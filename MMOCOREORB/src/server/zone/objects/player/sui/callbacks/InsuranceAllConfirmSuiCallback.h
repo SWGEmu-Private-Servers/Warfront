@@ -11,7 +11,6 @@
 #include "server/zone/objects/player/sui/SuiCallback.h"
 #include "server/zone/managers/player/PlayerManager.h"
 #include "templates/params/OptionBitmask.h"
-#include "server/zone/objects/transaction/TransactionLog.h"
 
 class InsuranceAllConfirmSuiCallback : public SuiCallback {
 public:
@@ -22,7 +21,7 @@ public:
 	void run(CreatureObject* player, SuiBox* suiBox, uint32 eventIndex, Vector<UnicodeString>* args) {
 		bool cancelPressed = (eventIndex == 1);
 
-		if (!suiBox->isMessageBox() || cancelPressed || player == nullptr)
+		if (!suiBox->isMessageBox() || cancelPressed || player == NULL)
 			return;
 
 		ZoneServer* zoneServer = player->getZoneServer();
@@ -34,7 +33,7 @@ public:
 
 		ManagedReference<SceneObject*> term = suiBox->getUsingObject().get();
 
-		if (term == nullptr) {
+		if (term == NULL) {
 			StringIdChatParameter params;
 			params.setStringId("@ui:action_target_not_found_prose");
 			params.setTT("@terminal_name:terminal_insurance");
@@ -64,8 +63,6 @@ public:
 		int j = 0;
 		bool finished = true;
 
-		TransactionLog trxBank(player, TrxCode::INSURANCESYSTEM, 100 * insurableItems.size()); // Actual cost is set below
-
 		for (int i = 0; i < insurableItems.size(); ++i) {
 			SceneObject* obj = insurableItems.get(i);
 			if (((i + 1) * 100) > money) {
@@ -77,7 +74,7 @@ public:
 				break;
 			}
 
-			if (obj != nullptr && obj->isTangibleObject()) {
+			if (obj != NULL && obj->isTangibleObject()) {
 				j++;
 				TangibleObject* item = cast<TangibleObject*>( obj);
 
@@ -86,25 +83,17 @@ public:
 				uint32 bitmask = item->getOptionsBitmask();
 				bitmask |= OptionBitmask::INSURED;
 				item->setOptionsBitmask(bitmask);
-				trxBank.addRelatedObject(obj->getObjectID());
 			}
 		}
 
-		trxBank.addState("insuredCount", j);
 		cost *= j;
 
 		if (bank < cost) {
 			int diff = cost - bank;
 
-			trxBank.setAmount(diff, true);
 			player->subtractBankCredits(cost - diff);
-			trxBank.commit();
-
-			TransactionLog trxCash(player, TrxCode::INSURANCESYSTEM, cost - diff, true);
-			trxCash.groupWith(trxBank);
 			player->subtractCashCredits(diff);
 		} else {
-			trxBank.setAmount(cost, false);
 			player->subtractBankCredits(cost);
 		}
 

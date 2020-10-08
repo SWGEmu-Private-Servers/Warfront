@@ -50,13 +50,13 @@ public:
 	void run() {
 		ManagedReference<CreatureObject*> player = client->getPlayer();
 
-		if (player == nullptr)
+		if (player == NULL)
 			return;
 
 		ManagedReference<Facade*> facade = player->getActiveSession(SessionFacadeType::IMAGEDESIGN);
 		ManagedReference<ImageDesignSession*> session = dynamic_cast<ImageDesignSession*>(facade.get());
 
-		if (session == nullptr)
+		if (session == NULL)
 			return;
 
 		session->updateImageDesign(player, designerID, targetID, tentID, type, imageDesignData);

@@ -10,12 +10,12 @@
 #include "server/zone/objects/scene/SceneObject.h"
 
 void MapLocationTable::transferObject(SceneObject* object) {
-	const PlanetMapCategory* pmc = object->getPlanetMapSubCategory();
+	PlanetMapCategory* pmc = object->getPlanetMapSubCategory();
 
-	if (pmc == nullptr)
+	if (pmc == NULL)
 		pmc = object->getPlanetMapCategory();
 
-	if (pmc == nullptr)
+	if (pmc == NULL)
 		return;
 
 	int index = locations.find(pmc->getName());
@@ -37,12 +37,12 @@ void MapLocationTable::transferObject(SceneObject* object) {
 }
 
 void MapLocationTable::dropObject(SceneObject* object) {
-	const PlanetMapCategory* pmc = object->getPlanetMapSubCategory();
+	PlanetMapCategory* pmc = object->getPlanetMapSubCategory();
 
-	if (pmc == nullptr)
+	if (pmc == NULL)
 		pmc = object->getPlanetMapCategory();
 
-	if (pmc == nullptr)
+	if (pmc == NULL)
 		return;
 
 	int index = locations.find(pmc->getName());
@@ -58,22 +58,22 @@ void MapLocationTable::dropObject(SceneObject* object) {
 	}
 }
 
-bool MapLocationTable::containsObject(SceneObject* object) const {
-	const PlanetMapCategory* pmc = object->getPlanetMapSubCategory();
+bool MapLocationTable::containsObject(SceneObject* object) {
+	PlanetMapCategory* pmc = object->getPlanetMapSubCategory();
 
-	if (pmc == nullptr)
+	if (pmc == NULL)
 		pmc = object->getPlanetMapCategory();
 
-	if (pmc == nullptr)
+	if (pmc == NULL)
 		return false;
 
 	int index = locations.find(pmc->getName());
 
 	if (index != -1) {
-		const SortedVector<MapLocationEntry>& vector = locations.elementAt(index).getValue();
+		SortedVector<MapLocationEntry>& vector = locations.elementAt(index).getValue();
 
 		for (int i = 0; i < vector.size(); i++) {
-			const auto& entry = vector.get(i);
+			MapLocationEntry entry = vector.get(i);
 
 			if (entry.getObjectID() == object->getObjectID()) {
 				return true;
@@ -85,12 +85,12 @@ bool MapLocationTable::containsObject(SceneObject* object) const {
 }
 
 void MapLocationTable::updateObjectsIcon(SceneObject* object, byte icon) {
-	const PlanetMapCategory* pmc = object->getPlanetMapSubCategory();
+	PlanetMapCategory* pmc = object->getPlanetMapSubCategory();
 
-	if (pmc == nullptr)
+	if (pmc == NULL)
 		pmc = object->getPlanetMapCategory();
 
-	if (pmc == nullptr)
+	if (pmc == NULL)
 		return;
 
 	int index = locations.find(pmc->getName());
@@ -111,10 +111,10 @@ void MapLocationTable::updateObjectsIcon(SceneObject* object, byte icon) {
 	}
 }
 
-const SortedVector<MapLocationEntry>& MapLocationTable::getLocation(const String& name) const {
+SortedVector<MapLocationEntry>& MapLocationTable::getLocation(const String& name) {
 	return locations.get(name);
 }
 
-int MapLocationTable::findLocation(const String& name) const {
+int MapLocationTable::findLocation(const String& name) {
 	return locations.find(name);
 }

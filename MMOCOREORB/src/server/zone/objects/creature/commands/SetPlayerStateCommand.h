@@ -28,7 +28,7 @@ public:
 
 		CreatureObject* targetCreature = creature;
 
-		if (obj == nullptr || !obj->isPlayerCreature()) {
+		if (obj == NULL || !obj->isPlayerCreature()) {
 			if (!tok.hasMoreTokens())
 				return INVALIDSYNTAX;
 
@@ -37,7 +37,7 @@ public:
 			obj = server->getPlayerManager()->getPlayer(targetName);
 
 			//The command issuer is the target if they have not specified a target or name.
-			if (obj != nullptr && obj->isPlayerCreature())
+			if (obj != NULL && obj->isPlayerCreature())
 				targetCreature = obj.castTo<CreatureObject*>();
 		} else {
 			targetCreature = obj.castTo<CreatureObject*>();

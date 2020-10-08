@@ -28,7 +28,7 @@ public:
 
 		Reference<PlayerObject*> ghost = creature->getSlottedObject("ghost").castTo<PlayerObject*>();
 
-		if (ghost != nullptr)
+		if (ghost != NULL)
 			ghost->toggleCharacterBit(PlayerObject::AFK);
 
 		return SUCCESS;

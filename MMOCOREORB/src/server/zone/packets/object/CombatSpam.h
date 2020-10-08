@@ -15,17 +15,17 @@ public:
 	CombatSpam(TangibleObject* attacker, TangibleObject* defender, CreatureObject* receiver, TangibleObject* item, uint32 damage, const String& file, const String& stringName, byte color)
 			: StandaloneObjectControllerMessage(receiver->getObjectID(), 0x1B, 0x134) {
 
-		if (attacker != nullptr)
+		if (attacker != NULL)
 			insertLong(attacker->getObjectID()); //%TU in strings.
 		else
 			insertLong(0);
 
-		if (defender != nullptr)
+		if (defender != NULL)
 			insertLong(defender->getObjectID()); //%TT in strings.
 		else
 			insertLong(0);
 
-		if (item != nullptr)
+		if (item != NULL)
 			insertLong(item->getObjectID()); //%TO in strings.
 		else
 			insertLong(0);

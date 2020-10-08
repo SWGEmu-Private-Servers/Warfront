@@ -9,8 +9,6 @@
 #ifndef PLANETTRAVELPOINT_H_
 #define PLANETTRAVELPOINT_H_
 
-#include <atomic>
-
 #include "server/zone/objects/creature/CreatureObject.h"
 
 using namespace server::zone::objects::creature;
@@ -21,7 +19,7 @@ class PlanetTravelPoint : public Object {
 	String pointZone;
 	String pointName;
 	Vector3 arrivalVector;
-	std::atomic<Vector3> departureVector{};
+	Vector3 departureVector;
 	bool interplanetaryTravelAllowed;
 	bool incomingTravelAllowed;
 
@@ -31,24 +29,24 @@ public:
 		arrivalVector.set(0.f, 0.f, 0.f);
 		interplanetaryTravelAllowed = false;
 		incomingTravelAllowed = true;
-		shuttleObject = nullptr;
+		shuttleObject = NULL;
 	}
 
 	PlanetTravelPoint(const String& zoneName, const String& cityName, Vector3 arrVector, Vector3 departVector, CreatureObject* shuttle) {
-		pointZone = zoneName;
-		pointName = cityName;
-		arrivalVector = arrVector;
-		departureVector = departVector;
-		interplanetaryTravelAllowed = false;
-		incomingTravelAllowed = true;
-		shuttleObject = shuttle;
+			pointZone = zoneName;
+			pointName = cityName;
+			arrivalVector = arrVector;
+			departureVector = departVector;
+			interplanetaryTravelAllowed = false;
+			incomingTravelAllowed = true;
+			shuttleObject = shuttle;
 	}
 
 	PlanetTravelPoint(const PlanetTravelPoint& ptp) : Object() {
 		pointZone = ptp.pointZone;
 		pointName = ptp.pointName;
 		arrivalVector = ptp.arrivalVector;
-		departureVector = ptp.departureVector.load();
+		departureVector = ptp.departureVector;
 		interplanetaryTravelAllowed = ptp.interplanetaryTravelAllowed;
 		incomingTravelAllowed = ptp.incomingTravelAllowed;
 		shuttleObject = ptp.shuttleObject;
@@ -61,7 +59,7 @@ public:
 		pointZone = ptp.pointZone;
 		pointName = ptp.pointName;
 		arrivalVector = ptp.arrivalVector;
-		departureVector = ptp.departureVector.load();
+		departureVector = ptp.departureVector;
 		interplanetaryTravelAllowed = ptp.interplanetaryTravelAllowed;
 		incomingTravelAllowed = ptp.incomingTravelAllowed;
 		shuttleObject = ptp.shuttleObject;
@@ -94,11 +92,11 @@ public:
 		pointName = name;
 	}
 
-	inline const String& getPointZone() const {
+	inline String& getPointZone() {
 		return pointZone;
 	}
 
-	inline const String& getPointName() const {
+	inline String& getPointName() {
 		return pointName;
 	}
 
@@ -119,39 +117,39 @@ public:
 	}
 
 	inline float getDeparturePositionX() const {
-		return departureVector.load().getX();
+		return departureVector.getX();
 	}
 
 	inline float getDeparturePositionY() const {
-		return departureVector.load().getY();
+		return departureVector.getY();
 	}
 
 	inline float getDeparturePositionZ() const {
-		return departureVector.load().getZ();
+		return departureVector.getZ();
 	}
 
 	inline Vector3 getDeparturePosition() const {
-		return departureVector.load(std::memory_order_relaxed);
+		return departureVector;
 	}
 
 	/**
 	 * Returns true if this point is has the same zone and name that is passed in.
 	 */
-	inline bool isPoint(const String& zoneName, const String& name) const {
+	inline bool isPoint(const String& zoneName, const String& name) {
 		return (zoneName == pointZone && name == pointName);
 	}
 
 	/**
 	 * Returns true if this location allows interplanetary travel
 	 */
-	inline bool isInterplanetary() const {
+	inline bool isInterplanetary() {
 		return interplanetaryTravelAllowed;
 	}
 
 	/**
 	 * Returns true if this location allows incoming travel
 	 */
-	inline bool isIncomingAllowed() const {
+	inline bool isIncomingAllowed() {
 		return incomingTravelAllowed;
 	}
 
@@ -159,7 +157,7 @@ public:
 	 * Returns true if travel between this point and the passed in point is permitted.
 	 * @param arrivalPoint The destination point.
 	 */
-	bool canTravelTo(const PlanetTravelPoint* arrivalPoint) const {
+	bool canTravelTo(PlanetTravelPoint* arrivalPoint) {
 		if (arrivalPoint->getPointZone() == pointZone && arrivalPoint->isIncomingAllowed())
 			return true;
 
@@ -170,18 +168,25 @@ public:
 		return shuttleObject.get();
 	}
 
-	String toString() const {
+	String toString() {
 		StringBuffer buf;
 
 		buf << "[PlanetTravelPoint 0x" + String::hexvalueOf((int64)this)
 			<< " Zone = '" << pointZone
 			<< "' Name = '" << pointName
 			<< "' StarPort = " << interplanetaryTravelAllowed
-			<< " Departure: " << departureVector.load().toString()
+			<< " Departure: " << departureVector.toString()
 			<< " Arrival: " << arrivalVector.toString()
 			<< " shuttle = ";
 
-			buf << "[oid:" << shuttleObject.getSavedObjectID() << "]";
+		if(shuttleObject == NULL) {
+			buf << "NULL";
+		} else {
+			buf << "[oid:" << shuttleObject.get()->getObjectID()
+				<< " " << shuttleObject.get()->getObjectNameStringIdName()
+				<< " @ " << shuttleObject.get()->getWorldPosition().toString()
+				<< "]";
+		}
 
 		buf << "]";
 

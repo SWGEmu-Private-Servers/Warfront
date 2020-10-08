@@ -9,9 +9,6 @@
 #define DAMAGEOVERTIMELIST_H_
 
 #include "engine/engine.h"
-
-#include "engine/util/json_utils.h"
-
 #include "DamageOverTime.h"
 
 class DamageOverTimeList : private VectorMap<uint64, Vector<DamageOverTime> > {
@@ -31,12 +28,6 @@ public:
 
 		nextTick = list.nextTick;
 		dot = list.dot;
-	}
-
-	friend void to_json(nlohmann::json& j, const DamageOverTimeList& l) {
-		const VectorMap<uint64, Vector<DamageOverTime> >& map = l;
-
-		to_json(j, map);
 	}
 
 	bool toBinaryStream(ObjectOutputStream* stream) {

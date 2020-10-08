@@ -37,12 +37,12 @@ public:
 		ManagedReference<PlayerManager*> playerManager = server->getPlayerManager();
 		ManagedReference<CreatureObject*> targetCreature = playerManager->getPlayer(targetName);
 
-		if (targetCreature == nullptr) {
+		if (targetCreature == NULL) {
 			creature->sendSystemMessage("The specified player does not exist.");
 			return INVALIDTARGET;
 		}
 
-		if (targetCreature->getZone() == nullptr) {
+		if (targetCreature->getZone() == NULL) {
 			creature->sendSystemMessage("The specified player is not in a zone that is currently loaded.");
 			return INVALIDTARGET;
 		}

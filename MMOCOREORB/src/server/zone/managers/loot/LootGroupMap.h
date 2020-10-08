@@ -9,21 +9,13 @@
 #define LOOTGROUPMAP_H_
 
 class LootItemTemplate;
-
 #include "templates/LootGroupTemplate.h"
-
 #include "engine/log/Logger.h"
 #include "engine/util/Singleton.h"
-#include "engine/lua/Lua.h"
 
 class LootGroupMap : public Singleton<LootGroupMap>, public Object, public Logger {
 public:
 	static Lua* lua;
-
-#ifdef PLATFORM_WIN
-#undef NO_ERROR
-#endif
-
 	enum LUA_ERROR_CODE { NO_ERROR = 0, GENERAL_ERROR };
 	static int ERROR_CODE;
 
@@ -44,23 +36,23 @@ public:
 		groupTemplates.put(name, group);
 	}
 
-	const LootGroupTemplate* getLootGroupTemplate(const String& name) const {
+	LootGroupTemplate* getLootGroupTemplate(const String& name) {
 		return groupTemplates.get(name);
 	}
 
-	const LootItemTemplate* getLootItemTemplate(const String& name) const {
+	LootItemTemplate* getLootItemTemplate(const String& name) {
 		return itemTemplates.get(name);
 	}
 
-	inline int countLootItemTemplates() const {
+	inline int countLootItemTemplates() {
 		return itemTemplates.size();
 	}
 
-	inline int countLootGroupTemplates() const {
+	inline int countLootGroupTemplates() {
 		return groupTemplates.size();
 	}
 
-	bool lootGroupExists(const String& group) const {
+	bool lootGroupExists(const String& group) {
 		return groupTemplates.containsKey(group);
 	}
 

@@ -24,7 +24,7 @@ public:
 	void run() {
 		ManagedReference<ChannelForceBuff*> buff = buffObject.get();
 
-		if (buff == nullptr)
+		if (buff == NULL)
 			return;
 
 		Locker locker(buff);

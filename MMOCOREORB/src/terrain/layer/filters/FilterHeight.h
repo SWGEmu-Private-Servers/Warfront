@@ -12,12 +12,12 @@
 #include "../ProceduralRule.h"
 #include "FilterProceduralRule.h"
 
-class FilterHeight : public FilterProceduralRule {
+class FilterHeight : public ProceduralRule<'FHGT'>, public FilterProceduralRule {
 	float minHeight;
 	float maxHeight;
 
 public:
-	FilterHeight() : FilterProceduralRule(0, 'FHGT'), minHeight(0), maxHeight(0) {
+	FilterHeight() : FilterProceduralRule(0), minHeight(0), maxHeight(0) {
 		filterType = HEIGHTTYPE;
 	}
 
@@ -72,6 +72,9 @@ public:
 		return result;
 	}
 
+	bool isEnabled() {
+		return informationHeader.isEnabled();
+	}
 };
 
 #endif /* FILTERHEIGHT_H_ */

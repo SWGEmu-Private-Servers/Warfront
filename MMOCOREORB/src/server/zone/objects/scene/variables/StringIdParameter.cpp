@@ -22,11 +22,11 @@ StringIdParameter::StringIdParameter(StringIdParameter&& par) : Object(), Serial
 }
 #endif
 
-void StringIdParameter::set(const StringId* sid) {
+void StringIdParameter::set(StringId* sid) {
 	set(*sid);
 }
 
-void StringIdParameter::set(const StringId& sid) {
+void StringIdParameter::set(StringId& sid) {
 	clear();
 
 	stringID = sid;

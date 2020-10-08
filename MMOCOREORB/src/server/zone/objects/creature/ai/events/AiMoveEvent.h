@@ -61,7 +61,7 @@ public:
 
 		ManagedReference<AiAgent*> strongRef = creature.get();
 
-		if (strongRef == nullptr)
+		if (strongRef == NULL)
 			return;
 
 		Locker locker(strongRef);
@@ -83,12 +83,12 @@ public:
 		try {
 			Task::schedule(delay);
 
-			if (strongRef != nullptr) {
-				if (strongRef->getFollowObject() != nullptr && !hasFollowObject) {
+			if (strongRef != NULL) {
+				if (strongRef->getFollowObject() != NULL && !hasFollowObject) {
 					AiMap::instance()->moveEventsWithFollowObject.increment();
 
 					hasFollowObject = true;
-				} else if (strongRef->getFollowObject() == nullptr && hasFollowObject) {
+				} else if (strongRef->getFollowObject() == NULL && hasFollowObject) {
 					AiMap::instance()->moveEventsWithFollowObject.decrement();
 
 					hasFollowObject = false;
@@ -132,7 +132,7 @@ public:
 	}
 
 	void clearCreatureObject() {
-		creature = nullptr;
+		creature = NULL;
 	}
 
 };

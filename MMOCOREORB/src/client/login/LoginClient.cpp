@@ -14,15 +14,15 @@ LoginClient::LoginClient(int port, const String& loggingName) {
 	client->setLogging(true);
 	client->setLoggingName(loggingName);
 
-	loginSession = nullptr;
+	loginSession = NULL;
 
 	basePacketHandler = new BasePacketHandler("LoginClient", this);
-	loginPacketHandler = nullptr;
+	loginPacketHandler = NULL;
 }
 
 LoginClient::~LoginClient() {
 	delete basePacketHandler;
-	basePacketHandler = nullptr;
+	basePacketHandler = NULL;
 }
 
 void LoginClient::initialize() {

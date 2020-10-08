@@ -29,7 +29,7 @@ public:
 		ManagedReference<DroidObject*> strongDroidRef = droid;
 		ManagedReference<CreatureObject*> strongOwnerRef = owner;
 
-		if( strongDroidRef == nullptr || strongOwnerRef == nullptr )
+		if( strongDroidRef == NULL || strongOwnerRef == NULL )
 			return;
 
 		Locker locker(strongDroidRef);
@@ -37,9 +37,9 @@ public:
 		strongDroidRef->removePendingTask("droid_skill_mod");
 
 		// Check if droid is spawned
-		if( strongDroidRef->getLocalZone() == nullptr ){  // Not outdoors
+		if( strongDroidRef->getLocalZone() == NULL ){  // Not outdoors
 			ManagedReference<SceneObject*> parent = strongDroidRef->getParent().get();
-			if( parent == nullptr || !parent->isCellObject() ){ // Not indoors either
+			if( parent == NULL || !parent->isCellObject() ){ // Not indoors either
 				return;
 			}
 		}

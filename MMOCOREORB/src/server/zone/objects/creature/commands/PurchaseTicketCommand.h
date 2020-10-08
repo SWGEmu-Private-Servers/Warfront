@@ -9,7 +9,6 @@
 #include "server/zone/objects/player/sui/messagebox/SuiMessageBox.h"
 #include "server/zone/managers/planet/PlanetManager.h"
 #include "server/zone/objects/region/CityRegion.h"
-#include "server/zone/objects/transaction/TransactionLog.h"
 
 class PurchaseTicketCommand : public QueueCommand {
 public:
@@ -34,7 +33,7 @@ public:
 
 		for (int i = 0; i < closeObjects.size(); i++) {
 			SceneObject* object = cast<SceneObject*>( closeObjects.get(i));
-			if (object != nullptr && object->getGameObjectType() == SceneObjectType::TRAVELTERMINAL && checkDistance(creature, object, 8)) {
+			if (object != NULL && object->getGameObjectType() == SceneObjectType::TRAVELTERMINAL && checkDistance(creature, object, 8)) {
 				nearTravelTerminal = true;
 				break;
 			}
@@ -49,7 +48,7 @@ public:
 		ManagedReference<CityRegion*> currentCity = creature->getCityRegion().get();
 
 		int departureTax = 0;
-		if (currentCity != nullptr){
+		if (currentCity != NULL){
 			if (currentCity->isBanned(creature->getObjectID())) {
 				creature->sendSystemMessage("@city/city:city_cant_purchase_ticket"); //You are banned from using the services of this city. You cannot purchase a ticket.
 				return GENERALERROR;
@@ -60,7 +59,7 @@ public:
 		}
 		ManagedReference<SceneObject*> inventory = creature->getSlottedObject("inventory");
 
-		if (inventory == nullptr)
+		if (inventory == NULL)
 			return GENERALERROR;
 
 		String departurePlanet, departurePoint, arrivalPlanet, arrivalPoint, type;
@@ -91,10 +90,10 @@ public:
 		ManagedReference<Zone*> departureZone = server->getZoneServer()->getZone(departurePlanet);
 		ManagedReference<Zone*> arrivalZone = server->getZoneServer()->getZone(arrivalPlanet);
 
-		if (departureZone == nullptr)
+		if (departureZone == NULL)
 			return GENERALERROR;
 
-		if (arrivalZone == nullptr)
+		if (arrivalZone == NULL)
 			return GENERALERROR;
 
 		ManagedReference<PlanetManager*> pmDeparture = departureZone->getPlanetManager();
@@ -112,18 +111,18 @@ public:
 
 		Reference<PlanetTravelPoint*>  destPoint = pmArrival->getPlanetTravelPoint(arrivalPoint);
 
-		if (destPoint == nullptr)
+		if (destPoint == NULL)
 			return GENERALERROR;
 
 		ManagedReference<CreatureObject*> arrivalShuttle = destPoint->getShuttle();
 
-		if (arrivalShuttle == nullptr)
+		if (arrivalShuttle == NULL)
 			return GENERALERROR;
 
 
 		ManagedReference<CityRegion*> destCity = arrivalShuttle->getCityRegion().get();
 
-		if (destCity != nullptr){
+		if (destCity != NULL){
 			if (destCity.get()->isBanned(creature->getObjectID())) {
 				creature->sendSystemMessage("@city/city:banned_from_that_city");  // You have been banned from traveling to that city by the city militia
 				return GENERALERROR;
@@ -174,30 +173,10 @@ public:
 				return GENERALERROR;
 			}
 
-			TransactionLog trxBank(creature, TrxCode::TRAVELSYSTEM, bank, false);
-			trxBank.addState("departurePlanet", departurePlanet);
-			trxBank.addState("departurePoint", departurePoint);
-			trxBank.addState("arrivalPlanet", arrivalPlanet);
-			trxBank.addState("arrivalPoint", arrivalPoint);
-
 			creature->subtractBankCredits(bank); //Take all from the bank, since they didn't have enough to cover.
-
-			TransactionLog trxCash(creature, TrxCode::TRAVELSYSTEM, diff, true);
-			trxCash.groupWith(trxBank);
-			trxCash.addState("departurePlanet", departurePlanet);
-			trxCash.addState("departurePoint", departurePoint);
-			trxCash.addState("arrivalPlanet", arrivalPlanet);
-			trxCash.addState("arrivalPoint", arrivalPoint);
-
 			creature->subtractCashCredits(diff); //Take the rest from the cash.
-			trxCash.groupWith(trxBank);
-		} else {
-			TransactionLog trx(creature, TrxCode::TRAVELSYSTEM, fare, false);
-			trx.addState("departurePlanet", departurePlanet);
-			trx.addState("departurePoint", departurePoint);
-			trx.addState("arrivalPlanet", arrivalPlanet);
-			trx.addState("arrivalPoint", arrivalPoint);
 
+		} else {
 			creature->subtractBankCredits(fare); //Take all of the fare from the bank.
 		}
 
@@ -209,7 +188,7 @@ public:
 		creature->sendSystemMessage(params);
 
 		ManagedReference<SceneObject*> ticket1 = pmDeparture->createTicket(departurePoint, arrivalPlanet, arrivalPoint);
-		if (ticket1 == nullptr) {
+		if (ticket1 == NULL) {
 			creature->sendSystemMessage("Error creating travel ticket.");
 			return GENERALERROR;
 		}
@@ -235,7 +214,7 @@ public:
 		}
 		_lock.release();
 
-		if(currentCity != nullptr && !currentCity->isClientRegion() && departureTax > 0) {
+		if(currentCity != NULL && !currentCity->isClientRegion() && departureTax > 0) {
 			Locker clocker(currentCity, creature);
 			int taxPaid = departureTax + (roundTrip * departureTax);
 			currentCity->addToCityTreasury(taxPaid);

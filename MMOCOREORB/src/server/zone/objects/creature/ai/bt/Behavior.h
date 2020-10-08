@@ -91,10 +91,10 @@ public:
 	 * @return true if we can update, false if not
 	 */
 	virtual bool checkConditions() {
-		if (interface != nullptr) {
+		if (interface != NULL) {
 			auto strongReference = agent.getReferenceUnsafeStaticCast();
 
-			if (strongReference != nullptr) {
+			if (strongReference != NULL) {
 				return interface->checkConditions(strongReference);
 			}
 		}
@@ -134,7 +134,7 @@ public:
 	 * Virtual to ensure that we should do an awareness check
 	 */
 	virtual bool doAwarenessCheck(SceneObject* target) {
-		if (interface != nullptr) {
+		if (interface != NULL) {
 			auto strongReference = agent.getReferenceUnsafeStaticCast();
 
 			return interface->doAwarenessCheck(strongReference, target);

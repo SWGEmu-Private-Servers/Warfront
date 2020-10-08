@@ -14,17 +14,17 @@
 void ObjectMenuComponent::fillObjectMenuResponse(SceneObject* sceneObject, ObjectMenuResponse* menuResponse, CreatureObject* player) const {
 	//All objects in a cell can be picked up, if the player is on the structures permission list.
 	//This opens the door to allow admins to be able to drop/pickup items in public structures
-	if (sceneObject == nullptr)
+	if (sceneObject == NULL)
 		return;
 
 	ManagedReference<SceneObject*> parent = sceneObject->getParent().get();
 
-	if (parent == nullptr || !parent->isCellObject())
+	if (parent == NULL || !parent->isCellObject())
 		return;
 
 	ManagedReference<SceneObject*> obj = parent->getParent().get();
 
-	if (obj == nullptr || !obj->isBuildingObject())
+	if (obj == NULL || !obj->isBuildingObject())
 		return;
 
 	ManagedReference<BuildingObject*> buio = cast<BuildingObject*>( obj.get());

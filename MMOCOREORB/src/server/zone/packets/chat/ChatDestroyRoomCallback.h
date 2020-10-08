@@ -30,11 +30,11 @@ public:
 	void run() {
 		ManagedReference<CreatureObject*> player = client->getPlayer();
 
-		if (player == nullptr)
+		if (player == NULL)
 			return;
 
 		ChatManager* chatManager = server->getChatManager();
-		if (chatManager != nullptr)
+		if (chatManager != NULL)
 			chatManager->handleChatDestroyRoom(player, roomID, requestID);
 	}
 

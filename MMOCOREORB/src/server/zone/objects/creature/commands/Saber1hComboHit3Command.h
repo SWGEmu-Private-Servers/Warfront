@@ -23,9 +23,18 @@ public:
 		if (!checkInvalidLocomotions(creature))
 			return INVALIDLOCOMOTION;
 
+		if (creature->isInvisible()) {
+			return GENERALERROR;
+		}
+
 		if (isWearingArmor(creature)) {
 			return NOJEDIARMOR;
 		}
+		ManagedReference<WeaponObject*> weapon = creature->getWeapon();
+
+		if (!weapon->isJediOneHandedWeapon()) {
+			return INVALIDWEAPON;
+		}		
 
 		float mods[3] = {0.f, 0.f, 0.f};
 

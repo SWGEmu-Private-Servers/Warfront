@@ -17,12 +17,13 @@
 #include "server/zone/objects/tangible/tool/recycle/RecycleTool.h"
 
 ResourceTree::ResourceTree(ResourceSpawner* spawn) : Logger() {
-	spawner = spawn;
 
+	spawner = spawn;
 	buildTreeFromClient();
 }
 
 ResourceTree::~ResourceTree() {
+
 	delete baseNode;
 }
 
@@ -31,7 +32,7 @@ bool ResourceTree::buildTreeFromClient() {
 
 	IffStream* iffStream = templateManager->openIffFile("datatables/resource/resource_tree.iff");
 
-	if (iffStream == nullptr) {
+	if (iffStream == NULL) {
 		info("The Resource Tree could not be found.", true);
 		return false;
 	}
@@ -132,14 +133,14 @@ bool ResourceTree::buildTreeFromClient() {
 	return true;
 }
 
-const ResourceTreeEntry* ResourceTree::getEntry(const String& type, const Vector<String>& excludes, const String& zoneName) const {
+ResourceTreeEntry* ResourceTree::getEntry(const String& type, const Vector<String>& excludes, const String& zoneName) {
 	return baseNode->getEntry(type, excludes, zoneName);
 }
 
 void ResourceTree::setZoneRestriction(ResourceTreeEntry* entry) {
 	String name = entry->getType();
 
-	const Vector<String>& activeZones = spawner->getActiveResourceZones();
+	Vector<String>& activeZones = spawner->getActiveResourceZones();
 
 	for(int i = 0; i < activeZones.size(); ++i) {
 		String zonename = activeZones.get(i);
@@ -154,7 +155,7 @@ void ResourceTree::setZoneRestriction(ResourceTreeEntry* entry) {
 void ResourceTree::setJtl(ResourceTreeEntry* entry) {
 	String name = entry->getType();
 
-	const Vector<String>& jtlResources = spawner->getJtlResources();
+	Vector<String>& jtlResources = spawner->getJtlResources();
 
 	for(int i = 0; i < jtlResources.size(); ++i) {
 		String jtlresource = jtlResources.get(i);
@@ -256,6 +257,6 @@ void ResourceTree::setRecycleToolType(ResourceTreeEntry* entry) {
 
 }
 
-void ResourceTree::toString() const {
+void ResourceTree::toString() {
 	baseNode->toString();
 }

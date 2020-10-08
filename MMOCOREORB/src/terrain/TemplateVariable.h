@@ -38,7 +38,7 @@ public:
 	}
 
 	void readObject(engine::util::IffStream* iffStream) {
-		if (iffStream->openForm(formType) == nullptr)
+		if (iffStream->openForm(formType) == NULL)
 			throw Exception("Incorrect form type " + String::valueOf(formType));
 
 		parseFromIffStream(iffStream);
@@ -49,6 +49,8 @@ public:
 	virtual void parseFromIffStream(engine::util::IffStream* iffStream) {
 
 	}
+
+
 };
 
 

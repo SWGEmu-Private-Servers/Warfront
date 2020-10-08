@@ -20,7 +20,7 @@ public:
 		if (!checkInvalidLocomotions(creature))
 			return INVALIDLOCOMOTION;
 
-		/*ManagedReference<CreatureObject*> mount = nullptr;
+		/*ManagedReference<CreatureObject*> mount = NULL;
 
 		if (creature->isRidingMount()) {
 			mount = cast<CreatureObject*>( creature->getParent());

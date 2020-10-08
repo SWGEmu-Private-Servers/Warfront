@@ -50,7 +50,7 @@ class ZoneResourceMap : public VectorMap<String, ManagedReference<ResourceSpawn*
 public:
 	ZoneResourceMap() {
 		setNoDuplicateInsertPlan();
-		setNullValue(nullptr);
+		setNullValue(NULL);
 	}
 	~ZoneResourceMap() {
 
@@ -102,7 +102,7 @@ public:
 	 * \param y The value of the y coordinate
 	 * \return Value between -1 and 1 indicating density
 	*/
-	float getDensityAt(const String& resourcename, String zoneName, float x, float y) const;
+	float getDensityAt(const String& resourcename, String zoneName, float x, float y);
 
 	/**
 	 * Get's the density value of resource at given point
@@ -113,7 +113,7 @@ public:
 		if(zoneResourceMap.contains(zoneName))
 			return zoneResourceMap.get(zoneName);
 		else
-			return nullptr;
+			return NULL;
 	}
 
 	/**

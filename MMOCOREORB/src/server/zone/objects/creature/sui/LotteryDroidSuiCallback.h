@@ -6,7 +6,6 @@
 #include "server/zone/objects/tangible/eventperk/LotteryDroid.h"
 #include "server/zone/objects/player/sui/messagebox/SuiMessageBox.h"
 #include "server/zone/managers/stringid/StringIdManager.h"
-#include "server/zone/objects/transaction/TransactionLog.h"
 
 class LotteryDroidSuiCallback : public SuiCallback {
 private:
@@ -32,12 +31,12 @@ public:
 
 		ManagedReference<SceneObject*> droid = suiBox->getUsingObject().get();
 
-		if (droid == nullptr)
+		if (droid == NULL)
 			return;
 
 		ManagedReference<LotteryDroid*> lotteryDroid = cast<LotteryDroid*>(droid.get());
 
-		if (lotteryDroid == nullptr)
+		if (lotteryDroid == NULL)
 			return;
 
 		Locker lotteryDroidGuard(lotteryDroid, player);
@@ -83,7 +82,7 @@ public:
 			} else {
 				PlayerObject* ghost = player->getPlayerObject();
 
-				if (ghost == nullptr)
+				if (ghost == NULL)
 					return;
 
 				ManagedReference<SuiMessageBox*> confirmBox = new SuiMessageBox(player, SuiWindowType::LOTTERY_ADD_CREDITS_CONFIRM);
@@ -111,7 +110,6 @@ public:
 				player->sendSystemMessage("@event_perk:lottery_add_credits_nsf");
 				lotteryDroid->sendAddCreditsSUI(player);
 			} else {
-				TransactionLog trx(player, lotteryDroid, TrxCode::LOTTERYDROID, creditAmt, true);
 				lotteryDroid->addToCreditPool(creditAmt);
 				player->subtractCashCredits(creditAmt);
 			}
@@ -124,7 +122,6 @@ public:
 				player->sendSystemMessage("@event_perk:lottery_add_credits_nsf");
 				return;
 			} else {
-				TransactionLog trx(player, lotteryDroid, TrxCode::LOTTERYDROID, ticketPrice, true);
 				lotteryDroid->addNewPlayer(player->getObjectID());
 				player->subtractCashCredits(ticketPrice);
 				lotteryDroid->addToCreditPool(ticketPrice);

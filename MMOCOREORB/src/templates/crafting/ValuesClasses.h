@@ -6,7 +6,6 @@
 #define VALUESCLASSES_H_
 
 #include "system/lang.h"
-#include "engine/log/Logger.h"
 
 /*
  * The Values class is just a container for values calculated in crafting
@@ -24,8 +23,6 @@ class Values : public Object {
 	bool experimentalProperties;
 
 public:
-	Values() = delete;
-
 	Values(const String& n, const float& tempmin, const float& tempmax, const int& prec, const bool& filler, const int& combine) {
 		name = n;
 
@@ -54,41 +51,35 @@ public:
 		combineType = val.combineType;
 	}
 
-	Values(Values&& val) : Object(), values(std::move(val.values)),
-					  name(std::move(val.name)), minValue(val.minValue),
-					  maxValue(val.maxValue), precision(val.precision),
-	      				  combineType(val.combineType), locked(val.locked),
-					  experimentalProperties(val.experimentalProperties) {
-	}
-
 	~Values(){
+		values.removeAll();
 	}
 
-	inline float getPercentage() const {
+	inline float getPercentage() {
 		return values.get("currentPercentage");
 	}
 
-	inline float getValue() const {
+	inline float getValue() {
 		return values.get("currentValue");
 	}
 
-	inline float getMaxPercentage() const {
+	inline float getMaxPercentage() {
 		return values.get("maxPercentage");
 	}
 
-	inline float getMinValue() const {
+	inline float getMinValue() {
 		return minValue;
 	}
 
-	inline float getMaxValue() const {
+	inline float getMaxValue() {
 		return maxValue;
 	}
 
-	inline int getPrecision() const {
+	inline int getPrecision() {
 		return precision;
 	}
 
-	inline bool isFiller() const {
+	inline bool isFiller() {
 		return experimentalProperties;
 	}
 
@@ -96,11 +87,11 @@ public:
 		experimentalProperties = in;
 	}
 
-	inline const String& getName() const {
+	inline String& getName() {
 		return name;
 	}
 
-	inline short getCombineType() const {
+	inline short getCombineType() {
 		return combineType;
 	}
 
@@ -123,22 +114,15 @@ public:
 
 		float newpercentage;
 
-		if (Float::areAlmostEqualRelative(maxValue, minValue)) {
-			newpercentage = (value - minValue);
-
-			const static Logger logger("ValuesClasses");
-
-			logger.debug() << name << " value class has the same maxValue and minValue that are equal to: " << maxValue;
-		} else if (maxValue > minValue) {
+		if (maxValue > minValue)
 			newpercentage = (value - minValue) / (maxValue - minValue);
-		} else {
+		else
 			newpercentage = 1 - ((value - maxValue) / (minValue - maxValue));
-		}
 
-		if (newpercentage > values.get("maxPercentage"))
+		if(newpercentage > values.get("maxPercentage"))
 			newpercentage = values.get("maxPercentage");
 
-		if (newpercentage < 0)
+		if(newpercentage < 0)
 			newpercentage = 0;
 
 		if (values.contains("currentValue")) {
@@ -231,8 +215,6 @@ class Subclasses : public Object {
 	bool hidden;
 
 public:
-	Subclasses() = delete;
-
 	Subclasses(const String& title, const String& subtitle, const float
 			min, const float max, const int precision, const bool filler, const int combine) {
 
@@ -240,9 +222,9 @@ public:
 
 		name = subtitle;
 
-		Values* values = new Values(subtitle, min, max, precision, filler, combine);
+		Values* values = new Values(subtitle ,min, max, precision, filler, combine);
 
-		valueList.setNullValue(nullptr);
+		valueList.setNullValue(NULL);
 		valueList.put(subtitle, values);
 
 		if (classTitle == "null" || classTitle == "" || (name == "")) {
@@ -260,7 +242,7 @@ public:
 		avePercentage = sub.avePercentage;
 
 		for (int i = 0; i < sub.valueList.size(); ++i) {
-			const auto& entry = sub.valueList.elementAt(i);
+			VectorMapEntry<String, Reference<Values*> > entry = sub.valueList.elementAt(i);
 
 			Values* values = entry.getValue();
 
@@ -270,12 +252,8 @@ public:
 		}
 	}
 
-	Subclasses(Subclasses&& sub) : Object(), valueList(std::move(sub.valueList)),
-					avePercentage(sub.avePercentage), name(std::move(sub.name)),
-					classTitle(std::move(sub.classTitle)), hidden(sub.hidden) {
-	}
-
 	~Subclasses(){
+		valueList.removeAll();
 	}
 
 	void addSubtitle(const String& s, const float min, const float max, const int precision, const bool filler, const int combine) {
@@ -290,11 +268,7 @@ public:
 		valueList.put(s, values);
 	}
 
-	inline const Values* get(const int i) const {
-		return valueList.get(i);
-	}
-
-	inline Values* get(const int i) {
+	inline Values* get(const int i){
 		return valueList.get(i);
 	}
 
@@ -302,39 +276,36 @@ public:
 		return valueList.get(subTitle);
 	}
 
-	inline const Values* get(const String& subTitle) const {
-		return valueList.get(subTitle);
-	}
-
-	inline int size() const {
+	inline int size(){
 		return valueList.size();
 	}
 
-	inline bool isClassHidden() const {
+	inline bool isClassHidden(){
 		return hidden;
 	}
 
-	inline bool hasAllHiddenItems() const {
+	inline bool hasAllHiddenItems() {
+
 		for(int i = 0; i < valueList.size(); ++i) {
-			auto values = valueList.get(i);
+			Values* values = valueList.get(i);
 			if(!values->isFiller() && values->getMaxValue() != values->getMinValue())
 				return false;
 		}
 		return true;
 	}
 
-	inline float getPercentage(const String& subTitle) const {
-		auto values = valueList.get(subTitle);
+	inline float getPercentage(const String& subTitle) {
+		Values* values = valueList.get(subTitle);
 		return values->getPercentage();
 	}
 
-	inline float getMaxPercentage(const String& subTitle) const {
-		auto values = valueList.get(subTitle);
+	inline float getMaxPercentage(const String& subTitle) {
+		Values* values = valueList.get(subTitle);
 		return values->getMaxPercentage();
 	}
 
-	inline float getValue(const String& subTitle) const {
-		auto values = valueList.get(subTitle);
+	inline float getValue(const String& subTitle) {
+		Values* values = valueList.get(subTitle);
 		return values->getValue();
 	}
 
@@ -342,7 +313,7 @@ public:
 	//	return name;
 	//}
 
-	inline const String& getClassTitle() const {
+	inline String& getClassTitle() {
 		return classTitle;
 	}
 
@@ -362,12 +333,13 @@ public:
 		values->setPercentage(value);
 	}
 
-	String toString() const {
+	String toString() {
 		Values* tempValues;
 
 		StringBuffer str;
 
 		for (int i = 0;i < valueList.size(); ++i) {
+
 			tempValues = valueList.get(i);
 
 			str << "Property Name: " << tempValues->getName();

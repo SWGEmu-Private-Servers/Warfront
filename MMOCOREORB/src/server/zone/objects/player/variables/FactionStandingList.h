@@ -10,8 +10,6 @@
 
 #include "engine/engine.h"
 
-#include "engine/util/json_utils.h"
-
 class FactionStandingList : public Serializable {
 	SerializableString factionRank;
 	int rebelPoints;
@@ -61,18 +59,11 @@ public:
 		addSerializableVariable("factions", &factions);
 	}
 
-	friend void to_json(nlohmann::json& j, const FactionStandingList& l) {
-		j["factionRank"] = l.factionRank;
-		j["rebelPoints"] = l.rebelPoints;
-		j["imperialPoints"] = l.imperialPoints;
-		j["factions"] = l.factions.getMapUnsafe();
-	}
-
-	float get(const String& faction) const {
+	float get(const String& faction) {
 		return getFactionStanding(faction);
 	}
 
-	int size() const {
+	int size() {
 		return factions.size();
 	}
 
@@ -85,7 +76,7 @@ public:
 			factions.put(faction, amount);
 	}
 
-	float getFactionStanding(const String& faction) const {
+	float getFactionStanding(const String& faction) {
 		if (faction == "imperial")
 			return getImperialPoints();
 		else if (faction == "rebel")
@@ -94,18 +85,18 @@ public:
 			return factions.get(faction);
 	}
 
-	bool contains(const String& faction) const {
+	bool contains(const String& faction) {
 		if (faction == "imperial" || faction == "rebel")
 			return true;
 		else
 			return factions.contains(faction);
 	}
 
-	bool isPvpFaction(const String& faction) const {
+	bool isPvpFaction(const String& faction) {
 		return faction == "imperial" || faction == "rebel";
 	}
 
-	const String& getFactionRank() const {
+	String& getFactionRank() {
 		return factionRank;
 	}
 
@@ -137,19 +128,19 @@ public:
 		factionRank = rank;
 	}
 
-	int getImperialPoints() const {
+	int getImperialPoints() {
 		return imperialPoints;
 	}
 
-	int getRebelPoints() const {
+	int getRebelPoints() {
 		return rebelPoints;
 	}
 
-	int getHuttPoints() const {
+	int getHuttPoints() {
 		return 0;
 	}
 
-	void insertToMessage(BaseMessage* message) const {
+	void insertToMessage(BaseMessage* message) {
 		message->insertAscii(factionRank);
 		message->insertInt(rebelPoints);
 		message->insertInt(imperialPoints);

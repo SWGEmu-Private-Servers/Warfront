@@ -83,15 +83,15 @@ public:
 
 	void readObject(ObjectInputStream* stream);
 
-	int getWidth() const {
+	int getWidth() {
 		return header.width;
 	}
 
-	int getHeight() const {
+	int getHeight() {
 		return header.height;
 	}
 
-	unsigned char getData(int offset) const;
+	unsigned char getData(int offset);
 };
 
 

@@ -36,12 +36,12 @@ public:
 	void run() {
 		ManagedReference<CreatureObject*> player = client->getPlayer();
 
-		if (player == nullptr)
+		if (player == NULL)
 			return;
 
 		ManagedReference<SceneObject*> mission = server->getZoneServer()->getObject(missionObjectID);
 
-		if (mission == nullptr)
+		if (mission == NULL)
 			return;
 
 		if (!mission->isMissionObject())

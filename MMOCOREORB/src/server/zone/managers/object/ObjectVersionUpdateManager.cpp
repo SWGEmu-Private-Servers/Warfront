@@ -118,7 +118,7 @@ ObjectOutputStream* ObjectVersionUpdateManager::changeVariableData(const uint32&
 	int offset = getVariableDataOffset(variableHashCode, object);
 
 	if (offset == -1)
-		return nullptr;
+		return NULL;
 
 	ObjectOutputStream* newData = new ObjectOutputStream(object->size());
 	object->copy(newData);
@@ -217,7 +217,7 @@ void ObjectVersionUpdateManager::updateWeaponsDots() {
 
 				delete inputStream;
 
-				database->putData(objectID, newNextData, nullptr);
+				database->putData(objectID, newNextData, NULL);
 			}
 
 			objectData.clear();
@@ -279,7 +279,7 @@ void ObjectVersionUpdateManager::updateTangibleObjectsVersion6() {
 			// Add all templates that still have a use Count > 1
 			// Also add all loot schematic templates as well as factory crates
 			if((tanotmp->getUseCount() > 0) ||
-			   (lootSchem != nullptr && lootSchem->getTargetUseCount() > 1) ||
+			   (lootSchem != NULL && lootSchem->getTargetUseCount() > 1) ||
 			    tmpl->getGameObjectType() == SceneObjectType::FACTORYCRATE) {
 				templateKeys.put(key);
 				info("Adding Tangible Template: " + tanotmp->getTemplateFileName(), true);
@@ -287,7 +287,7 @@ void ObjectVersionUpdateManager::updateTangibleObjectsVersion6() {
 			}
 
 
-			const Vector<String>* subGroups = tanotmp->getExperimentalSubGroupTitles();
+			Vector<String>* subGroups = tanotmp->getExperimentalSubGroupTitles();
 
 			for(int i=0; i<subGroups->size(); i++) {
 				String subGroupTitle = subGroups->get(i).toLowerCase();
@@ -333,7 +333,7 @@ void ObjectVersionUpdateManager::updateTangibleObjectsVersion6() {
 
 				SharedObjectTemplate *tmpl = templateMap.get(hash);
 
-				if(tmpl == nullptr) {
+				if(tmpl == NULL) {
 					info("Null shared object template from loot template" + lootTmpl->getDirectObjectTemplate(), false);
 					continue;
 				}
@@ -356,7 +356,7 @@ void ObjectVersionUpdateManager::updateTangibleObjectsVersion6() {
 		while (iterator.getNextKeyAndValue(objectID, &objectData)) {
 
 			int useCount = 0;
-			uint32 objCRC = 0;
+			uint objCRC = 0;
 			AbilityListMigrator abilityList;
 
 			String className;
@@ -374,7 +374,7 @@ void ObjectVersionUpdateManager::updateTangibleObjectsVersion6() {
 			try {
 				if (className == "PlayerObject") {
 
-					ObjectOutputStream *abilityListChanges = nullptr;
+					ObjectOutputStream *abilityListChanges = NULL;
 					if (Serializable::getVariable<AbilityListMigrator>(STRING_HASHCODE("PlayerObject.abilityList"), &abilityList, &objectData)) {
 						Vector<String> *abilities = &(abilityList.names);
 						int size = abilityList.names.size();
@@ -403,18 +403,18 @@ void ObjectVersionUpdateManager::updateTangibleObjectsVersion6() {
 					if(Serializable::getVariable<int>(STRING_HASHCODE("PlayerObject.pvpRating"), &dummyPVPRating, &objectData)) {
 						ObjectInputStream* inputStream = &objectData;
 
-						if(abilityListChanges != nullptr) {
+						if(abilityListChanges != NULL) {
 							inputStream = new ObjectInputStream(abilityListChanges->getBuffer(), abilityListChanges->size());
 							delete abilityListChanges;
 						}
 
 						ObjectOutputStream *pvpUpdate = changeVariableData(STRING_HASHCODE("PlayerObject.pvpRating"), inputStream, &pvpRatingData);
 						pvpUpdate->reset();
-						database->putData(objectID, pvpUpdate, nullptr);
+						database->putData(objectID, pvpUpdate, NULL);
 
 					} else {
-						if(abilityListChanges != nullptr) {
-							database->putData(objectID, abilityListChanges, nullptr);
+						if(abilityListChanges != NULL) {
+							database->putData(objectID, abilityListChanges, NULL);
 						}
 						info("PlayerObject.pvpRating does not exist for " + String::valueOf(objectID), true);
 					}
@@ -429,7 +429,7 @@ void ObjectVersionUpdateManager::updateTangibleObjectsVersion6() {
 
 			try {
 				if (!Serializable::getVariable<int>(STRING_HASHCODE("TangibleObject.useCount"), &useCount, &objectData) ||
-						!Serializable::getVariable<uint32>(STRING_HASHCODE("SceneObject.serverObjectCRC"), &objCRC, &objectData)) {
+						!Serializable::getVariable<uint>(STRING_HASHCODE("SceneObject.serverObjectCRC"), &objCRC, &objectData)) {
 					objectData.clear();
 					continue;
 				}
@@ -449,7 +449,7 @@ void ObjectVersionUpdateManager::updateTangibleObjectsVersion6() {
 					data.writeInt(0);
 					ObjectOutputStream* test = changeVariableData(STRING_HASHCODE("TangibleObject.useCount"), &objectData, &data);
 					test->reset();
-					database->putData(objectID, test, nullptr);
+					database->putData(objectID, test, NULL);
 
 				}
 			}
@@ -509,7 +509,7 @@ void ObjectVersionUpdateManager::updateStructurePermissionLists() {
 
 						ObjectOutputStream* test = changeVariableData(STRING_HASHCODE("StructureObject.structurePermissionList"), &objectData, &newOutputStream);
 						test->reset();
-						database->putData(objectID, test, nullptr);
+						database->putData(objectID, test, NULL);
 					} else {
 						info("ERROR unable to get structurePermissionList for structure " + String::valueOf(objectID),true);
 					}
@@ -607,13 +607,13 @@ void ObjectVersionUpdateManager::setResidence(uint64 buildingID, bool isResidenc
 				if ( !Serializable::getVariable<bool>(STRING_HASHCODE("BuildingObject.isOwnerResidence"), &isResidence, &objectData)){
 					//info("setResidence() adding the variable",true);
 					ObjectOutputStream* newVariableData = addVariable("BuildingObject.isOwnerResidence", &objectData, &newResidenceValue);
-					database->putData(buildingID, newVariableData, nullptr);
+					database->putData(buildingID, newVariableData, NULL);
 
 				} else {
 					//info("setResidence() has variable and value = " + String::valueOf(isResidence) +  " ... changing it",true);
 					ObjectOutputStream* test = changeVariableData(STRING_HASHCODE("BuildingObject.isOwnerResidence"), &objectData, &newResidenceValue);
 					test->reset();
-					database->putData(buildingID, test, nullptr);
+					database->putData(buildingID, test, NULL);
 				}
 
 			}
@@ -665,7 +665,7 @@ void ObjectVersionUpdateManager::updateCityTreasury(){
 					TypeInfo<float>::toBinaryStream(&floatFunds, &newFunds );
 					ObjectOutputStream* test = changeVariableData(STRING_HASHCODE("CityRegion.cityTreasury"), &objectData, &newFunds);
 					test->reset();
-					database->putData(objectID, test, nullptr);
+					database->putData(objectID, test, NULL);
 
 
 				} else {
@@ -725,7 +725,7 @@ void ObjectVersionUpdateManager::updateCityTreasuryToDouble(){
 					TypeInfo<double>::toBinaryStream(&floatFunds, &newFunds );
 					ObjectOutputStream* test = changeVariableData(STRING_HASHCODE("CityRegion.cityTreasury"), &objectData, &newFunds);
 					test->reset();
-					database->putData(objectID, test, nullptr);
+					database->putData(objectID, test, NULL);
 
 
 				} else {

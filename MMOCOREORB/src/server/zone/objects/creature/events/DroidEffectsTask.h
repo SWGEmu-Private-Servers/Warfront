@@ -16,7 +16,7 @@ namespace events {
 
 class DroidEffectsTask : public Task, public Logger {
 
-	Reference<DroidEffectsModuleDataComponent*> module;
+	ManagedReference<DroidEffectsModuleDataComponent*> module;
 
 public:
 	DroidEffectsTask(DroidEffectsModuleDataComponent* module) : Task() {
@@ -25,7 +25,7 @@ public:
 
 	void run() {
 
-		if( module == nullptr || module->getDroidObject() == nullptr ){
+		if( module == NULL || module->getDroidObject() == NULL ){
 			return;
 		}
 
@@ -40,10 +40,10 @@ public:
 		}
 
 		// Check if droid is spawned
-		if( droid->getLocalZone() == nullptr ){  // Not outdoors
+		if( droid->getLocalZone() == NULL ){  // Not outdoors
 
 			ManagedReference<SceneObject*> parent = droid->getParent().get();
-			if( parent == nullptr || !parent->isCellObject() ){ // Not indoors either
+			if( parent == NULL || !parent->isCellObject() ){ // Not indoors either
 				droid->removePendingTask("droid_effects");
 				return;
 			}

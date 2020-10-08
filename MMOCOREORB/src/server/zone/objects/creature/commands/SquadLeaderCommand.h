@@ -35,15 +35,15 @@ public:
 	}
 
 	bool checkGroupLeader(CreatureObject* player, GroupObject* group) const {
-		if (player == nullptr)
+		if (player == NULL)
 			return false;
 
-		if (group == nullptr) {
+		if (group == NULL) {
 			player->sendSystemMessage("@error_message:not_grouped");
 			return false;
 		}
 
-		if (group->getLeader() == nullptr) {
+		if (group->getLeader() == NULL) {
 			player->sendSystemMessage("@error_message:not_group_leader");
 			return false;
 		}
@@ -80,7 +80,7 @@ public:
 			targetCreo = target->getLinkedCreature().get();
 
 		PlayerObject* ghost = targetCreo->getPlayerObject();
-		if (ghost == nullptr || ghost->hasBhTef())
+		if (ghost == NULL || (ghost->hasBhTef() && !ghost->hasPvpTef()))
 			return false;
 
 		uint32 leaderFaction = leader->getFaction();
@@ -105,11 +105,11 @@ public:
 	}
 
 /*	bool shoutCommand(CreatureObject* player, GroupObject* group) {
-		if (player == nullptr || group == nullptr)
+		if (player == NULL || group == NULL)
 			return false;
 
 		ManagedReference<ChatManager*> chatManager = server->getChatManager();
-		if (chatManager == nullptr)
+		if (chatManager == NULL)
 			return false;
 
 		if (!player->getPlayerObject()->hasCommandMessageString(actionCRC))
@@ -123,16 +123,18 @@ public:
 */
 
 	float calculateGroupModifier(GroupObject* group) const {
-		if (group == nullptr)
+		if (group == NULL)
 			return 0;
 
-		float modifier = 1.0f + ((float)(group->getGroupSize()) / 20.0f);
+		float modifier = (float)(group->getGroupSize()) / 10.0f;
+			if (modifier < 1.0)
+				modifier += 1.0f;
 
 			return modifier;
 	}
 
 	bool inflictHAM(CreatureObject* player, int health, int action, int mind) const {
-		if (player == nullptr)
+		if (player == NULL)
 			return false;
 
 		if (health < 0 || action < 0 || mind < 0)
@@ -154,7 +156,7 @@ public:
 	}
 
 	void sendCombatSpam(CreatureObject* player) const {
-		if (player == nullptr)
+		if (player == NULL)
 			return;
 
 		if (combatSpam == "")

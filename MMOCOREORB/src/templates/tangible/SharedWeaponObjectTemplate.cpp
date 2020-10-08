@@ -43,7 +43,7 @@ void SharedWeaponObjectTemplate::parseFileData(IffStream* iffStream) {
 	//while (iffStream->getRemainingSubChunksNumber() > 0) {
 		Chunk* chunk = iffStream->openChunk('XXXX');
 
-		if (chunk == nullptr)
+		if (chunk == NULL)
 			continue;
 
 		String varName;

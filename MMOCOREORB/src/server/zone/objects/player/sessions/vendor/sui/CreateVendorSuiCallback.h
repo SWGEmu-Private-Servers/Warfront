@@ -30,7 +30,7 @@ public:
 		ManagedReference<Facade*> facade = player->getActiveSession(SessionFacadeType::CREATEVENDOR);
 		ManagedReference<CreateVendorSession*> session = dynamic_cast<CreateVendorSession*>(facade.get());
 
-		if (session == nullptr)
+		if (session == NULL)
 			return;
 
 		if (cancelPressed) {

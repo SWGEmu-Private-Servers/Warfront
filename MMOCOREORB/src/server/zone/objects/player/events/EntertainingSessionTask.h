@@ -29,7 +29,7 @@ public:
 	void run() {
 		ManagedReference<EntertainingSession*> strongRef = session.get();
 
-		if (strongRef == nullptr)
+		if (strongRef == NULL)
 			return;
 
 		strongRef->activateAction();

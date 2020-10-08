@@ -19,20 +19,20 @@ void TicketCollectorImplementation::fillObjectMenuResponse(ObjectMenuResponse* m
 	if (JediManager::instance()->getJediProgressionType() == JediManager::VILLAGEJEDIPROGRESSION) {
 		Zone* thisZone = getZone();
 
-		if (thisZone == nullptr)
+		if (thisZone == NULL)
 			return;
 
 		ManagedReference<PlanetManager*> pMan = thisZone->getPlanetManager();
 
-		if (pMan == nullptr)
+		if (pMan == NULL)
 			return;
 
 		PlanetTravelPoint* ptp = pMan->getNearestPlanetTravelPoint(_this.getReferenceUnsafeStaticCast(), 64.f);
 
-		if (ptp != nullptr && ptp->isInterplanetary()) {
+		if (ptp != NULL && ptp->isInterplanetary()) {
 			PlayerObject* ghost = player->getPlayerObject();
 
-			if (ghost != nullptr && ghost->hasActiveQuestBitSet(PlayerQuestData::FS_CRAFTING4_QUEST_03) && !ghost->hasCompletedQuestsBitSet(PlayerQuestData::FS_CRAFTING4_QUEST_03))
+			if (ghost != NULL && ghost->hasActiveQuestBitSet(PlayerQuestData::FS_CRAFTING4_QUEST_03) && !ghost->hasCompletedQuestsBitSet(PlayerQuestData::FS_CRAFTING4_QUEST_03))
 				menuResponse->addRadialMenuItem(193, 3, "@quest/force_sensitive/fs_crafting:tracking_data_menu_obtain_data"); // Obtain Satellite Data
 		}
 	}
@@ -44,20 +44,20 @@ int TicketCollectorImplementation::handleObjectMenuSelect(CreatureObject* player
 	} else if (selectedID == 193 && JediManager::instance()->getJediProgressionType() == JediManager::VILLAGEJEDIPROGRESSION) {
 		Zone* thisZone = getZone();
 
-		if (thisZone == nullptr)
+		if (thisZone == NULL)
 			return 0;
 
 		ManagedReference<PlanetManager*> planetManager = thisZone->getPlanetManager();
 
-		if (planetManager == nullptr)
+		if (planetManager == NULL)
 			return 0;
 
 		PlanetTravelPoint* ptp = planetManager->getNearestPlanetTravelPoint(_this.getReferenceUnsafeStaticCast(), 64.f);
 
-		if (ptp != nullptr && ptp->isInterplanetary()) {
+		if (ptp != NULL && ptp->isInterplanetary()) {
 			PlayerObject* ghost = player->getPlayerObject();
 
-			if (ghost != nullptr && ghost->hasActiveQuestBitSet(PlayerQuestData::FS_CRAFTING4_QUEST_03) && !ghost->hasCompletedQuestsBitSet(PlayerQuestData::FS_CRAFTING4_QUEST_03)) {
+			if (ghost != NULL && ghost->hasActiveQuestBitSet(PlayerQuestData::FS_CRAFTING4_QUEST_03) && !ghost->hasCompletedQuestsBitSet(PlayerQuestData::FS_CRAFTING4_QUEST_03)) {
 				Lua* lua = DirectorManager::instance()->getLuaInstance();
 				Reference<LuaFunction*> luaObtainData = lua->createFunction("FsCrafting4", "obtainSatelliteData", 0);
 				*luaObtainData << player;

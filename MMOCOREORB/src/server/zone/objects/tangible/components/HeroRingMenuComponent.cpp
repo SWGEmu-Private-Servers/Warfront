@@ -12,12 +12,12 @@ void HeroRingMenuComponent::fillObjectMenuResponse(SceneObject* sceneObject, Obj
 
 	TangibleObject* ring = cast<TangibleObject*>(sceneObject);
 
-	if (ring == nullptr)
+	if (ring == NULL)
 		return;
 
 	HeroRingDataComponent* data = cast<HeroRingDataComponent*>(ring->getDataObjectComponent()->get());
 
-	if (data == nullptr || !data->isHeroRingData())
+	if (data == NULL || !data->isHeroRingData())
 		return;
 
 	if (data->getCharges() > 0)
@@ -34,12 +34,12 @@ int HeroRingMenuComponent::handleObjectMenuSelect(SceneObject* sceneObject, Crea
 
 		WearableObject* wearable = cast<WearableObject*>(sceneObject);
 
-		if (wearable == nullptr)
+		if (wearable == NULL)
 			return 0;
 
 		HeroRingDataComponent* data = cast<HeroRingDataComponent*>(wearable->getDataObjectComponent()->get());
 
-		if (data == nullptr || !data->isHeroRingData())
+		if (data == NULL || !data->isHeroRingData())
 			return 0;
 
 		int charges = data->getCharges();
@@ -58,7 +58,7 @@ int HeroRingMenuComponent::handleObjectMenuSelect(SceneObject* sceneObject, Crea
 		}
 
 		if (!player->checkCooldownRecovery("mark_of_hero")) {
-			const Time* timeRemaining = player->getCooldownTime("mark_of_hero");
+			Time* timeRemaining = player->getCooldownTime("mark_of_hero");
 			StringIdChatParameter cooldown("quest/hero_of_tatooine/system_messages", "restore_not_yet");
 			cooldown.setTO(getCooldownString(timeRemaining->miliDifference() * -1));
 			player->sendSystemMessage(cooldown);
@@ -68,16 +68,16 @@ int HeroRingMenuComponent::handleObjectMenuSelect(SceneObject* sceneObject, Crea
 		player->healDamage(player, CreatureAttribute::HEALTH, 200);
 		player->healDamage(player, CreatureAttribute::ACTION, 200);
 		player->healDamage(player, CreatureAttribute::MIND, 200);
-
+		
 		player->removeFeignedDeath();
 
 		data->setCharges(charges - 1);
 
 		String hardpoint = "";
 
-		if (player->getSlottedObject("ring_r") != nullptr && player->getSlottedObject("ring_r")->getObjectID() == sceneObject->getObjectID())
+		if (player->getSlottedObject("ring_r") != NULL && player->getSlottedObject("ring_r")->getObjectID() == sceneObject->getObjectID())
 			hardpoint = "hold_r";
-		else if (player->getSlottedObject("ring_l") != nullptr && player->getSlottedObject("ring_l")->getObjectID() == sceneObject->getObjectID())
+		else if (player->getSlottedObject("ring_l") != NULL && player->getSlottedObject("ring_l")->getObjectID() == sceneObject->getObjectID())
 			hardpoint = "hold_l";
 
 		PlayClientEffectObjectMessage* effect = new PlayClientEffectObjectMessage(player, "clienteffect/item_ring_hero_mark.cef", hardpoint);

@@ -10,7 +10,6 @@ import server.zone.objects.creature.buffs.Buff;
 include server.zone.managers.object.ObjectManager;
 import server.zone.objects.creature.buffs.SingleUseBuffObserver;
 
-@json
 class SingleUseBuff extends Buff {
 	protected SingleUseBuffObserver observer;
 	protected CreatureObject player;

@@ -29,7 +29,7 @@ int InsuranceTerminalMenuComponent::handleObjectMenuSelect(SceneObject* sceneObj
 
 	ManagedReference<CityRegion* > region = sceneObject->getCityRegion().get();
 
-	if (region != nullptr) {
+	if (region != NULL) {
 		if (region->isBanned(player->getObjectID())) {
 				player->sendSystemMessage("@city/city:banned_services"); // You are banned from using this city's services.
 				return 0;
@@ -69,7 +69,7 @@ int InsuranceTerminalMenuComponent::handleObjectMenuSelect(SceneObject* sceneObj
 		for (int i = 0; i < insurableItems.size(); i++) {
 			SceneObject* item = insurableItems.get(i);
 
-			if (item != nullptr)
+			if (item != NULL)
 				suiInsuranceMenuBox->addMenuItem(item->getDisplayedName(), item->getObjectID());
 		}
 

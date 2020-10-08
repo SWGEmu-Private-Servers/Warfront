@@ -141,7 +141,7 @@ public:
 
 		Reference<ConversationOption*> opt = options.get(idx);
 
-		if (opt != nullptr)
+		if (opt != NULL)
 			text = opt->getOptionText().getFullPath();
 
 		return text;
@@ -152,7 +152,7 @@ public:
 
 		Reference<ConversationOption*> opt = options.get(idx);
 
-		if (opt != nullptr)
+		if (opt != NULL)
 			link = opt->getLinkedScreenID();
 
 		return link;
@@ -181,7 +181,7 @@ public:
 		for (int i = 0; i < options.size(); ++i) {
 			Reference<ConversationOption*> option = options.get(i);
 
-			if (option == nullptr)
+			if (option == NULL)
 				continue;
 
 			optionsList->insertOption(option->getDisplayedName());
@@ -199,11 +199,11 @@ public:
 		if (stopConversation) {
 			player->sendMessage(new StopNpcConversation(player, npc->getObjectID()));
 			npc->notifyObservers(ObserverEventType::STOPCONVERSATION, player);
-			screenToSave = nullptr;
+			screenToSave = NULL;
 		}
 
 		Reference<ConversationSession*> session = player->getActiveSession(SessionFacadeType::CONVERSATION).castTo<ConversationSession* >();
-		if (session != nullptr) {
+		if (session != NULL) {
 			session->setLastConversationScreen(screenToSave);
 		}
 	}
@@ -234,7 +234,7 @@ public:
 			String optionString = luaObj.getStringAt(1);
 			String linkedId = luaObj.getStringAt(2);
 
-			Reference<ConversationOption*> option = nullptr;
+			Reference<ConversationOption*> option = NULL;
 
 			if (optionString.beginsWith("@"))
 				option = new ConversationOption(StringIdChatParameter(optionString), linkedId);

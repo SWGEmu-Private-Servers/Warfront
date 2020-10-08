@@ -32,19 +32,19 @@ public:
 
 		ManagedReference<FireworkObject*> firework = (server->getObject(fireworkObjectID)).castTo<FireworkObject*>();
 
-		if (firework == nullptr || !firework->isFireworkObject())
+		if (firework == NULL || !firework->isFireworkObject())
 			return;
 
 		Locker clocker(firework, player);
 
 		ManagedReference<SceneObject*> fireworkShow = suiBox->getUsingObject().get();
 
-		if (fireworkShow == nullptr || !fireworkShow->isFireworkObject())
+		if (fireworkShow == NULL || !fireworkShow->isFireworkObject())
 			return;
 
 		DataObjectComponent* data = fireworkShow->getDataObjectComponent()->get();
 
-		if(data == nullptr || !data->isFireworkShowData())
+		if(data == NULL || !data->isFireworkShowData())
 			return;
 
 		FireworkShowDataComponent* fireworkShowData = cast<FireworkShowDataComponent*>(data);
@@ -54,7 +54,7 @@ public:
 		if(firework->getUseCount() > 1) {
 			ObjectManager* objectManager = ObjectManager::instance();
 			ManagedReference<TangibleObject*> clone = cast<TangibleObject*>( objectManager->cloneObject(firework));
-			if(clone == nullptr)
+			if(clone == NULL)
 				return;
 
 			Locker locker(clone);
@@ -63,7 +63,7 @@ public:
 				clone->removeAntiDecayKit();
 			}
 
-			clone->setParent(nullptr);
+			clone->setParent(NULL);
 			clone->setUseCount(1, false);
 			firework->decreaseUseCount();
 			firework->broadcastObject(clone, true);
@@ -78,7 +78,7 @@ public:
 
 		ManagedReference<TangibleObject*> fireworkShowObject = fireworkShow.castTo<TangibleObject*>();
 
-		if (fireworkShowObject != nullptr ) {
+		if (fireworkShowObject != NULL ) {
 			Locker locker(fireworkShowObject);
 			fireworkShowObject->setUseCount(fireworkShowObject->getUseCount() + 1, true);
 		}

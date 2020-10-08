@@ -25,12 +25,12 @@ public:
 		ManagedReference<CreatureObject*> player = play.get();
 		ManagedReference<SceneObject*> hqTerminal = terminal.get();
 
-		if (gcwManager == nullptr || buildingObject == nullptr || hqTerminal == nullptr || player == nullptr)
+		if (gcwManager == NULL || buildingObject == NULL || hqTerminal == NULL || player == NULL)
 			return;
 
 		ManagedReference<PlayerObject* > ghost = player->getPlayerObject();
 
-		if (ghost == nullptr)
+		if (ghost == NULL)
 			return;
 
 		Locker locker(player);
@@ -51,7 +51,7 @@ public:
 		if (ghost->hasSuiBoxWindowType(SuiWindowType::HQ_TERMINAL))
 			ghost->closeSuiWindowType(SuiWindowType::HQ_TERMINAL);
 
-		Observer* shutdownObserver = nullptr;
+		Observer* shutdownObserver = NULL;
 		SortedVector<ManagedReference<Observer* > > observers = player->getObservers(ObserverEventType::PARENTCHANGED);
 
 		for (int i = 0; i < observers.size(); i++) {
@@ -63,7 +63,7 @@ public:
 			}
 		}
 
-		if (shutdownObserver != nullptr) {
+		if (shutdownObserver != NULL) {
 			player->dropObserver(ObserverEventType::PARENTCHANGED, shutdownObserver);
 			player->dropObserver(ObserverEventType::OBJECTDESTRUCTION, shutdownObserver);
 		}

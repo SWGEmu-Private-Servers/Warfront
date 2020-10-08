@@ -30,7 +30,7 @@ public:
 		uint64 targetid = creature->getTargetID();
 		ManagedReference<SceneObject*> obj = playerManager->getInRangeStructureWithAdminRights(creature, targetid);
 
-		if (obj == nullptr || !obj->isStructureObject())
+		if (obj == NULL || !obj->isStructureObject())
 			return INVALIDTARGET;
 
 		StructureObject* structure = cast<StructureObject*>( obj.get());

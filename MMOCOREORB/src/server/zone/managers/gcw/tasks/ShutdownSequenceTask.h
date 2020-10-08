@@ -30,7 +30,7 @@ public:
 
 	void run() {
 
-		if (buildingObject == nullptr || gcwManager == nullptr  )
+		if (buildingObject == NULL || gcwManager == NULL  )
 			return;
 
 		if(bDestruction)

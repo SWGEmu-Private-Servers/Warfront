@@ -97,7 +97,7 @@ public:
 		return id;
 	}*/
 
-	uint32 getID() const;
+	uint32 getID();
 
 	inline Vector3 getPosition() const {
 		return Vector3(x, y, z);
@@ -111,7 +111,7 @@ public:
 		return type;
 	}
 
-	const Vector<PathNode*>* getNeighbors() const {
+	Vector<PathNode*>* getNeighbors() {
 		return &children;
 	}
 
@@ -119,7 +119,7 @@ public:
 		return globalGraphNodeID;
 	}
 
-	inline const PathGraph* getPathGraph() const {
+	inline PathGraph* getPathGraph() {
 		return pathGraph;
 	}
 

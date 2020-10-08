@@ -60,7 +60,7 @@ public:
 	void run() {
 		ManagedReference<ZoneClientSession*> session = client.get();
 
-		if (session == nullptr)
+		if (session == NULL)
 			return;
 
 		ConnectionServerLagResponse* connectionServer = new ConnectionServerLagResponse();

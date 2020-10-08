@@ -40,10 +40,10 @@ public:
 
 	~MapFractal() {
 		delete noise;
-		noise = nullptr;
+		noise = NULL;
 
 		delete rand;
-		rand = nullptr;
+		rand = NULL;
 	}
 
 	void parseFromIffStream(engine::util::IffStream* iffStream);

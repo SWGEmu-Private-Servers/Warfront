@@ -13,14 +13,14 @@
 #include "../affectors/AffectorRiver.h"
 #include "Boundary.h"
 
-class BoundaryPolyline : public Boundary {
+class BoundaryPolyline : public ProceduralRule<'BPLN'>,  public Boundary {
 	Vector<Point2D*> points;
 	float lineWidth;
 
 	float minX, minY, maxX, maxY;
 
 public:
-	BoundaryPolyline() : Boundary('BPLN'), lineWidth(0) {
+	BoundaryPolyline() : lineWidth(0) {
 		//ruleType = BOUNDARYPOLYLINE;
 
 		minX = 800000000;
@@ -35,7 +35,7 @@ public:
 			delete points.get(i);
 	}
 
-	void parseFromIffStream(engine::util::IffStream* iffStream) override {
+	void parseFromIffStream(engine::util::IffStream* iffStream) {
 		uint32 version = iffStream->getNextFormType();
 
 		iffStream->openForm(version);
@@ -52,7 +52,7 @@ public:
 		iffStream->closeForm(version);
 	}
 
-	float checkInfluence(float x, float y) const final {
+	float checkInfluence(float x, float y) {
 		return 0;
 	}
 
@@ -80,7 +80,7 @@ public:
 		initialize();
 	}
 
-	void translateBoundary(float x, float y) final {
+	void translateBoundary(float x, float y) {
 		minX = 800000000;
 		minY = 800000000;
 
@@ -135,11 +135,7 @@ public:
 		maxY = maxY + lineWidth;
 	}
 
-	bool containsPoint(float x, float y) const final {
-		return process(x, y) != 0;
-	}
-
-	float process(float x, float y) const final {
+	float process(float x, float y) {
 		if (x < minX)
 			return 0.0;
 
@@ -207,22 +203,25 @@ public:
 		return result;
 	}
 
-	float getMinX() const final {
+	float getMinX() const {
 		return minX;
 	}
 
-	float getMaxX() const final {
+	float getMaxX() const {
 		return maxX;
 	}
 
-	float getMinY() const final {
+	float getMinY() const {
 		return minY;
 	}
 
-	float getMaxY() const final {
+	float getMaxY() const {
 		return maxY;
 	}
 
+	bool isEnabled() {
+		return informationHeader.isEnabled();
+	}
 };
 
 

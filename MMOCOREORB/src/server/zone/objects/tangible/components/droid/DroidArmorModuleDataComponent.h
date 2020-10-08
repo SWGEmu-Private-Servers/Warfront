@@ -24,7 +24,7 @@ public:
 
 	~DroidArmorModuleDataComponent();
 
-	String getModuleName() const;
+	String getModuleName();
 
 	void initializeTransientMembers();
 
@@ -34,9 +34,9 @@ public:
 
 	int getBatteryDrain();
 
-	String toString() const;
+	String toString();
 
-    	bool isStackable() { return true; }
+    bool isStackable() { return true; }
 
 	void updateCraftingValues(CraftingValues* values, bool firstUpdate);
 

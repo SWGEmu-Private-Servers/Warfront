@@ -21,37 +21,34 @@ public:
 
 	void run() {
 
-		if (terminal == nullptr || gcwManager == nullptr || creature == nullptr)
-			return;
-
-		ManagedReference<BuildingObject*> building = terminal->getParentRecursively(SceneObjectType::FACTIONBUILDING).castTo<BuildingObject*>();
-
-		if (building == nullptr)
-			return;
-
-		DataObjectComponentReference* data = building->getDataObjectComponent();
-
-		if (data == nullptr)
-			return;
-
-		DestructibleBuildingDataComponent* baseData = cast<DestructibleBuildingDataComponent*>(data->get());
-
-		if (baseData == nullptr)
+		if (terminal == NULL || gcwManager == NULL || creature == NULL)
 			return;
 
 		if (creature->isDead() || creature->isIncapacitated()) {
 			creature->sendSystemMessage("You cannot repair the terminal in your current state. Aborting repairs...");
-			baseData->setTerminalBeingRepaired(false);
 			return;
 		} else if (creature->isInCombat()) {
 			creature->sendSystemMessage("You cannot slice the terminal while you are in combat!");
-			baseData->setTerminalBeingRepaired(false);
 			return;
 		} else if (creature->getParentID() != terminal->getParentID()) {
 			creature->sendSystemMessage("You cannot repair the terminal from that distance. Aborting repairs...");
-			baseData->setTerminalBeingRepaired(false);
 			return;
 		}
+
+		ManagedReference<BuildingObject*> building = terminal->getParentRecursively(SceneObjectType::FACTIONBUILDING).castTo<BuildingObject*>();
+
+		if (building == NULL)
+			return;
+
+		DataObjectComponentReference* data = building->getDataObjectComponent();
+
+		if (data == NULL)
+			return;
+
+		DestructibleBuildingDataComponent* baseData = cast<DestructibleBuildingDataComponent*>(data->get());
+
+		if (baseData == NULL)
+			return;
 
 		int maxDecrease = 1;
 

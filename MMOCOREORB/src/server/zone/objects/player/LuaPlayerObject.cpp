@@ -15,7 +15,6 @@
 #include "server/zone/managers/skill/SkillManager.h"
 #include "server/zone/Zone.h"
 #include "server/zone/objects/region/CityRegion.h"
-#include "server/zone/objects/player/sessions/SlicingSession.h"
 
 const char LuaPlayerObject::className[] = "LuaPlayerObject";
 
@@ -79,9 +78,6 @@ Luna<LuaPlayerObject>::RegType LuaPlayerObject::Register[] = {
 		{ "setFrsRank", &LuaPlayerObject::setFrsRank },
 		{ "getFrsRank", &LuaPlayerObject::getFrsRank },
 		{ "getFrsCouncil", &LuaPlayerObject::getFrsCouncil },
-		{ "startSlicingSession", &LuaPlayerObject::startSlicingSession },
-		{ "setVisibility", &LuaPlayerObject::setVisibility },
-		{ "getPlayedTimeString", &LuaPlayerObject::getPlayedTimeString },
 		{ 0, 0 }
 };
 
@@ -90,7 +86,7 @@ LuaPlayerObject::LuaPlayerObject(lua_State *L) : LuaIntangibleObject(L) {
 #ifdef DYNAMIC_CAST_LUAOBJECTS
 	realObject = dynamic_cast<PlayerObject*>(_getRealSceneObject());
 
-	E3_ASSERT(!_getRealSceneObject() || realObject != nullptr);
+	assert(!_getRealSceneObject() || realObject != nullptr);
 #else
 	realObject = reinterpret_cast<PlayerObject*>(lua_touserdata(L, 1));
 #endif
@@ -105,7 +101,7 @@ int LuaPlayerObject::_setObject(lua_State* L) {
 #ifdef DYNAMIC_CAST_LUAOBJECTS
 	realObject = dynamic_cast<PlayerObject*>(_getRealSceneObject());
 
-	E3_ASSERT(!_getRealSceneObject() || realObject != nullptr);
+	assert(!_getRealSceneObject() || realObject != nullptr);
 #else
 	realObject = (PlayerObject*)lua_touserdata(L, -1);
 #endif
@@ -339,7 +335,7 @@ int LuaPlayerObject::addHologrindProfession(lua_State* L){
 }
 
 int LuaPlayerObject::getHologrindProfessions(lua_State* L) {
-	const Vector<byte>* professions = realObject->getHologrindProfessions();
+	Vector<byte>* professions = realObject->getHologrindProfessions();
 
 	lua_newtable(L);
 
@@ -585,7 +581,7 @@ int LuaPlayerObject::closeSuiWindowType(lua_State* L) {
 }
 
 int LuaPlayerObject::getExperienceList(lua_State* L) {
-	const DeltaVectorMap<String, int>* expList = realObject->getExperienceList();
+	DeltaVectorMap<String, int>* expList = realObject->getExperienceList();
 
 	lua_newtable(L);
 
@@ -669,15 +665,6 @@ int LuaPlayerObject::setFrsCouncil(lua_State* L) {
 	return 0;
 }
 
-int LuaPlayerObject::setVisibility(lua_State* L) {
-	int visValue = lua_tointeger(L, -1);
-
-	realObject->setVisibility(visValue);
-
-	return 0;
-}
-
-
 int LuaPlayerObject::setFrsRank(lua_State* L) {
 	int rank = lua_tointeger(L, -1);
 
@@ -706,47 +693,6 @@ int LuaPlayerObject::getFrsCouncil(lua_State* L) {
 	FrsData* frsData = realObject->getFrsData();
 
 	lua_pushinteger(L, frsData->getCouncilType());
-
-	return 1;
-}
-
-int LuaPlayerObject::startSlicingSession(lua_State* L) {
-	TangibleObject* objToSlice = (TangibleObject*) lua_touserdata(L, -2);
-	bool isKeypadSlice = lua_toboolean(L, -1);
-
-	if (objToSlice == nullptr)
-		return 0;
-
-	ManagedReference<CreatureObject*> player = realObject->getParentRecursively(SceneObjectType::PLAYERCREATURE).castTo<CreatureObject*>();
-
-	if (player == nullptr)
-		return 0;
-
-	if (player->containsActiveSession(SessionFacadeType::SLICING)) {
-		player->sendSystemMessage("@slicing/slicing:already_slicing");
-		return 0;
-	}
-
-	//Create Session
-	ManagedReference<SlicingSession*> session = new SlicingSession(player);
-	session->setKeypadSlice(isKeypadSlice);
-	session->initalizeSlicingMenu(player, objToSlice);
-
-	return 0;
-}
-
-int LuaPlayerObject::getPlayedTimeString(lua_State* L) {
-	int argc = lua_gettop(L) - 1;
-
-	bool verbose = false;
-
-	if (argc == 1) {
-		verbose = lua_toboolean(L, -1);
-	}
-
-	Locker locker(realObject);
-
-	lua_pushstring(L, realObject->getPlayedTimeString(verbose).toCharArray());
 
 	return 1;
 }

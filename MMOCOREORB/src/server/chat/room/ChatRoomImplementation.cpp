@@ -22,14 +22,14 @@ void ChatRoomImplementation::init(ZoneServer* serv, ChatRoom* parent, const Stri
 	name = roomName;
 	roomID = Long::hashCode(_this.getReferenceUnsafeStaticCast()->_getObjectID());
 
-	if (parent != nullptr) {
+	if (parent != NULL) {
 		parentRoomID = parent->getRoomID();
 		fullPath = parent->getFullPath() + "." + roomName;
 	} else
 		fullPath = roomName;
 
 	playerList.setNoDuplicateInsertPlan();
-	playerList.setNullValue(nullptr);
+	playerList.setNullValue(NULL);
 
 	invitedList.setNoDuplicateInsertPlan();
 	moderatorList.setNoDuplicateInsertPlan();
@@ -63,12 +63,12 @@ void ChatRoomImplementation::addPlayer(CreatureObject* player) {
 }
 
 void ChatRoomImplementation::removePlayer(CreatureObject* player, bool disconnecting) {
-	if (player == nullptr)
+	if (player == NULL)
 		return;
 
 	if (!disconnecting) {
 		ManagedReference<PlayerObject*> ghost = player->getPlayerObject();
-		if (ghost != nullptr)
+		if (ghost != NULL)
 			ghost->removeChatRoom(getRoomID());
 	}
 
@@ -82,13 +82,13 @@ void ChatRoomImplementation::removeAllPlayers() {
 	//Room prelocked
 	for (int i = 0; i < playerList.size(); i++) {
 		ManagedReference<CreatureObject*> player = playerList.get(i);
-		if (player == nullptr)
+		if (player == NULL)
 			continue;
 
 		Locker clocker(player, _this.getReferenceUnsafeStaticCast());
 
 		PlayerObject* ghost = player->getPlayerObject();
-		if (ghost != nullptr)
+		if (ghost != NULL)
 			ghost->removeChatRoom(getRoomID());
 	}
 
@@ -105,7 +105,7 @@ void ChatRoomImplementation::broadcastMessage(BaseMessage* msg) {
 	for (int i = 0; i < playerList.size(); ++i) {
 		ManagedReference<CreatureObject*>& player = playerList.get(i);
 
-		if (player != nullptr) {
+		if (player != NULL) {
 #ifdef LOCKFREE_BCLIENT_BUFFERS
 			player->sendMessage(msg);
 #else
@@ -159,26 +159,26 @@ void ChatRoomImplementation::broadcastMessageCheckIgnore(BaseMessage* msg, const
 	PlayerManager* playerManager = server->getPlayerManager();
 	String lowerName = senderName.toLowerCase();
 
-	ManagedReference<CreatureObject*> sender = nullptr;
-	ManagedReference<PlayerObject*> senderPlayer = nullptr;
+	ManagedReference<CreatureObject*> sender = NULL;
+	ManagedReference<PlayerObject*> senderPlayer = NULL;
 
 	bool godMode = false;
 
-	if (playerManager == nullptr) {
+	if (playerManager == NULL) {
 		delete msg;
 		return;
 	}
 
 	sender = playerManager->getPlayer(lowerName);
 
-	if (sender == nullptr) {
+	if (sender == NULL) {
 		delete msg;
 		return;
 	}
 
 	senderPlayer = sender->getPlayerObject();
 
-	if (senderPlayer == nullptr) {
+	if (senderPlayer == NULL) {
 		delete msg;
 		return;
 	}
@@ -197,7 +197,7 @@ void ChatRoomImplementation::broadcastMessageCheckIgnore(BaseMessage* msg, const
 
 		if (player != nullptr) {
 			PlayerObject* ghost = player->getPlayerObject();
-			if (ghost == nullptr)
+			if (ghost == NULL)
 				continue;
 
 			if (!ghost->isIgnoring(lowerName) || godMode) {
@@ -259,7 +259,7 @@ int ChatRoomImplementation::checkEnterPermission(CreatureObject* player) {
 
 	Locker locker(_this.getReferenceUnsafeStaticCast());
 
-	if (player == nullptr || !canEnterRoom)
+	if (player == NULL || !canEnterRoom)
 		return ChatManager::NOTINVITED;
 
 	switch (roomType) {
@@ -269,7 +269,7 @@ int ChatRoomImplementation::checkEnterPermission(CreatureObject* player) {
 		return ChatManager::SUCCESS;
 	case ChatRoom::GUILD: {
 		ManagedReference<GuildObject*> guild = player->getGuildObject().getReferenceUnsafeStaticCast();
-		if (guild != nullptr) {
+		if (guild != NULL) {
 			if (guild->getObjectID() == getOwnerID())
 				return ChatManager::SUCCESS;
 		}
@@ -277,7 +277,7 @@ int ChatRoomImplementation::checkEnterPermission(CreatureObject* player) {
 	}
 	case ChatRoom::GROUP: {
 		ManagedReference<GroupObject*> group = player->getGroup();
-		if (group != nullptr) {
+		if (group != NULL) {
 			if (group->getObjectID() == getOwnerID())
 				return ChatManager::SUCCESS;
 		}
@@ -285,7 +285,7 @@ int ChatRoomImplementation::checkEnterPermission(CreatureObject* player) {
 	}
 	case ChatRoom::PLANET: {
 		ManagedReference<Zone*> zone = player->getZone();
-		if (zone != nullptr) {
+		if (zone != NULL) {
 			if (zone->getObjectID() == getOwnerID())
 				return ChatManager::SUCCESS;
 		}

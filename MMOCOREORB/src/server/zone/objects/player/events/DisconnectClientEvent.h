@@ -9,9 +9,6 @@
 #define DISCONNECTCLIENTEVENT_H_
 
 #include "server/zone/objects/player/PlayerObject.h"
-#ifdef WITH_SESSION_API
-#include "server/login/SessionAPIClient.h"
-#endif // WITH_SESSION_API
 
 class DisconnectClientEvent : public Task {
 	ManagedReference<CreatureObject*> player;
@@ -31,36 +28,12 @@ public:
 	}
 
 	void run() {
-		if (player == nullptr || client == nullptr)
+		if (player == NULL || client == NULL)
 			return;
 
 		Locker _locker(player);
 
 		PlayerObject* ghost = player->getPlayerObject();
-
-		if (ghost == nullptr)
-			return;
-
-#ifdef WITH_SESSION_API
-		String eventTypeStr;
-
-		switch(eventType) {
-		case DISCONNECT:
-			eventTypeStr = "disconnect";
-			break;
-		case LOGOUT:
-			eventTypeStr = "logout";
-			break;
-		case SETLINKDEAD:
-			eventTypeStr = "setlinkdead";
-			break;
-		default:
-			eventTypeStr = "unknown_" + String::valueOf(eventType);
-			break;
-		}
-
-		SessionAPIClient::instance()->notifyDisconnectClient(client->getIPAddress(), ghost->getAccountID(), player->getObjectID(), eventTypeStr);
-#endif // WITH_SESSION_API
 
 		switch (eventType) {
 		case DISCONNECT:

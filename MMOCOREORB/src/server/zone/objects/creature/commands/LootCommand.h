@@ -8,7 +8,6 @@
 #include "server/zone/objects/scene/SceneObject.h"
 #include "server/zone/managers/player/PlayerManager.h"
 #include "server/zone/managers/group/GroupLootTask.h"
-#include "server/zone/objects/transaction/TransactionLog.h"
 
 class LootCommand : public QueueCommand {
 
@@ -35,7 +34,7 @@ public:
 
 		ManagedReference<AiAgent*> ai = server->getZoneServer()->getObject(target).castTo<AiAgent*>();
 
-		if (ai == nullptr)
+		if (ai == NULL)
 			return INVALIDTARGET;
 
 		Locker locker(ai, creature);
@@ -52,7 +51,7 @@ public:
 
 		//Get the corpse's inventory.
 		SceneObject* lootContainer = ai->getSlottedObject("inventory");
-		if (lootContainer == nullptr)
+		if (lootContainer == NULL)
 			return GENERALERROR;
 
 		//Determine the loot rights.
@@ -65,14 +64,8 @@ public:
 				PlayerManager* playerManager = server->getZoneServer()->getPlayerManager();
 				playerManager->lootAll(creature, ai);
 			} else {
-				//Check if the corpse's inventory contains any items.
-				if (lootContainer->getContainerObjectsSize() < 1) {
-  					creature->sendSystemMessage("@error_message:corpse_empty"); //"You find nothing else of value on the selected corpse."
-  					creature->getZoneServer()->getPlayerManager()->rescheduleCorpseDestruction(creature, ai);
-  				} else {
-					ai->notifyObservers(ObserverEventType::LOOTCREATURE, creature, 0);
-					lootContainer->openContainerTo(creature);
-				}
+				ai->notifyObservers(ObserverEventType::LOOTCREATURE, creature, 0);
+				lootContainer->openContainerTo(creature);
 			}
 
 			return SUCCESS;
@@ -80,7 +73,7 @@ public:
 
 		//If player and their group don't own the corpse, pick up any owned items left on corpse due to full inventory, then fail.
 		if (!groupIsOwner) {
-			int pickupResult = pickupOwnedItems(ai, creature, lootContainer);
+			int pickupResult = pickupOwnedItems(creature, lootContainer);
 			if (pickupResult < 2) { //Player didn't pickup an item nor is one available for them.
 				StringIdChatParameter noPermission("error_message","no_corpse_permission"); //"You do not have permission to access this corpse."
 				creature->sendSystemMessage(noPermission);
@@ -94,7 +87,7 @@ public:
 		}
 
 		//If looter's group is the owner, attempt to pick up any owned items, then process group loot rule.
-		int pickupResult = pickupOwnedItems(ai, creature, lootContainer);
+		int pickupResult = pickupOwnedItems(creature, lootContainer);
 		switch (pickupResult) {
 		case NOPICKUPITEMS: //No items available for anyone to pickup.
 			break;
@@ -112,7 +105,7 @@ public:
 		}
 
 		ManagedReference<GroupObject*> group = creature->getGroup();
-		if (group == nullptr)
+		if (group == NULL)
 			return GENERALERROR;
 
 		GroupLootTask* task = new GroupLootTask(group, creature, ai, lootAll);
@@ -121,7 +114,7 @@ public:
 
 	}
 
-	int pickupOwnedItems(AiAgent* ai, CreatureObject* creature, SceneObject* lootContainer) const {
+	int pickupOwnedItems(CreatureObject* creature, SceneObject* lootContainer) const {
 		/* Return codes:
 		 * NOPICKUPITEMS: No items available for anyone to pickup.
 		 * ITEMFOROTHER: No items available for looter to pickup, but one is available for someone else.
@@ -135,19 +128,19 @@ public:
 		int totalItems = lootContainer->getContainerObjectsSize();
 		if (totalItems < 1) return NOPICKUPITEMS;
 
-		ContainerPermissions* contPerms = lootContainer->getContainerPermissionsForUpdate();
-		if (contPerms == nullptr) return NOPICKUPITEMS;
+		ContainerPermissions* contPerms = lootContainer->getContainerPermissions();
+		if (contPerms == NULL) return NOPICKUPITEMS;
 
 		SceneObject* playerInventory = creature->getSlottedObject("inventory");
-		if (playerInventory == nullptr) return NOPICKUPITEMS;
+		if (playerInventory == NULL) return NOPICKUPITEMS;
 
 		//Check each loot item to see if the player owns it.
 		for (int i = totalItems - 1; i >= 0; --i) {
 			SceneObject* object = lootContainer->getContainerObject(i);
-			if (object == nullptr) continue;
+			if (object == NULL) continue;
 
-			ContainerPermissions* itemPerms = object->getContainerPermissionsForUpdate();
-			if (itemPerms == nullptr) continue;
+			ContainerPermissions* itemPerms = object->getContainerPermissions();
+			if (itemPerms == NULL) continue;
 
 			//Check if player owns the loot item.
 			uint64 itemOwnerID = itemPerms->getOwnerID();
@@ -163,14 +156,10 @@ public:
 
 				uint64 originalOwner = contPerms->getOwnerID();
 				contPerms->setOwner(creature->getObjectID());
-				TransactionLog trx(ai, creature, object, TrxCode::NPCLOOTCLAIM);
 
 				if (creature->getZoneServer()->getObjectController()->transferObject(object, playerInventory, -1, true)) {
 					itemPerms->clearDenyPermission("player", ContainerPermissions::OPEN);
 					itemPerms->clearDenyPermission("player", ContainerPermissions::MOVECONTAINER);
-					trx.commit();
-				} else {
-					trx.abort() << "Failed to transferObject to player";
 				}
 
 				contPerms->setOwner(originalOwner);

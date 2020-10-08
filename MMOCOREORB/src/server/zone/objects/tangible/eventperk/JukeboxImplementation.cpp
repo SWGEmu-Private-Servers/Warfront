@@ -25,10 +25,10 @@ void JukeboxImplementation::fillObjectMenuResponse(ObjectMenuResponse* menuRespo
 
 	PlayerObject* playerObject = player->getPlayerObject();
 
-	if (playerObject == nullptr)
+	if (playerObject == NULL)
 		return;
 
-	if ((perkOwner != nullptr && perkOwner == player) || playerObject->isPrivileged()) {
+	if ((perkOwner != NULL && perkOwner == player) || playerObject->isPrivileged()) {
 		TangibleObjectImplementation::fillObjectMenuResponse(menuResponse, player);
 		menuResponse->addRadialMenuItem(132, 3, "@event_perk:mnu_show_exp_time"); // Show Expiration Time
 	}
@@ -55,7 +55,7 @@ void JukeboxImplementation::fillObjectMenuResponse(ObjectMenuResponse* menuRespo
 int JukeboxImplementation::handleObjectMenuSelect(CreatureObject* player, byte selectedID) {
 	ManagedReference<CreatureObject*> perkOwner = owner.get();
 
-	bool isOwner = perkOwner != nullptr && player == perkOwner;
+	bool isOwner = perkOwner != NULL && player == perkOwner;
 
 	// Non owners cannot pick up
 	if (selectedID == 10 && !isOwner)
@@ -85,14 +85,14 @@ int JukeboxImplementation::handleObjectMenuSelect(CreatureObject* player, byte s
 	} else if (selectedID == 73) {
 		PlayerObject* playerObject = player->getPlayerObject();
 
-		if (playerObject == nullptr)
+		if (playerObject == NULL)
 			return 0;
 
 		if (playerObject->isPrivileged() && player->getParentID() == 0) {
 			if (isASubChildOf(player)) {
 				Zone* zone = player->getZone();
 
-				if (zone == nullptr)
+				if (zone == NULL)
 					return 0;
 
 				ManagedReference<Jukebox*> jbox = _this.getReferenceUnsafeStaticCast();
@@ -105,7 +105,7 @@ int JukeboxImplementation::handleObjectMenuSelect(CreatureObject* player, byte s
 
 				ManagedReference<SceneObject*> inventory = player->getSlottedObject("inventory");
 
-				if (inventory == nullptr)
+				if (inventory == NULL)
 					return 0;
 
 				ManagedReference<Jukebox*> jbox = _this.getReferenceUnsafeStaticCast();
@@ -130,7 +130,7 @@ void JukeboxImplementation::notifyInsertToZone(Zone* zone) {
 
 	ManagedReference<SceneObject*> obj = jbox->getRootParent();
 
-	if (obj == nullptr || !obj->isStructureObject())
+	if (obj == NULL || !obj->isStructureObject())
 		setRadius(100);
 	else
 		setRadius(30);
@@ -140,7 +140,7 @@ void JukeboxImplementation::notifyInsertToZone(Zone* zone) {
 	for (int i = 0; i < children->size(); ++i) {
 		ManagedReference<SceneObject*> child = children->get(i);
 
-		if (child != nullptr && child->isActiveArea()) {
+		if (child != NULL && child->isActiveArea()) {
 			ManagedReference<ActiveArea*> area = cast<ActiveArea*>(child.get());
 			area->registerObserver(ObserverEventType::ENTEREDAREA, observer);
 			area->registerObserver(ObserverEventType::EXITEDAREA, observer);
@@ -156,7 +156,7 @@ void JukeboxImplementation::setRadius(float newRadius) {
 	if (newRadius == radius)
 		return;
 
-	if (children == nullptr)
+	if (children == NULL)
 		return;
 
 	radius = newRadius;
@@ -164,7 +164,7 @@ void JukeboxImplementation::setRadius(float newRadius) {
 	for (int i = 0; i < children->size(); ++i) {
 		ManagedReference<SceneObject*> child = children->get(i);
 
-		if (child != nullptr && child->isActiveArea()) {
+		if (child != NULL && child->isActiveArea()) {
 			ManagedReference<ActiveArea*> area = cast<ActiveArea*>(child.get());
 
 			Locker clocker(area, jbox);
@@ -177,12 +177,12 @@ void JukeboxImplementation::setRadius(float newRadius) {
 void JukeboxImplementation::doMusicSelection(CreatureObject* player) {
 	PlayerObject* ghost = player->getPlayerObject();
 
-	if (ghost == nullptr)
+	if (ghost == NULL)
 		return;
 
 	PlayerManager* playerManager = player->getZoneServer()->getPlayerManager();
 
-	if (playerManager == nullptr)
+	if (playerManager == NULL)
 		return;
 
 	ManagedReference<SuiListBox*> listbox = new SuiListBox(player, SuiWindowType::JUKEBOX_SELECTION);
@@ -194,12 +194,12 @@ void JukeboxImplementation::doMusicSelection(CreatureObject* player) {
 	listbox->setCancelButton(true, "@cancel");
 
 	int songListSize = playerManager->getNumJukeboxSongs();
-	JukeboxSong* song = nullptr;
+	JukeboxSong* song = NULL;
 
 	for (int i = 0; i < songListSize; i++) {
 		song = playerManager->getJukeboxSong(i);
 
-		if (song != nullptr) {
+		if (song != NULL) {
 			listbox->addMenuItem(song->getStringId());
 		}
 	}
@@ -209,7 +209,7 @@ void JukeboxImplementation::doMusicSelection(CreatureObject* player) {
 }
 
 void JukeboxImplementation::playMusicToPlayer(CreatureObject* player, const String& song) {
-	if (player == nullptr || !player->isPlayerCreature())
+	if (player == NULL || !player->isPlayerCreature())
 		return;
 
 	PlayMusicMessage* pmm = new PlayMusicMessage(song);
@@ -220,7 +220,7 @@ void JukeboxImplementation::playMusicToPlayer(CreatureObject* player, const Stri
 void JukeboxImplementation::changeMusic(const String& song) {
 	Zone* zone = getZone();
 
-	if (zone == nullptr)
+	if (zone == NULL)
 		return;
 
 	curSong = song;
@@ -264,12 +264,12 @@ void JukeboxImplementation::stopPlaying() {
 void JukeboxImplementation::destroyObjectFromDatabase(bool destroyContainedObjects) {
 	ManagedReference<CreatureObject*> strongOwner = owner.get();
 
-	if (strongOwner != nullptr) {
+	if (strongOwner != NULL) {
 		Locker clocker(strongOwner, _this.getReferenceUnsafeStaticCast());
 
 		PlayerObject* ghost = strongOwner->getPlayerObject();
 
-		if (ghost != nullptr) {
+		if (ghost != NULL) {
 			ghost->removeEventPerk(_this.getReferenceUnsafeStaticCast());
 		}
 	}
@@ -278,7 +278,7 @@ void JukeboxImplementation::destroyObjectFromDatabase(bool destroyContainedObjec
 }
 
 void JukeboxImplementation::activateRemoveEvent(bool immediate) {
-	if (removeEventPerkItemTask == nullptr) {
+	if (removeEventPerkItemTask == NULL) {
 		removeEventPerkItemTask = new RemoveEventPerkItemTask(_this.getReferenceUnsafeStaticCast());
 
 		Time currentTime;

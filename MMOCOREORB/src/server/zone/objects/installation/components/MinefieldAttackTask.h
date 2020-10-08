@@ -25,7 +25,7 @@ public:
 	}
 
 	void run() {
-		if(sceneObject == nullptr)
+		if(sceneObject == NULL)
 			return;
 
 		Locker locker(sceneObject);
@@ -34,13 +34,13 @@ public:
 			return;
 
 		DataObjectComponentReference* ref = sceneObject->getDataObjectComponent();
-		if(ref == nullptr){
+		if(ref == NULL){
 			return;
 		}
 
 		MinefieldDataComponent* mineData = cast<MinefieldDataComponent*>(ref->get());
 
-		if(mineData == nullptr || !mineData->canExplode()){
+		if(mineData == NULL || !mineData->canExplode()){
 			return;
 		}
 
@@ -48,21 +48,21 @@ public:
 
 		ManagedReference<WeaponObject*> weapon = sceneObject->getContainerObject(0).castTo<WeaponObject*>();
 
-		if (weapon == nullptr || sceneObject->getZone() == nullptr)
+		if (weapon == NULL || sceneObject->getZone() == NULL)
 			return;
 
 		PlayClientEffectLoc* explodeLoc = new PlayClientEffectLoc("clienteffect/lair_damage_heavy.cef", sceneObject->getZone()->getZoneName(), sceneObject->getPositionX(), sceneObject->getPositionZ(), sceneObject->getPositionY());
 		sceneObject->broadcastMessage(explodeLoc, false);
 
-		sceneObject->removeObject(weapon,nullptr,true);
+		sceneObject->removeObject(weapon,NULL,true);
 
-		if(sceneObject->getZoneServer() != nullptr){
+		if(sceneObject->getZoneServer() != NULL){
 			ManagedReference<ObjectController*> objectController = sceneObject->getZoneServer()->getObjectController();
-			const QueueCommand* command = objectController->getQueueCommand(STRING_HASHCODE("minefieldattack"));
+			QueueCommand* command = objectController->getQueueCommand(STRING_HASHCODE("minefieldattack"));
 
-			if(command != nullptr){
-				const CombatQueueCommand* combatCommand = cast<const CombatQueueCommand*>(command);
-				if(combatCommand != nullptr){
+			if(command != NULL){
+				CombatQueueCommand* combatCommand = cast<CombatQueueCommand*>(command);
+				if(combatCommand != NULL){
 					CombatManager::instance()->doCombatAction(sceneObject.castTo<TangibleObject*>(), weapon, player, combatCommand);
 				}
 			}
@@ -74,7 +74,7 @@ public:
 
 		if(sceneObject->getContainerObjectsSize() <= 0){
 			TangibleObject* tano = sceneObject.castTo<TangibleObject*>();
-			if(tano == nullptr)
+			if(tano == NULL)
 				return;
 
 			tano->setPvpStatusBitmask(tano->getPvpStatusBitmask() | CreatureFlag::ATTACKABLE);

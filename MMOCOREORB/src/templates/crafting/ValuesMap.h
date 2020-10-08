@@ -8,7 +8,7 @@
 #include "ValuesClasses.h"
 
 class ValuesMap : public VectorMap<String, Reference<Subclasses*> > {
-	const static String EMPTY;
+	String EMPTY = "";
 
 public:
 	static float VALUENOTFOUND;
@@ -25,30 +25,30 @@ public:
 			const float min, const float max, const int precision,
 			const bool filler, const int combine);
 
-	const String& getExperimentalPropertyTitle(const String& subtitle) const;
-	const String& getExperimentalPropertyTitle(const int i) const;
-	const String& getVisibleExperimentalPropertyTitle(const int i) const;
+	String& getExperimentalPropertyTitle(const String& subtitle);
+	String& getExperimentalPropertyTitle(const int i);
+	String& getVisibleExperimentalPropertyTitle(const int i);
 
-	const String& getExperimentalPropertySubtitlesTitle(const int i) const;
-	const String& getExperimentalPropertySubtitle(const int i) const;
-	const String& getExperimentalPropertySubtitle(const String& title, const int i) const;
+	String& getExperimentalPropertySubtitlesTitle(const int i);
+	String& getExperimentalPropertySubtitle(const int i);
+	String& getExperimentalPropertySubtitle(const String& title, const int i);
 
-	int getExperimentalPropertySubtitleSize() const;
-	int getExperimentalPropertySubtitleSize(const String& title) const;
+	int getExperimentalPropertySubtitleSize();
+	int getExperimentalPropertySubtitleSize(const String& title);
 
-	bool hasProperty(const String& attribute) const;
+	bool hasProperty(const String& attribute);
 
-	bool isHidden(const String& attribute) const;
+	bool isHidden(const String& attribute);
 	void setHidden(const String& attribute);
 	void unsetHidden(const String& attribute);
 
-	short getCombineType(const String& attribute) const;
+	short getCombineType(const String& attribute);
 
 	void setCurrentValue(const String& attribute, const float value);
 	void setCurrentValue(const String& attribute, const float value, const float min, const float max);
 
-	float getCurrentValue(const String& attribute) const;
-	float getCurrentValue(const int i) const;
+	float getCurrentValue(const String& attribute);
+	float getCurrentValue(const int i);
 
 	void lockValue(const String& attribute);
 	void unlockValue(const String& attribute);
@@ -57,30 +57,30 @@ public:
 	void setCurrentPercentage(const String& subtitle, const float value);
 	void setCurrentPercentage(const String& subtitle, const float value, const float max);
 
-	float getCurrentPercentage(const String& attribute) const;
-	float getCurrentPercentage(const int i) const;
+	float getCurrentPercentage(const String& attribute);
+	float getCurrentPercentage(const int i);
 
-	float getCurrentVisiblePercentage(const String title) const;
+	float getCurrentVisiblePercentage(const String title);
 
 	void setMaxPercentage(const String& attribute, const float value);
 
-	float getMaxPercentage(const String& attribute) const;
-	float getMaxPercentage(const int i) const;
+	float getMaxPercentage(const String& attribute);
+	float getMaxPercentage(const int i);
 
-	float getMaxVisiblePercentage(const int i) const;
+	float getMaxVisiblePercentage(const int i);
 
-	float getMinValue(const String& attribute) const;
-	float getMaxValue(const String& attribute) const;
+	float getMinValue(const String& attribute);
+	float getMaxValue(const String& attribute);
 
 	void setMinValue(const String& attribute, const float value);
 	void setMaxValue(const String& attribute, const float value);
 
-	int getPrecision(const String& attribute) const;
+	int getPrecision(const String& attribute);
 	void setPrecision(const String& attribute, const int precision);
 
-	inline int getVisibleExperimentalPropertyTitleSize() const {
+	inline int getVisibleExperimentalPropertyTitleSize() {
 		int tempSize = 0;
-		const Subclasses* subclasses;
+		Subclasses* subclasses;
 
 		for(int i = 0; i < size(); ++i) {
 			subclasses = get(i);
@@ -92,8 +92,8 @@ public:
 		return tempSize;
 	}
 
-	inline int getSubtitleCount() const {
-		const Subclasses* subclasses;
+	inline int getSubtitleCount() {
+		Subclasses* subclasses;
 
 		int count = 0;
 
@@ -106,8 +106,8 @@ public:
 		return count;
 	}
 
-	inline int getTitleLine(const String& title) const {
-		const Subclasses* subClasses;
+	inline int getTitleLine(String& title) {
+		Subclasses* subClasses;
 		String exptitle;
 		int counter = 0;
 

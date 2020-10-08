@@ -57,7 +57,7 @@ public:
 
 	CloneSpawnPoint* getRandomSpawnPoint() {
 		if (spawningPoints.size() == 0)
-			return nullptr;
+			return NULL;
 
 		return &spawningPoints.get(System::random(spawningPoints.size() - 1));
 	}

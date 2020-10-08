@@ -45,9 +45,9 @@ public:
 	void addLayer(Layer* layer);
 	void removeLayer(Layer* layer);
 
-	bool getFullBoundaryCircle(float& centerX, float& centerY, float& radius) const;
+	bool getFullBoundaryCircle(float& centerX, float& centerY, float& radius);
 
-	void getFullBoundaryCircle(const Layer* layer, float& minX, float& minY, float& maxX, float& maxY) const;
+	void getFullBoundaryCircle(Layer* layer, float& minX, float& minY, float& maxX, float& maxY);
 
 	inline MapGroup* getMapGroup() {
 		return &mapGroup;
@@ -62,22 +62,6 @@ public:
 	}
 
 	inline MapFractal* getMfrc(int idx) {
-		return mapGroup.getMfrc(idx);
-	}
-
-	inline const MapGroup* getMapGroup() const {
-		return &mapGroup;
-	}
-
-	inline const LayersGroup* getLayersGroup() const {
-		return &layers;
-	}
-
-	inline const BitmapGroup* getBitmapGroup() const {
-		return &bitmapGroup;
-	}
-
-	inline const MapFractal* getMfrc(int idx) const {
 		return mapGroup.getMfrc(idx);
 	}
 

@@ -28,12 +28,12 @@ public:
 
 		Reference<CraftingSession*> session = creature->getActiveSession(SessionFacadeType::CRAFTING).castTo<CraftingSession*>();
 
-		if(session == nullptr) {
+		if(session == NULL) {
 			return GENERALERROR;
 		}
 
 		Locker locker(session);
-		session->cancelSessionCommand();
+		session->cancelSession();
 
 		return SUCCESS;
 	}

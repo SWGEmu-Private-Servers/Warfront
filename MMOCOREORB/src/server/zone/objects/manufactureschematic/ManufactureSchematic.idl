@@ -23,7 +23,6 @@ include server.zone.objects.manufactureschematic.variables.StringIdDeltaVector;
 include server.zone.objects.manufactureschematic.variables.Uint64VectorDeltaVector;
 include server.zone.objects.manufactureschematic.variables.IntVectorDeltaVector;
 
-@json
 class ManufactureSchematic extends IntangibleObject {
 
 	protected DraftSchematic draftSchematic;
@@ -103,8 +102,9 @@ class ManufactureSchematic extends IntangibleObject {
 
 		manufactureLimit = 1000;
 
-		ContainerPermissions permissions = super.getContainerPermissionsForUpdate();
-		permissions.setInheritPermissionsFromParent(true);
+		super.getContainerPermissions().setInheritPermissionsFromParent(true);
+
+		ContainerPermissions permissions = super.getContainerPermissions();
 		permissions.clearDefaultDenyPermission(ContainerPermissions.MOVECONTAINER);
 		permissions.clearDenyPermission("owner", ContainerPermissions.MOVECONTAINER);
 	}
@@ -112,8 +112,6 @@ class ManufactureSchematic extends IntangibleObject {
 	public void initializeTransientMembers() {
 		super.initializeTransientMembers();
 	}
-
-	public abstract native void destroyObjectFromDatabase(boolean destroyContainedObjects = false);
 
 	/**
 	 * Fills the attribute list message options that are sent to player creature

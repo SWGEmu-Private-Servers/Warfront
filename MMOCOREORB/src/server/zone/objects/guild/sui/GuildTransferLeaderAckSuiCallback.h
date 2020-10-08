@@ -23,7 +23,7 @@ public:
 		bool cancelPressed = (eventIndex == 1);
 
 		ManagedReference<SceneObject*> sceoTerminal = suiBox->getUsingObject().get();
-		if (sceoTerminal == nullptr || !sceoTerminal->isTerminal())
+		if (sceoTerminal == NULL || !sceoTerminal->isTerminal())
 			return;
 
 		Terminal* terminal = sceoTerminal.castTo<Terminal*>();
@@ -31,20 +31,20 @@ public:
 			return;
 
 		GuildTerminal* guildTerminal = cast<GuildTerminal*>(terminal);
-		if (guildTerminal == nullptr)
+		if (guildTerminal == NULL)
 			return;
 
 		ManagedReference<BuildingObject*> buildingObject = guildTerminal->getParentRecursively(SceneObjectType::BUILDING).castTo<BuildingObject*>();
-		if (buildingObject == nullptr)
+		if (buildingObject == NULL)
 			return;
 
 		ManagedReference<CreatureObject*> owner = buildingObject->getOwnerCreatureObject();
-		if (owner == nullptr || !owner->isPlayerCreature()) {
+		if (owner == NULL || !owner->isPlayerCreature()) {
 			return;
 		}
 
 		ManagedReference<GuildObject*> guild = owner->getGuildObject().get();
-		if (guild == nullptr || !guild->isTransferPending())
+		if (guild == NULL || !guild->isTransferPending())
 			return;
 
 		Locker clocker(guild, newLeader);
@@ -62,7 +62,7 @@ public:
 
 		ManagedReference<GuildManager*> guildManager = server->getGuildManager();
 
-		if ( guildManager != nullptr ) {
+		if ( guildManager != NULL ) {
 			ManagedReference<CreatureObject*> newOwner = newLeader;
 
 			Core::getTaskManager()->executeTask([=] () {

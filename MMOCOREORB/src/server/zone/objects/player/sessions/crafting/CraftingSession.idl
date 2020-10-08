@@ -78,11 +78,6 @@ class CraftingSession extends Facade {
 	 */
 	public native int cancelSession();
 	
-	/*
-	 * Cancels the current session via slash cancelCraftingSession which also closes the window
-	 */
-	public native int cancelSessionCommand();
-	
 	/**
 	 * 
 	 */
@@ -96,7 +91,7 @@ class CraftingSession extends Facade {
 	/**
 	 * Closes an open crafting windows
 	 */
-	private native void closeCraftingWindow(int clientCounter, boolean wasCraftSuccess);
+	private native void closeCraftingWindow(int clientCounter);
 
 	/**
 	 * Sends various crafting messages

@@ -8,6 +8,7 @@ import system.util.SortedVector;
 
 import server.zone.objects.tangible.TangibleObject;
 import server.zone.objects.structure.StructureObject;
+import server.zone.objects.building.BuildingObject;
 import server.zone.objects.installation.InstallationObject;
 import server.zone.objects.creature.CreatureObject;
 import server.zone.objects.creature.ai.AiAgent;
@@ -15,8 +16,6 @@ import server.zone.objects.scene.SceneObject;
 import system.thread.Mutex;
 import server.zone.objects.tangible.deed.Deed;
 
-include server.zone.objects.building.BuildingObject;
-include server.zone.managers.gcw.TerminalSpawn;
 include server.zone.objects.building.components.DestructibleBuildingDataComponent;
 include server.zone.objects.installation.components.TurretDataComponent;
 include server.zone.objects.tangible.terminal.components.TurretControlTerminalDataComponent;
@@ -73,8 +72,6 @@ class GCWManager extends ManagedService implements Logger {
 	private transient int imperialScore;
 	private transient int winningFaction;
 	private transient int winnerDifficultyScaling;
-	private transient boolean crackdownScansEnabled;
-	private transient boolean crackdownScanPrivilegedPlayers;
 
 	public transient unsigned long gcwCheckTimer;
 	public transient int vulnerabilityDuration;
@@ -99,13 +96,6 @@ class GCWManager extends ManagedService implements Logger {
 	public transient boolean racialPenaltyEnabled;
 
 	@dereferenced
-	@local
-	protected transient VectorMap<string, Reference<Vector<Reference<TerminalSpawn> > > > terminalSpawnLocations;
-
-	@dereferenced
-	protected transient Vector<string> terminalTemplates;
-
-	@dereferenced
 	protected transient Vector<string> imperialStrongholds;
 	@dereferenced
 	protected transient Vector<string> rebelStrongholds;
@@ -119,8 +109,8 @@ class GCWManager extends ManagedService implements Logger {
 		winnerDifficultyScaling = 1;
 
 		gcwCheckTimer = 3600;
-		vulnerabilityDuration = 7200;
-		vulnerabilityFrequency = 172800;
+		vulnerabilityDuration = 10800;
+		vulnerabilityFrequency = 43200;
 		resetTimer = 604800;
 		sliceCooldown = 120;
 		totalDNASamples = 10;
@@ -131,13 +121,13 @@ class GCWManager extends ManagedService implements Logger {
 		overtCooldown = 300;
 		reactivationTimer = 300;
 		turretAutoFireTimeout = 20;
-		maxBasesPerPlayer = 3;
+		maxBasesPerPlayer = 1;
 		bonusXP = 15;
 		loserBonus = 0;
 		winnerBonus = 30;
 		racialPenaltyEnabled = true;
 		spawnDefenses = true;
-		initialVulnerabilityDelay = 0;
+		initialVulnerabilityDelay = 3600;
 
 		Logger.setLoggingName("GCWManager " + zne.getZoneName());
 		Logger.info("instantiated", true);
@@ -229,6 +219,7 @@ class GCWManager extends ManagedService implements Logger {
 
 	@local
 	public native void broadcastBuilding(BuildingObject building, @dereferenced StringIdChatParameter params);
+	public native void broadcastXP(BuildingObject building, int amount);
 
 	public native void startAbortSequenceDelay(BuildingObject building, CreatureObject creature, SceneObject hqTerminal);
 	public native void abortShutdownSequence(BuildingObject building, CreatureObject creature);
@@ -249,7 +240,7 @@ class GCWManager extends ManagedService implements Logger {
 	public native void performDefenseDonation(BuildingObject building, CreatureObject creature, unsigned long deedOID);
 	private native void performDonateMinefield(BuildingObject building, CreatureObject creature, Deed deed);
 	private native void performDonateTurret(BuildingObject building, CreatureObject creature, Deed deed);
-	private native unsigned long addChildInstallationFromDeed(BuildingObject building, final ChildObject child, CreatureObject creature, Deed deed);
+	private native unsigned long addChildInstallationFromDeed(BuildingObject building, ChildObject child, CreatureObject creature, Deed deed);
 
 	public native void sendTurretAttackListTo(CreatureObject creature, SceneObject turretControlTerminal);
 	public native boolean canUseTurret(TangibleObject turret, SceneObject terminal, CreatureObject creature);
@@ -260,9 +251,6 @@ class GCWManager extends ManagedService implements Logger {
 	public native float getGCWDiscount(CreatureObject creature);
 
 	public native void runCrackdownScan(AiAgent scanner, CreatureObject player);
-
-	private native void spawnBaseTerminals(BuildingObject building);
-	private native void despawnBaseTerminals(BuildingObject building);
 
 	@dirty
 	public native int isStrongholdCity(string city);
@@ -475,11 +463,5 @@ class GCWManager extends ManagedService implements Logger {
 	@read
 	public int getResetTimer() {
 		return resetTimer;
-	}
-
-	@local
-	@read
-	public int getCrackdownScansEnabled() {
-		return crackdownScansEnabled;
 	}
 }

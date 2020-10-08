@@ -11,8 +11,7 @@ import server.zone.objects.tangible.tasks.FlagGamePulseTask;
 import system.lang.ref.Reference;
 include system.lang.Time;
 
-@json
-class FlagGame extends TangibleObject {
+class FlagGame extends TangibleObject {	
 	@weakReference
 	protected CreatureObject owner;
 
@@ -31,7 +30,7 @@ class FlagGame extends TangibleObject {
 
 	protected int impScore;
 	protected int rebScore;
-
+	
 	protected unsigned int factionControl;
 
 	@dereferenced
@@ -60,7 +59,7 @@ class FlagGame extends TangibleObject {
 	public native void notifyInsertToZone(Zone zone);
 
 	public native unsigned int getFlagTemplate(unsigned int faction);
-
+	
 	public native void doVictoryEffects(unsigned int faction);
 
 	@preLocked

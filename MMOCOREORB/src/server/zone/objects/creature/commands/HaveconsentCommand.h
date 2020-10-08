@@ -29,7 +29,7 @@ public:
 
 		PlayerObject* ghost = creature->getPlayerObject();
 
-		if (ghost == nullptr)
+		if (ghost == NULL)
 			return GENERALERROR;
 
 		ghost->closeSuiWindowType(SuiWindowType::MEDIC_CONSENT);

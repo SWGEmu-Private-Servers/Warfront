@@ -36,7 +36,7 @@ void ResourceLabratory::initialize(ZoneServer* server) {
 }
 void ResourceLabratory::setInitialCraftingValues(TangibleObject* prototype, ManufactureSchematic* manufactureSchematic, int assemblySuccess) {
 
-	if(manufactureSchematic == nullptr || manufactureSchematic->getDraftSchematic() == nullptr)
+	if(manufactureSchematic == NULL || manufactureSchematic->getDraftSchematic() == NULL)
 		return;
 
 	ManagedReference<DraftSchematic* > draftSchematic = manufactureSchematic->getDraftSchematic();
@@ -130,7 +130,7 @@ int ResourceLabratory::getCreationCount(ManufactureSchematic* manufactureSchemat
 
 bool ResourceLabratory::applyComponentStats(TangibleObject* prototype, ManufactureSchematic* manufactureSchematic) {
 
-	if(manufactureSchematic == nullptr || manufactureSchematic->getDraftSchematic() == nullptr)
+	if(manufactureSchematic == NULL || manufactureSchematic->getDraftSchematic() == NULL)
 		return false;
 
 	float max, min, currentvalue, propertyvalue;
@@ -149,17 +149,17 @@ bool ResourceLabratory::applyComponentStats(TangibleObject* prototype, Manufactu
 		Reference<IngredientSlot* > ingredientSlot = manufactureSchematic->getSlot(i);
 		Reference<DraftSlot* > draftSlot = draftSchematic->getDraftSlot(i);
 
-		if(ingredientSlot == nullptr || !ingredientSlot->isComponentSlot() || !ingredientSlot->isFull())
+		if(ingredientSlot == NULL || !ingredientSlot->isComponentSlot() || !ingredientSlot->isFull())
 			continue;
 
 		ComponentSlot* compSlot = cast<ComponentSlot*>(ingredientSlot.get());
 
-		if(compSlot == nullptr)
+		if(compSlot == NULL)
 			continue;
 
 		ManagedReference<TangibleObject*> tano = compSlot->getPrototype();
 
-		if (tano == nullptr || !tano->isComponent())
+		if (tano == NULL || !tano->isComponent())
 			continue;
 
 		ManagedReference<Component*> component = cast<Component*>( tano.get());
@@ -184,7 +184,7 @@ bool ResourceLabratory::applyComponentStats(TangibleObject* prototype, Manufactu
 						precision = component->getAttributePrecision(property);
 						int preciseValue = Math::getPrecision(currentvalue, precision);
 						WearableObject* clothing = cast<WearableObject*>(prototype);
-						const VectorMap<String, int>* clothingMods = clothing->getWearableSkillMods();
+						VectorMap<String, int>* clothingMods = clothing->getWearableSkillMods();
 
 						int existingValue = 0;
 						if(clothingMods->contains(key)) {

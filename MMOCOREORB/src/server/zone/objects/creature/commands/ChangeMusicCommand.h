@@ -25,7 +25,7 @@ public:
 
 		ManagedReference<EntertainingSession*> session = creature->getActiveSession(SessionFacadeType::ENTERTAINING).castTo<EntertainingSession*>();
 
-		if (session == nullptr) {
+		if (session == NULL) {
 			creature->sendSystemMessage("@performance:music_must_be_performing_self"); // You must be playing music before you can change the song.
 			return GENERALERROR;
 		}
@@ -41,21 +41,21 @@ public:
 
 		ManagedReference<Instrument*> instrument = session->getInstrument(creature);
 
-		if (instrument == nullptr) {
+		if (instrument == NULL) {
 			creature->sendSystemMessage("@performance:music_no_instrument"); // You must have an instrument equipped to play music.
 			return GENERALERROR;
 		}
 
 		ManagedReference<PlayerObject*> ghost = creature->getPlayerObject();
 
-		if (ghost == nullptr)
+		if (ghost == NULL)
 			return GENERALERROR;
 
 		String args = arguments.toString();
 
 		ManagedReference<GroupObject*> group = creature->getGroup();
 
-		if (group != nullptr) {
+		if (group != NULL) {
 			bool otherPlaying = group->isOtherMemberPlayingMusic(creature);
 
 			if (otherPlaying) {
@@ -96,12 +96,12 @@ public:
 		int instrid = performanceManager->getInstrumentId(args);
 		instrid += performanceManager->getInstrumentAnimation(instrument->getInstrumentType(), instrumentAnimation);
 
-		session->sendEntertainingUpdate(creature, /*0x3C4CCCCD*/0.0125f, instrumentAnimation, 0x07339FF8, instrid);
+		session->sendEntertainingUpdate(creature, /*0x3C4CCCCD*/0.0125, instrumentAnimation, 0x07339FF8, instrid);
 		session->setPerformanceName(args);
 
 		creature->notifyObservers(ObserverEventType::CHANGEENTERTAIN, creature);
 
-		if (group != nullptr) {
+		if (group != NULL) {
 			Locker locker(group);
 
 			group->setBandSong(args);

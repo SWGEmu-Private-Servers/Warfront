@@ -20,7 +20,7 @@ namespace events {
 
 class DroidPlaybackTask : public Task {
 
-	Reference<DroidPlaybackModuleDataComponent*> module;
+	ManagedReference<DroidPlaybackModuleDataComponent*> module;
 	bool playing;
 public:
 	DroidPlaybackTask(DroidPlaybackModuleDataComponent* module) : Task() {
@@ -29,19 +29,19 @@ public:
 	}
 
 	void run() {
-		if (module == nullptr)
+		if (module == NULL)
 			return;
 
 		DroidObject* droid = module->getDroidObject();
-		if (droid == nullptr)
+		if (droid == NULL)
 			return;
 
 		Locker locker(droid);
 
-		if( droid->getLocalZone() == nullptr ){  // Not outdoors
+		if( droid->getLocalZone() == NULL ){  // Not outdoors
 
 			ManagedReference<SceneObject*> parent = droid->getParent().get();
-			if( parent == nullptr || !parent->isCellObject() ){ // Not indoors either
+			if( parent == NULL || !parent->isCellObject() ){ // Not indoors either
 				module->deactivate();
 				droid->removePendingTask("droid_playback");
 				return;
@@ -76,11 +76,11 @@ public:
 			return;
 		}
 		SkillManager* skillManager = droid->getZoneServer()->getSkillManager();
-		if (skillManager == nullptr)
+		if (skillManager == NULL)
 			return;
 
 		PerformanceManager* performanceManager = skillManager->getPerformanceManager();
-		if (performanceManager == nullptr)
+		if (performanceManager == NULL)
 			return;
 
 		String instrumentAnimation;

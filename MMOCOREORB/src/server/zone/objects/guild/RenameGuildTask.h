@@ -22,13 +22,13 @@ public:
 	void run() {
 		ManagedReference<GuildObject*> guild = guildObject.get();
 
-		if (guild == nullptr || !guild->isRenamePending())
+		if (guild == NULL || !guild->isRenamePending())
 			return;
 
 		Locker locker(guild);
 
 		ManagedReference<GuildManager*> guildManager = server->getGuildManager();
-		if (guildManager == nullptr) {
+		if (guildManager == NULL) {
 			guild->resetRename();
 			return;
 		}

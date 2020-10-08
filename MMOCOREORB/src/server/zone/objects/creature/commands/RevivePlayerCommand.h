@@ -28,7 +28,7 @@ public:
 			return 0;
 		}
 
-		if (revivePack == nullptr) {
+		if (revivePack == NULL) {
 			creature->sendSystemMessage("@healing_response:cannot_resuscitate_kit"); //You cannot resuscitate someone without a resuscitation kit!
 			return false;
 		}
@@ -45,7 +45,7 @@ public:
 
 		ManagedReference<GroupObject*> group = creature->getGroup();
 
-		if (group == nullptr || !group->hasMember(creatureTarget)) {
+		if (group == NULL || !group->hasMember(creatureTarget)) {
 			if (creature->isPlayerCreature()) {
 				CreatureObject* player = cast<CreatureObject*>(creature);
 				CreatureObject* consentOwner = cast<CreatureObject*>( creatureTarget);
@@ -53,7 +53,7 @@ public:
 				PlayerObject* ghost = consentOwner->getPlayerObject();
 
 				if (!ghost->hasInConsentList(player->getFirstName().toLowerCase())) {
-					if ((consentOwner->getWeapon() != nullptr && consentOwner->getWeapon()->isJediWeapon()) || consentOwner->hasSkill("force_title_jedi_rank_02")) {
+					if ((consentOwner->getWeapon() != NULL && consentOwner->getWeapon()->isJediWeapon()) || consentOwner->hasSkill("force_title_jedi_rank_02")) {
 						creature->sendSystemMessage("@healing_response:jedi_must_consent"); // You must have consent from a jedi resuscitation target!
 						return false;
 					} else {
@@ -115,7 +115,7 @@ public:
 		SceneObject* inventory = creature->getSlottedObject("inventory");
 		int medicineUse = creature->getSkillMod("healing_ability");
 
-		if (inventory != nullptr) {
+		if (inventory != NULL) {
 			for (int i = 0; i < inventory->getContainerObjectsSize(); ++i) {
 				SceneObject* object = inventory->getContainerObject(i);
 
@@ -133,7 +133,7 @@ public:
 			}
 		}
 
-		return nullptr;
+		return NULL;
 	}
 
 	void doAnimations(CreatureObject* creature, CreatureObject* creatureTarget) const {
@@ -145,6 +145,44 @@ public:
 			creature->doAnimation("heal_other");
 	}
 
+/*	void checkJediTarget(CreatureObject* creature, CreatureObject* creatureTarget) const {
+		if (creature->isPlayerCreature()) {
+			CreatureObject* player = cast<CreatureObject*>(creature);
+			CreatureObject* target = cast<CreatureObject*>(creatureTarget);
+
+			ManagedReference<PlayerObject*> ghost = target->getPlayerObject();
+			PlayerObject* playerGhost = player->getPlayerObject();
+
+			if ((target->getWeapon() != NULL && target->getWeapon()->isJediWeapon()) || target->hasSkill("force_title_jedi_rank_02")) {
+				ghost->updateLastJediAttackableTimestamp();
+				playerGhost->updateLastJediPvpCombatActionTimestamp();
+				
+	
+		
+				// Jedi XP Loss
+				int jediXpCap = ghost->getXpCap("jedi_general");
+				int xpLoss = (int)(jediXpCap * -0.08);
+				int curExp = ghost->getExperience("jedi_general");
+
+				int negXpCap = -10000000; // Cap on negative jedi experience
+
+				if ((curExp + xpLoss) < negXpCap)
+					xpLoss = negXpCap - curExp;
+
+				if (xpLoss < -200000)
+					xpLoss = -200000;
+				PlayerManager* playerManager = server->getZoneServer()->getPlayerManager();
+				playerManager->awardExperience(target, "jedi_general", xpLoss, true);
+
+				StringIdChatParameter message("base_player","prose_revoke_xp");
+				message.setDI(xpLoss * -1);
+				message.setTO("exp_n", "jedi_general");
+				target->sendSystemMessage(message);
+			
+		}
+	}
+*/
+
 	int doQueueCommand(CreatureObject* creature, const uint64& target, const UnicodeString& arguments) const {
 
 		int result = doCommonMedicalCommandChecks(creature);
@@ -154,11 +192,11 @@ public:
 
 		ManagedReference<SceneObject*> object = server->getZoneServer()->getObject(target);
 
-		if (object != nullptr) {
+		if (object != NULL) {
 			if (!object->isCreatureObject()) {
 				TangibleObject* tangibleObject = dynamic_cast<TangibleObject*>(object.get());
 
-				if (tangibleObject != nullptr && tangibleObject->isAttackableBy(creature)) {
+				if (tangibleObject != NULL && tangibleObject->isAttackableBy(creature)) {
 					object = creature;
 				} else {
 					creature->sendSystemMessage("@healing_response:healing_response_a2"); //You cannot apply resuscitation medication without a valid target!
@@ -190,15 +228,15 @@ public:
 
 		parseModifier(arguments.toString(), objectId);
 
-		ManagedReference<RevivePack*> revivePack = nullptr;
+		ManagedReference<RevivePack*> revivePack = NULL;
 
 		SceneObject* inventory = creature->getSlottedObject("inventory");
 
-		if (inventory != nullptr) {
+		if (inventory != NULL) {
 			revivePack = inventory->getContainerObject(objectId).castTo<RevivePack*>();
 		}
 
-		if (revivePack == nullptr)
+		if (revivePack == NULL)
 			revivePack = findRevivePack(creature);
 
 		int mindCostNew = creature->calculateCostAdjustment(CreatureAttribute::FOCUS, mindCost);
@@ -224,7 +262,7 @@ public:
 
 		creature->inflictDamage(creature, CreatureAttribute::MIND, mindCostNew, false);
 
-		if (revivePack != nullptr) {
+		if (revivePack != NULL) {
 			Locker locker(revivePack);
 
 			revivePack->decreaseUseCount();
@@ -242,8 +280,13 @@ public:
 
 		creatureTarget->notifyObservers(ObserverEventType::CREATUREREVIVED, creature, 0);
 
+		if (creatureTarget->hasSkill("force_rank_dark_novice") || creatureTarget->hasSkill("force_rank_light_novice")) 
+		creatureTarget->setFactionStatus(2);
+
 		return SUCCESS;
 	}
+	
+	
 
 };
 

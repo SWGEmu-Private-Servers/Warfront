@@ -6,31 +6,24 @@
 #define SKILLBOXLIST_H_
 
 #include "engine/engine.h"
-#include "engine/util/json_utils.h"
-
 #include "server/zone/objects/scene/variables/DeltaVector.h"
 
 class Skill;
 
 class SkillList : public DeltaVector<Reference<Skill*> > {
-#ifdef ODB_SERIALIZATION
-	Vector<String> skills;
-#endif
 public:
-	bool add(Skill* skill, DeltaMessage* message = nullptr);
-	void remove(Skill* skill, DeltaMessage* message = nullptr);
+	bool add(Skill* skill, DeltaMessage* message = NULL);
+	void remove(Skill* skill, DeltaMessage* message = NULL);
 
-	bool containsSkill(const String& skill) const;
+	bool containsSkill(const String& skill);
 
-	bool toBinaryStream(ObjectOutputStream* stream) override;
-	bool parseFromBinaryStream(ObjectInputStream* stream) override;
+	bool toBinaryStream(ObjectOutputStream* stream);
+	bool parseFromBinaryStream(ObjectInputStream* stream);
 
-	void getStringList(Vector<String>& skills) const;
+	void getStringList(Vector<String>& skills);
 	void loadFromNames(Vector<String>& skills);
 
-	void insertToMessage(BaseMessage* msg) const override;
-
-	friend void to_json(nlohmann::json& j, const SkillList& s);
+	void insertToMessage(BaseMessage* msg);
 };
 
 #endif /*SKILLBOXLIST_H_*/

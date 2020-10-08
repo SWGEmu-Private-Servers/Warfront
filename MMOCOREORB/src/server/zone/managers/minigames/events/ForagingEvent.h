@@ -34,7 +34,7 @@ public:
 	void run() {
 		ManagedReference<ForageManager*> forageManager = player->getZoneProcessServer()->getForageManager();
 
-		if (forageManager != nullptr)
+		if (forageManager != NULL)
 			forageManager->finishForaging(player, forageType, forageX, forageY, zoneName);
 	}
 };

@@ -15,7 +15,7 @@ void CraftingManagerImplementation::initialize() {
 }
 
 void CraftingManagerImplementation::stop() {
-	schematicMap = nullptr;
+	schematicMap = NULL;
 }
 
 void CraftingManagerImplementation::awardSchematicGroup(PlayerObject* playerObject, Vector<String>& schematicgroups, bool updateClient) {
@@ -87,7 +87,7 @@ int CraftingManagerImplementation::calculateExperimentationSuccess(CreatureObjec
 	if (player->hasBuff(BuffCRC::FOOD_EXPERIMENT_BONUS)) {
 		Buff* buff = player->getBuff(BuffCRC::FOOD_EXPERIMENT_BONUS);
 
-		if (buff != nullptr) {
+		if (buff != NULL) {
 			expbonus = buff->getSkillModifierValue("experiment_bonus");
 			toolModifier *= 1.0f + (expbonus / 100.0f);
 		}
@@ -180,7 +180,7 @@ void CraftingManagerImplementation::configureLabratories() {
 
 }
 void CraftingManagerImplementation::setInitialCraftingValues(TangibleObject* prototype, ManufactureSchematic* manufactureSchematic, int assemblySuccess) {
-	if(manufactureSchematic == nullptr || manufactureSchematic->getDraftSchematic() == nullptr)
+	if(manufactureSchematic == NULL || manufactureSchematic->getDraftSchematic() == NULL)
 		return;
 	int labratory = manufactureSchematic->getLabratory();
 	SharedLabratory* lab = labs.get(labratory);

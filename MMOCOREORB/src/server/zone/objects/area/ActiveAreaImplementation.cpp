@@ -9,15 +9,15 @@
 #include "events/ActiveAreaEvent.h"
 #include "server/zone/objects/area/areashapes/AreaShape.h"
 
-bool ActiveAreaImplementation::containsPoint(float px, float py, uint64 cellid) const {
+bool ActiveAreaImplementation::containsPoint(float px, float py, uint64 cellid) {
 	if (cellObjectID != 0 && cellObjectID != cellid)
 		return false;
 
 	return containsPoint(px, py);
 }
 
-bool ActiveAreaImplementation::containsPoint(float px, float py) const {
-	if (areaShape == nullptr) {
+bool ActiveAreaImplementation::containsPoint(float px, float py) {
+	if (areaShape == NULL) {
 		return QuadTreeEntryImplementation::containsPoint(px, py);
 	}
 
@@ -86,8 +86,8 @@ void ActiveAreaImplementation::setZone(Zone* zone) {
 	this->zone = zone;
 }
 
-bool ActiveAreaImplementation::intersectsWith(ActiveArea* area) const {
-	if (areaShape == nullptr) {
+bool ActiveAreaImplementation::intersectsWith(ActiveArea* area) {
+	if (areaShape == NULL) {
 		return false;
 	}
 
@@ -97,7 +97,7 @@ bool ActiveAreaImplementation::intersectsWith(ActiveArea* area) const {
 void ActiveAreaImplementation::initializeChildObject(SceneObject* controllerObject) {
 	ManagedReference<SceneObject*> objectParent = controllerObject->getParent().get();
 
-	if (objectParent != nullptr && objectParent->isCellObject()) {
+	if (objectParent != NULL && objectParent->isCellObject()) {
 		setCellObjectID(objectParent->getObjectID());
 	}
 }

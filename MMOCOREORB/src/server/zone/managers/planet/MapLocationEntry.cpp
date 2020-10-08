@@ -47,17 +47,17 @@ void MapLocationEntry::setObject(SceneObject *obj) {
 	object = obj;
 	icon = 0;
 
-	if(object == nullptr)
+	if(object == NULL)
 		return;
 
-	const PlanetMapCategory* category = object->getPlanetMapCategory();
+	PlanetMapCategory* category = object->getPlanetMapCategory();
 
-	if (category == nullptr)
+	if (category == NULL)
 		return;
 
 	ManagedReference<Zone*> zone = object->getZone();
 
-	if(zone == nullptr)
+	if(zone == NULL)
 		return;
 
 	if (object->isBuildingObject()) {
@@ -87,10 +87,10 @@ void MapLocationEntry::setObject(SceneObject *obj) {
 		ManagedReference<PlanetManager*> planetManager = zone->getPlanetManager();
 		PlanetTravelPoint* ptp = planetManager->getNearestPlanetTravelPoint(object, 64.f);
 
-		if(ptp != nullptr) {
+		if(ptp != NULL) {
 			newName = ptp->getPointName();
 		}
-	} else if(category->getIndex() == MapLocationType::TERMINAL && (object->getPlanetMapSubCategory() != nullptr)) {
+	} else if(category->getIndex() == MapLocationType::TERMINAL && (object->getPlanetMapSubCategory() != NULL)) {
 		newName = object->getPlanetMapSubCategory()->getName();
 
 		if (newName == "terminal_bank") {
@@ -101,7 +101,7 @@ void MapLocationEntry::setObject(SceneObject *obj) {
 			if (object->isMissionTerminal()) {
 				ManagedReference<MissionTerminal*> terminal = dynamic_cast<MissionTerminal*>(object.get());
 
-				if (terminal != nullptr)
+				if (terminal != NULL)
 					newName = terminal->getTerminalName();
 			}
 		} else {
@@ -113,7 +113,7 @@ void MapLocationEntry::setObject(SceneObject *obj) {
 
 		ManagedReference<CityRegion *> region = planetManager->getRegionAt(object->getWorldPositionX(), object->getWorldPositionY());
 
-		if(region != nullptr) {
+		if(region != NULL) {
 			newName = region->getRegionName();
 		}
 	}
@@ -123,12 +123,12 @@ void MapLocationEntry::setObject(SceneObject *obj) {
 }
 
 bool MapLocationEntry::insertToMessage(BaseMessage* message, CreatureObject* player) {
-	if (object == nullptr)
+	if (object == NULL)
 		return false;
 
-	const PlanetMapCategory* category = object->getPlanetMapCategory();
+	PlanetMapCategory* category = object->getPlanetMapCategory();
 
-	if (category == nullptr)
+	if (category == NULL)
 		return false;
 
 	if (category->isFactionVisibleOnly()) {
@@ -141,7 +141,7 @@ bool MapLocationEntry::insertToMessage(BaseMessage* message, CreatureObject* pla
 	if (category->getName() == "cloningfacility") {
 		CloningBuildingObjectTemplate* cbot = cast<CloningBuildingObjectTemplate*>(object->getObjectTemplate());
 
-		if (cbot == nullptr)
+		if (cbot == NULL)
 			return false;
 
 		if (cbot->getFacilityType() == CloningBuildingObjectTemplate::FACTION_IMPERIAL && player->getFaction() != Factions::FACTIONIMPERIAL)
@@ -164,7 +164,7 @@ bool MapLocationEntry::insertToMessage(BaseMessage* message, CreatureObject* pla
 	message->insertFloat(object->getWorldPositionY());
 
 	message->insertByte(category->getIndex());
-	message->insertByte((object->getPlanetMapSubCategory() != nullptr) ? object->getPlanetMapSubCategory()->getIndex() : 0);
+	message->insertByte((object->getPlanetMapSubCategory() != NULL) ? object->getPlanetMapSubCategory()->getIndex() : 0);
 
 	message->insertByte(icon);
 

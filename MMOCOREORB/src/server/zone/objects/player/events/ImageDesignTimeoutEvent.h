@@ -12,7 +12,6 @@
 #define IMAGEDESIGNTIMEOUTEVENT_H_
 
 #include "engine/engine.h"
-#include "server/zone/objects/player/sessions/ImageDesignSession.h"
 
 namespace server {
 namespace zone {
@@ -31,7 +30,7 @@ public:
 	void run() {
 		ManagedReference<ImageDesignSession*> session = idSession.get();
 
-		if (session == nullptr)
+		if (session == NULL)
 			return;
 
 		session->sessionTimeout();

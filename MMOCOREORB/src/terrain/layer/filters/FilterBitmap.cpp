@@ -12,10 +12,10 @@
 #include "../../TargaBitmap.h"
 
 float FilterBitmap::process(float x, float y, float transformValue, float& baseValue, TerrainGenerator* terrainGenerator, FilterRectangle* rect) {
-	if (map == nullptr) {
+	if (map == NULL) {
 		map = terrainGenerator->getBitmapGroup()->getBitmap(bitmapId);
 
-		if (map == nullptr) {
+		if (map == NULL) {
 			System::out << "error out of bounds fractal id for filter " << informationHeader.getDescription() << endl;
 
 			return 1;

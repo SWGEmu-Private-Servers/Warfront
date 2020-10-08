@@ -5,12 +5,14 @@
  *      Author: victor
  */
 
-#pragma once
+#ifndef CHILDOBJECT_H_
+#define CHILDOBJECT_H_
 
 #include "engine/util/u3d/Quaternion.h"
 #include "engine/lua/LuaObject.h"
 
 class ChildObject : public Object {
+
 protected:
 	Vector3 position;
 	Quaternion direction;
@@ -78,24 +80,25 @@ public:
 		templateFile = file;
 	}
 
-	inline const Vector3& getPosition() const {
+	inline Vector3& getPosition() {
 		return position;
 	}
 
-	inline const Quaternion& getDirection() const {
+	inline Quaternion& getDirection() {
 		return direction;
 	}
 
-	inline const String& getTemplateFile() const {
+	inline String& getTemplateFile() {
 		return templateFile;
 	}
 
-	inline int getCellId() const {
+	inline int getCellId() {
 		return cellid;
 	}
 
-	inline int getContainmentType() const {
+	inline int getContainmentType() {
 		return containmentType;
 	}
 };
 
+#endif /* CHILDOBJECT_H_ */

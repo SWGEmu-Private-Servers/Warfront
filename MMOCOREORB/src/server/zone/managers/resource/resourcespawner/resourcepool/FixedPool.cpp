@@ -37,7 +37,7 @@ void FixedPool::addResource(ManagedReference<ResourceSpawn*> resourceSpawn, cons
 		String resourceType = includedResources.elementAt(i).getKey();
 		ManagedReference<ResourceSpawn* > spawn = includedResources.elementAt(i).getValue();
 
-		if(resourceType == poolSlot && spawn == nullptr) {
+		if(resourceType == poolSlot && spawn == NULL) {
 			index = i;
 			break;
 		}
@@ -68,16 +68,16 @@ bool FixedPool::update() {
 		String resourceType = includedResources.elementAt(i).getKey();
 		ManagedReference<ResourceSpawn* > spawn = includedResources.elementAt(i).getValue();
 
-		if (spawn == nullptr || !spawn->inShift()) {
+		if (spawn == NULL || !spawn->inShift()) {
 
-			if(spawn != nullptr) {
+			if(spawn != NULL) {
 				resourceSpawner->despawn(spawn);
 				despawnedCount++;
 				//buffer << "Removing: " << spawn->getName() << " : " << spawn->getType();
 			}
 
 			ManagedReference<ResourceSpawn* > newSpawn = resourceSpawner->createResourceSpawn(resourceType, excludedResources);
-			if(newSpawn != nullptr) {
+			if(newSpawn != NULL) {
 				Locker locker(newSpawn);
 				newSpawn->setSpawnPool(ResourcePool::FIXEDPOOL, resourceType);
 				spawnedCount++;
@@ -113,7 +113,7 @@ String FixedPool::healthCheck() {
 		if(!pass)
 			heathly = false;
 
-		if (spawn != nullptr) {
+		if (spawn != NULL) {
 			buffer << "   " << i << ". " << resourceType << " : "
 					<< (pass ? "Pass" : "Fail") << "  " << spawn->getName()
 					<< " Zones: " << String::valueOf(spawn->getSpawnMapSize())

@@ -21,7 +21,7 @@ void ConsumableImplementation::loadTemplateData(SharedObjectTemplate* templateDa
 
 	ConsumableTemplate* consumable = dynamic_cast<ConsumableTemplate*>(templateData);
 
-	if (consumable == nullptr)
+	if (consumable == NULL)
 		return;
 
 	duration = consumable->getDuration();
@@ -144,7 +144,7 @@ int ConsumableImplementation::handleObjectMenuSelect(CreatureObject* player, byt
 
 	int availfill = 0;
 
-	if (ghost == nullptr)
+	if (ghost == NULL)
 		return 1;
 
 	if (isFood())
@@ -164,7 +164,7 @@ int ConsumableImplementation::handleObjectMenuSelect(CreatureObject* player, byt
 	}
 
 
-	ManagedReference<Buff*> buff = nullptr;
+	ManagedReference<Buff*> buff = NULL;
 
 	switch (effectType) {
 	case EFFECT_ATTRIBUTE: {
@@ -297,13 +297,7 @@ int ConsumableImplementation::handleObjectMenuSelect(CreatureObject* player, byt
 
 			if (!playerManager->doBurstRun(player, hamModifier, cooldownModifier))
 				return 0;
-		} else if (effect == "wookiee_roar") {
-			uint64 target = player->getTargetID();
-			player->enqueueCommand(STRING_HASHCODE("wookieeroar"), 0, target, "", 1);
-		} else if (effect == "enhanced_regen") {
-			uint64 target = player->getObjectID();
-			player->addSkillMod(SkillModManager::TEMPORARYMOD,"enhanced_regen",nutrition,true);
-			player->enqueueCommand(STRING_HASHCODE("regeneration"), 0, target, "", 1);
+
 		} else if (effect == "food_reduce") {
 			//Tilla till reduces food stomach filling by a percentage
 			int currentfilling = ghost->getFoodFilling();
@@ -322,7 +316,7 @@ int ConsumableImplementation::handleObjectMenuSelect(CreatureObject* player, byt
 		break;
 	}
 
-	if (buff != nullptr) {
+	if (buff != NULL) {
 		Locker locker(buff);
 
 		player->addBuff(buff);

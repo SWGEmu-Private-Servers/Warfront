@@ -36,12 +36,12 @@ public:
 	void run() {
 		ManagedReference<CreatureObject*> player = client->getPlayer();
 
-		if (player == nullptr)
+		if (player == NULL)
 			return;
 
 		ChatManager* chatManager = server->getZoneServer()->getChatManager();
 
-		if (chatManager != nullptr)
+		if (chatManager != NULL)
 			chatManager->handleChatRoomMessage(player, chatMessage, roomID, counter);
 	}
 

@@ -15,7 +15,7 @@ public:
 	CmdStartScene(CreatureObject* creo) : BaseMessage(50) {
 		Zone* zone = creo->getZone();
 
-		/*if (zone == nullptr)
+		/*if (zone == NULL)
 			zone = creo->getRootParent()->getZone();*/
 
 		insertShort(0x09);

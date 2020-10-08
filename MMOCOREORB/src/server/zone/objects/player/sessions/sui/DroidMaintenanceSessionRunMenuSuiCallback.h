@@ -24,7 +24,7 @@ public:
 		ManagedReference<Facade*> facade = player->getActiveSession(SessionFacadeType::DROIDMAINTENANCERUN);
 		ManagedReference<DroidMaintenanceSession*> session = dynamic_cast<DroidMaintenanceSession*>(facade.get());
 
-		if (session == nullptr) {
+		if (session == NULL) {
 			player->dropActiveSession(SessionFacadeType::DROIDMAINTENANCERUN);
 			return;
 		}
@@ -51,11 +51,11 @@ public:
 			}
 			uint64 itemId = suiListBox->getMenuObjectID(idx);
 			// lookup structure
-			StructureObject* stobject = nullptr;
+			StructureObject* stobject = NULL;
 			ManagedReference<SceneObject*> structure = player->getZoneServer()->getObject(itemId);
-			if( structure != nullptr && structure->isStructureObject() ) {
+			if( structure != NULL && structure->isStructureObject() ) {
 				stobject = cast<StructureObject*>(structure.get());
-				if (stobject != nullptr) {
+				if (stobject != NULL) {
 					session->setSelectedStructure(stobject);
 					session->sendMaintenanceTransferBox();
 				} else {

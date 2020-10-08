@@ -38,12 +38,12 @@ public:
 			//player->info("command queue action activated");
 
 		} catch (...) {
-			//player = nullptr;
+			//player = NULL;
 
 			throw;
 		}
 
-		//player = nullptr;
+		//player = NULL;
 
 	}
 

@@ -10,15 +10,14 @@
 
 #include "engine/engine.h"
 
-#include "engine/util/json_utils.h"
-
-class CreatureAttack {
+class CreatureAttack : public Variable {
 protected:
 	String command;
 	String arguments;
 
 public:
 	CreatureAttack() {}
+	virtual ~CreatureAttack() {}
 
 	bool toBinaryStream(ObjectOutputStream* stream) {
 		bool val = command.toBinaryStream(stream);
@@ -34,24 +33,19 @@ public:
 		return val && val2;
 	}
 
-	friend void to_json(nlohmann::json& j, const CreatureAttack& a) {
-		j["command"] = a.command;
-		j["arguments"] = a.arguments;
-	}
-
-	const String& getCommand() const {
+	String getCommand() {
 		return command;
 	}
 
-	const String& getArguments() const {
+	String getArguments() {
 		return arguments;
 	}
 
-	void setCommand(const String& c) {
+	void setCommand(String c) {
 		command = c;
 	}
 
-	void setArguments(const String& a) {
+	void setArguments(String a) {
 		arguments = a;
 	}
 };
@@ -68,15 +62,15 @@ public:
 		add(attack);
 	}
 
-	const String& getCommand(int i) const {
+	String getCommand(int i) {
 		return get(i).getCommand();
 	}
 
-	const String& getArguments(int i) const {
+	String getArguments(int i) {
 		return get(i).getArguments();
 	}
 
-	int getRandomAttackNumber() const {
+	int getRandomAttackNumber() {
 		return System::random(size() - 1);
 	}
 };

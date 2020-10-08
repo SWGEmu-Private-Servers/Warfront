@@ -9,7 +9,6 @@
 #define GUILDMEMBERINFO_H_
 
 #include "engine/engine.h"
-#include "engine/util/json_utils.h"
 
 namespace server {
 namespace zone {
@@ -47,13 +46,6 @@ namespace guild {
 		int compareTo(const GuildMemberInfo& gmi) const;
 
 		GuildMemberInfo& operator=(const GuildMemberInfo& gmi);
-
-		friend void to_json(nlohmann::json& j, const GuildMemberInfo& m) {
-			j["playerID"] = m.playerID;
-			j["guildTitle"] = m.guildTitle;
-			j["permissions"] = m.permissions;
-			j["declaredAllegiance"] = m.declaredAllegiance;
-		}
 
 		bool toBinaryStream(ObjectOutputStream* stream) {
 			stream->writeLong(playerID);

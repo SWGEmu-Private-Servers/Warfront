@@ -25,18 +25,18 @@ public:
 			return INVALIDLOCOMOTION;
 
 		Zone* zone = creature->getZone();
-		if (zone == nullptr)
+		if (zone == NULL)
 			return GENERALERROR;
 
 		GCWManager* gcwMan = zone->getGCWManager();
 
-		if (gcwMan == nullptr)
+		if (gcwMan == NULL)
 			return GENERALERROR;
 
 		// temporary for testing gcw bases
 		ManagedReference<PlayerObject*> ghost = creature->getPlayerObject();
 
-		if (ghost != nullptr && ghost->isPrivileged()) {
+		if (ghost != NULL && ghost->isPrivileged()) {
 			int rebelBases = gcwMan->getRebelBaseCount();
 			int imperialBases = gcwMan->getImperialBaseCount();
 

@@ -26,13 +26,13 @@ public:
 	void run() {
 		ManagedReference<InstallationObject*> strongRef = installation.get();
 
-		if (strongRef == nullptr)
+		if (strongRef == NULL)
 			return;
 
 		Locker locker(strongRef);
 
 		try {
-			if (strongRef->getZone() == nullptr)
+			if (strongRef->getZone() == NULL)
 				return;
 
 			strongRef->updateInstallationWork();

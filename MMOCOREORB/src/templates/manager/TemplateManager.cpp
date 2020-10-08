@@ -131,7 +131,7 @@
 #include "tre3/TreeArchive.h"
 
 
-Lua* TemplateManager::luaTemplatesInstance = nullptr;
+Lua* TemplateManager::luaTemplatesInstance = NULL;
 
 AtomicInteger TemplateManager::loadedTemplatesCount;
 
@@ -140,7 +140,6 @@ int TemplateManager::ERROR_CODE = NO_ERROR;
 TemplateManager::TemplateManager() {
 	setLogging(false);
 	setGlobalLogging(true);
-
 	setLoggingName("TemplateManager");
 
 	registerTemplateObjects();
@@ -167,33 +166,33 @@ TemplateManager::TemplateManager() {
 
 TemplateManager::~TemplateManager() {
 	delete templateCRCMap;
-	templateCRCMap = nullptr;
+	templateCRCMap = NULL;
 
 	delete clientTemplateCRCMap;
-	clientTemplateCRCMap = nullptr;
+	clientTemplateCRCMap = NULL;
 
 	delete luaTemplatesInstance;
-	luaTemplatesInstance = nullptr;
+	luaTemplatesInstance = NULL;
 
 	delete portalLayoutMap;
-	portalLayoutMap = nullptr;
+	portalLayoutMap = NULL;
 
 	delete floorMeshMap;
-	floorMeshMap = nullptr;
+	floorMeshMap = NULL;
 
 	delete interiorMap;
-	interiorMap = nullptr;
+	interiorMap = NULL;
 
 	delete appearanceMap;
-	appearanceMap = nullptr;
+	appearanceMap = NULL;
 }
 
 void TemplateManager::loadSlotDefinitions() {
-	debug("Loading slot definitions");
+	info("Loading slot definitions");
 
 	IffStream* iffStream = openIffFile("abstract/slot/slot_definition/slot_definitions.iff");
 
-	if (iffStream == nullptr) {
+	if (iffStream == NULL) {
 		error("Slot definitions can't be found.");
 		ERROR_CODE = SLOT_DEFINITION_FILE_NOT_FOUND;
 		return;
@@ -218,15 +217,15 @@ void TemplateManager::loadSlotDefinitions() {
 
 	delete iffStream;
 
-	info() << "Loaded " << slotDefinitions.size() << " slot definitions.";
+	info("Loaded " + String::valueOf(slotDefinitions.size()) + " slot definitions.", true);
 }
 
 void TemplateManager::loadAssetCustomizationManager() {
-	debug("loading asset customization manager");
+	info("loading asset customization manager", true);
 
 	IffStream* iffStream = openIffFile("customization/asset_customization_manager.iff");
 
-	if (iffStream == nullptr) {
+	if (iffStream == NULL) {
 		error("Asset customization manager data not found.");
 		ERROR_CODE = ASSETCUSTOMIZATIONMANAGER_FILE_NOT_FOUND;
 		return;
@@ -236,11 +235,11 @@ void TemplateManager::loadAssetCustomizationManager() {
 
 	delete iffStream;
 
-	debug() << "loading customization id manager";
+	info("loading customization id manager", true);
 
 	iffStream = openIffFile("customization/customization_id_manager.iff");
 
-	if (iffStream == nullptr) {
+	if (iffStream == NULL) {
 		error("Customization Id manager data not found.");
 		ERROR_CODE = CUSTOMIZATION_ID_MANAGER_FILE_NOT_FOUND;
 		return;
@@ -252,7 +251,7 @@ void TemplateManager::loadAssetCustomizationManager() {
 
 	iffStream = openIffFile("datatables/customization/palette_columns.iff");
 
-	if (iffStream == nullptr) {
+	if (iffStream == NULL) {
 		error("Customization palette columns data not found.");
 		ERROR_CODE = PALLETE_COLUMNS_FILE_NOT_FOUND;
 		return;
@@ -264,7 +263,7 @@ void TemplateManager::loadAssetCustomizationManager() {
 
 	iffStream = openIffFile("datatables/customization/hair_assets_skill_mods.iff");
 
-	if (iffStream == nullptr) {
+	if (iffStream == NULL) {
 		error("Hair assets data not found.");
 		ERROR_CODE = HAIR_ASSETS_FILE_NOT_FOUND;
 		return;
@@ -276,7 +275,7 @@ void TemplateManager::loadAssetCustomizationManager() {
 
 	iffStream = openIffFile("datatables/customization/allow_bald.iff");
 
-	if (iffStream == nullptr) {
+	if (iffStream == NULL) {
 		error("allow bald data not found");
 		ERROR_CODE = HAIR_ASSETS_FILE_NOT_FOUND;
 		return;
@@ -292,8 +291,8 @@ Reference<SlotDescriptor*> TemplateManager::getSlotDescriptor(const String& file
 	if (!slotDescriptors.contains(filename)) {
 		IffStream* iffStream = openIffFile(filename);
 
-		if (iffStream == nullptr)
-			return nullptr; //Descriptor does not exist.
+		if (iffStream == NULL)
+			return NULL; //Descriptor does not exist.
 
 		Reference<SlotDescriptor*> slotDesc = new SlotDescriptor();
 		slotDesc->readObject(iffStream);
@@ -307,22 +306,23 @@ Reference<SlotDescriptor*> TemplateManager::getSlotDescriptor(const String& file
 }
 
 PaletteTemplate* TemplateManager::getPaletteTemplate(const String& fileName) {
-	PaletteTemplate* palette = nullptr;
+	PaletteTemplate* palette = NULL;
 
 	ObjectInputStream* stream = openTreFile(fileName);
 
-	if (stream == nullptr)
-		return nullptr;
+	if (stream == NULL)
+		return NULL;
 
 	palette = new PaletteTemplate();
 
 	try {
 		palette->readObject(stream);
-	} catch (const Exception& e) {
-		error() << "could not parse palette template: " << fileName << e.getMessage();
+	} catch (Exception& e) {
+		error("could not parse palette template: " + String(fileName));
+		error(e.getMessage());
 
 		delete palette;
-		palette = nullptr;
+		palette = NULL;
 	}
 
 	delete stream;
@@ -335,8 +335,8 @@ Reference<ArrangementDescriptor*> TemplateManager::getArrangementDescriptor(cons
 	if (!arrangementDescriptors.contains(filename)) {
 		IffStream* iffStream = openIffFile(filename);
 
-		if (iffStream == nullptr)
-			return nullptr; //Descriptor does not exist.
+		if (iffStream == NULL)
+			return NULL; //Descriptor does not exist.
 
 		Reference<ArrangementDescriptor*> slotDesc = new ArrangementDescriptor();
 		slotDesc->readObject(iffStream);
@@ -352,7 +352,7 @@ Reference<ArrangementDescriptor*> TemplateManager::getArrangementDescriptor(cons
 void TemplateManager::loadPlanetMapCategories() {
 	IffStream* iffStream = openIffFile("datatables/player/planet_map_cat.iff");
 
-	if (iffStream == nullptr) {
+	if (iffStream == NULL) {
 		error("Planet map categories could not be found.");
 		ERROR_CODE = PLANET_CAT_FILE_NOT_FOUND;
 		return;
@@ -372,49 +372,50 @@ void TemplateManager::loadPlanetMapCategories() {
 		planetMapCategoryList.put(planetMapCategory->getName(), planetMapCategory);
 	}
 
-	info() << "Loaded " << planetMapCategoryList.size() << " planet map categories.";
+	info("Loaded " + String::valueOf(planetMapCategoryList.size()) + " planet map categories.", true);
 }
 
 void TemplateManager::loadLuaTemplates() {
-	if (loadedTemplatesCount > 0) {
+	
+	if( loadedTemplatesCount > 0 ) {
 		error("Templates already loaded");
 		return;
 	}
-
-	info(true) << "Loading object templates";
+	
+	info("Loading object templates", true);
 
 	try {
 		bool val = luaTemplatesInstance->runFile("scripts/object/main.lua");
 
 		if (!val)
 			ERROR_CODE = LOAD_LUA_TEMPLATE_ERROR;
-	} catch (const Exception& e) {
+	} catch (Exception& e) {
 		error(e.getMessage());
 		e.printStackTrace();
 
 		ERROR_CODE = LOAD_LUA_TEMPLATE_ERROR;
 	}
 
-	System::out << endl;
+	printf("\n");
 	info("Finished loading object templates", true);
-
-	info() << portalLayoutMap->size() << " portal layouts loaded";
-	info() << floorMeshMap->size() << " floor meshes loaded";
-	info() << structureFootprints.size() << " structure footprints.";
+	
+	info(String::valueOf(portalLayoutMap->size()) + " portal layouts loaded", true);
+	info(String::valueOf(floorMeshMap->size()) + " floor meshes loaded", true);
+	info(String::valueOf(structureFootprints.size()) + " structure footprints.", true);
 
 	delete luaTemplatesInstance;
-	luaTemplatesInstance = nullptr;
+	luaTemplatesInstance = NULL;
 }
 
 void TemplateManager::loadTreArchive() {
-	const auto& path = ConfigManager::instance()->getTrePath();
+	String path = ConfigManager::instance()->getTrePath();
 
 	if (path.length() <= 1) {
 		ERROR_CODE = NO_TRE_PATH;
 		return;
 	}
 
-	const auto& treFilesToLoad = ConfigManager::instance()->getTreFiles();
+	Vector<String> treFilesToLoad = ConfigManager::instance()->getTreFiles();
 
 	if (treFilesToLoad.size() == 0) {
 		ERROR_CODE = NO_TRE_FILES;
@@ -426,6 +427,26 @@ void TemplateManager::loadTreArchive() {
 	if (res != 0) {
 		ERROR_CODE = LOAD_TRES_ERROR;
 	}
+
+/*	info("Loading TRE archives...", true);
+
+
+
+	treeDirectory = new TreeArchive();
+
+	int j = 0;
+
+	for (int i = 0; i < treFilesToLoad.size(); ++i) {
+		String file = treFilesToLoad.get(i);
+
+		String fullPath = path + "/";
+		fullPath += file;
+
+		treeDirectory->unpackFile(fullPath);
+	}
+
+
+	info("Finished loading TRE archives.", true);*/
 }
 
 void TemplateManager::addTemplate(uint32 key, const String& fullName, LuaObject* templateData) {
@@ -434,13 +455,13 @@ void TemplateManager::addTemplate(uint32 key, const String& fullName, LuaObject*
 
 	SharedObjectTemplate* templateObject = templateFactory.createObject(templateType);
 
-	if (templateObject == nullptr) {
+	if (templateObject == NULL) {
 		error("error creating template from lua with templateType 0x" + String::hexvalueOf((int)templateType));
 
 		return;
 	}
 
-	debug() << "loading " << fullName;
+	//info("loading " + fullName, true);
 
 	String fileName = fullName.subString(fullName.lastIndexOf('/') + 1, fullName.lastIndexOf('.'));
 
@@ -450,7 +471,7 @@ void TemplateManager::addTemplate(uint32 key, const String& fullName, LuaObject*
 	if (!clientTemplateFile.isEmpty()) {
 		IffStream* iffStream = openIffFile(clientTemplateFile);
 
-		if (iffStream != nullptr) {
+		if (iffStream != NULL) {
 			templateObject->readObject(iffStream);
 
 			delete iffStream;
@@ -462,9 +483,9 @@ void TemplateManager::addTemplate(uint32 key, const String& fullName, LuaObject*
 	if (!clientTemplateFile.isEmpty())
 		templateObject->addDerivedFile(clientTemplateFile);
 
-	debug() << "loaded " << fullName;
+	info("loaded " + fullName);
 
-	if (templateCRCMap->put(key, templateObject) != nullptr) {
+	if (templateCRCMap->put(key, templateObject) != NULL) {
 		//error("duplicate template for " + fullName);
 	}
 }
@@ -558,10 +579,10 @@ void TemplateManager::registerTemplateObjects() {
 
 void TemplateManager::registerFunctions() {
 	//lua generic
-	luaTemplatesInstance->registerFunction("includeFile", includeFile);
-	luaTemplatesInstance->registerFunction("crcString", crcString);
-	luaTemplatesInstance->registerFunction("addTemplateCRC", addTemplateCRC);
-	luaTemplatesInstance->registerFunction("addClientTemplate", addClientTemplate);
+	lua_register(luaTemplatesInstance->getLuaState(), "includeFile", includeFile);
+	lua_register(luaTemplatesInstance->getLuaState(), "crcString", crcString);
+	lua_register(luaTemplatesInstance->getLuaState(), "addTemplateCRC", addTemplateCRC);
+	lua_register(luaTemplatesInstance->getLuaState(), "addClientTemplate", addClientTemplate);
 }
 
 void TemplateManager::registerGlobals() {
@@ -771,11 +792,11 @@ void TemplateManager::registerGlobals() {
 	luaTemplatesInstance->setGlobalInt("CLONER_FACTION_IMPERIAL", CloningBuildingObjectTemplate::FACTION_IMPERIAL);
 }
 
-const String& TemplateManager::getTemplateFile(uint32 key) const {
+String TemplateManager::getTemplateFile(uint32 key) {
 	SharedObjectTemplate* templateData = templateCRCMap->get(key);
 
-	if (templateData == nullptr) {
-		const String& ascii = clientTemplateCRCMap->get(key);
+	if (templateData == NULL) {
+		String ascii = clientTemplateCRCMap->get(key);
 
 		if (ascii.isEmpty())
 			throw Exception("TemplateManager::getTemplateFile exception unknown template key 0x" + String::hexvalueOf((int)key));
@@ -788,9 +809,9 @@ const String& TemplateManager::getTemplateFile(uint32 key) const {
 
 ObjectInputStream* TemplateManager::openTreFile(const String& fileName) {
 	if (fileName.isEmpty())
-		return nullptr;
+		return NULL;
 
-	IffStream* iffStream = nullptr;
+	IffStream* iffStream = NULL;
 
 	int size = 0;
 	//byte* data = treeDirectory->getBytes(fileName, size);
@@ -798,7 +819,7 @@ ObjectInputStream* TemplateManager::openTreFile(const String& fileName) {
 	byte* data = DataArchiveStore::instance()->getData(fileName, size);
 
 	if (size == 0)
-		return nullptr;
+		return NULL;
 
 	ObjectInputStream* stream = new ObjectInputStream((char*)data, size);
 
@@ -814,38 +835,38 @@ IffStream* TemplateManager::openIffFile(const String& fileName) {
 FloorMesh* TemplateManager::getFloorMesh(const String& fileName) {
 	FloorMesh* floorMesh = floorMeshMap->get(fileName);
 
-	if (floorMesh == nullptr) {
+	if (floorMesh == NULL) {
 		// read file
 
 		IffStream* iffStream = openIffFile(fileName);
 
-		if (iffStream != nullptr) {
+		if (iffStream != NULL) {
 			try {
 				floorMesh = new FloorMesh();
 
 				floorMesh->readObject(iffStream);
 
-				debug() << "parsed " << fileName;
+				info("parsed " + fileName);
 			} catch (Exception& e) {
-				warning() << "could not parse " << fileName;
+				info("could not parse " + fileName);
 
 				delete floorMesh;
-				floorMesh = nullptr;
+				floorMesh = NULL;
 			}
 
 			delete iffStream;
-			iffStream = nullptr;
+			iffStream = NULL;
 
 			floorMeshMap->put(fileName, floorMesh);
 		}
 	}
 
 	return floorMesh;
-	//return nullptr;
+	//return NULL;
 }
 
 AppearanceTemplate* TemplateManager::getAppearanceTemplate(const String& fileName) {
-	AppearanceTemplate* meshAppearance = nullptr;
+	AppearanceTemplate* meshAppearance = NULL;
 
 	Locker locker(&appearanceMapLock);
 
@@ -855,14 +876,14 @@ AppearanceTemplate* TemplateManager::getAppearanceTemplate(const String& fileNam
 		error("unreported exception caught in AppearanceTemplate* TemplateManager::getAppearanceTemplate(const String& fileName)");
 	}
 
-	if (meshAppearance == nullptr) {
+	if (meshAppearance == NULL) {
 		IffStream* iffStream = openIffFile(fileName);
 
-		if (iffStream != nullptr) {
+		if (iffStream != NULL) {
 			meshAppearance = instantiateAppearanceTemplate(iffStream);
 
 			delete iffStream;
-			iffStream = nullptr;
+			iffStream = NULL;
 
 			appearanceMap->put(fileName, meshAppearance);
 		}
@@ -873,7 +894,7 @@ AppearanceTemplate* TemplateManager::getAppearanceTemplate(const String& fileNam
 
 AppearanceTemplate* TemplateManager::instantiateAppearanceTemplate(IffStream* iffStream) {
 	uint32 formType = iffStream->getNextFormType();
-	AppearanceTemplate* appTemplate = nullptr;
+	AppearanceTemplate* appTemplate = NULL;
 
 	try {
 		switch (formType) {
@@ -902,7 +923,7 @@ AppearanceTemplate* TemplateManager::instantiateAppearanceTemplate(IffStream* if
 			break;
 		}
 
-		if (appTemplate != nullptr)
+		if (appTemplate != NULL)
 			appTemplate->readObject(iffStream);
 
 	} catch (Exception& e) {
@@ -918,25 +939,25 @@ PortalLayout* TemplateManager::getPortalLayout(const String& fileName) {
 
 	PortalLayout* portalLayout = portalLayoutMap->get(fileName);
 
-	if (portalLayout == nullptr) {
+	if (portalLayout == NULL) {
 		IffStream* iffStream = openIffFile(fileName);
 
-		if (iffStream != nullptr) {
+		if (iffStream != NULL) {
 			try {
 				portalLayout = new PortalLayout();
 
 				portalLayout->readObject(iffStream);
 
-				debug() << "parsed " << fileName;
+				info("parsed " + fileName);
 			} catch (Exception& e) {
-				warning() << "could not parse " << fileName;
+				info("could not parse " + fileName);
 
 				delete portalLayout;
-				portalLayout = nullptr;
+				portalLayout = NULL;
 			}
 
 			delete iffStream;
-			iffStream = nullptr;
+			iffStream = NULL;
 
 			portalLayoutMap->put(fileName, portalLayout);
 		}
@@ -950,20 +971,20 @@ InteriorLayoutTemplate* TemplateManager::getInteriorLayout(const String& fileNam
 
 	InteriorLayoutTemplate* interior = interiorMap->get(fileName);
 
-	if (interior == nullptr) {
+	if (interior == NULL) {
 		IffStream* iffStream = openIffFile(fileName);
 
-		if (iffStream != nullptr) {
+		if (iffStream != NULL) {
 			try {
 				interior = new InteriorLayoutTemplate();
 				interior->readObject(iffStream);
 			} catch (Exception& e) {
 				delete interior;
-				interior = nullptr;
+				interior = NULL;
 			}
 
 			delete iffStream;
-			iffStream = nullptr;
+			iffStream = NULL;
 
 			interiorMap->put(fileName, interior);
 		}
@@ -972,11 +993,11 @@ InteriorLayoutTemplate* TemplateManager::getInteriorLayout(const String& fileNam
 	return interior;
 }
 
-SharedObjectTemplate* TemplateManager::getTemplate(uint32 key) const {
+SharedObjectTemplate* TemplateManager::getTemplate(uint32 key) {
 	return templateCRCMap->get(key);
 }
 
-bool TemplateManager::existsTemplate(uint32 key) const {
+bool TemplateManager::existsTemplate(uint32 key) {
 	return templateCRCMap->containsKey(key);
 }
 
@@ -992,29 +1013,27 @@ int TemplateManager::includeFile(lua_State* L) {
 }
 
 LuaObject* TemplateManager::getLuaObject(const String& iffTemplate) {
-	if (templateCRCMap->get(iffTemplate.hashCode()) == nullptr) {
+	if (templateCRCMap->get(iffTemplate.hashCode()) == NULL) {
 		String luaFileName = iffTemplate.replaceAll(".iff", ".lua");
 
 		luaTemplatesInstance->runFile("scripts/" + luaFileName);
 	}
 
-	auto hashCode = iffTemplate.hashCode();
-
-	if (templateCRCMap->get(hashCode) == nullptr)
-		return nullptr;
+	if (templateCRCMap->get(iffTemplate.hashCode()) == NULL)
+		return NULL;
 
 	LuaFunction getObject(luaTemplatesInstance->getLuaState(), "getTemplate", 1);
-	getObject << hashCode; // push first argument
+	getObject << iffTemplate.hashCode(); // push first argument
 	getObject.callFunction();
 
 	LuaObject* result = new LuaObject(luaTemplatesInstance->getLuaState());
 
 	if (!result->isValidTable()) {
-		System::err << "Unknown lua object template " << iffTemplate << endl;
+		System::out << "Unknown lua object template " << iffTemplate << endl;
 
 		delete result;
 
-		return nullptr;
+		return NULL;
 	}
 
 	return result;
@@ -1066,20 +1085,20 @@ void TemplateManager::addClientTemplate(uint32 crc, const String& name) {
 	clientTemplateCRCMap->put(crc, name);
 }
 
-const StructureFootprint* TemplateManager::loadStructureFootprint(const String& filePath) {
+StructureFootprint* TemplateManager::loadStructureFootprint(const String& filePath) {
 	if (filePath.isEmpty())
-		return nullptr;
+		return NULL;
 
 	Reference<StructureFootprint*> structureFootprint = structureFootprints.get(filePath);
 
-	if (structureFootprint != nullptr)
+	if (structureFootprint != NULL)
 		return structureFootprint;
 
 	IffStream* iffStream = openIffFile(filePath);
 
-	if (iffStream == nullptr) {
+	if (iffStream == NULL) {
 		warning("Could not find referenced Structure Footprint file: " + filePath);
-		return nullptr;
+		return NULL;
 	}
 
 	structureFootprint = new StructureFootprint();

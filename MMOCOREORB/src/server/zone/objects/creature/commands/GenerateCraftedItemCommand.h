@@ -32,13 +32,13 @@ public:
 		ManagedReference<CreatureObject*> player = cast<CreatureObject*>(creature);
 
 		ManagedReference<CraftingManager*> craftingManager = player->getZoneServer()->getCraftingManager();
-		if (craftingManager == nullptr) {
+		if (craftingManager == NULL) {
 			return GENERALERROR;
 		}
 
 		ManagedReference<SceneObject*> inventory = creature->getSlottedObject("inventory");
 
-		if (inventory == nullptr) {
+		if (inventory == NULL) {
 			creature->sendSystemMessage("Error locating target inventory");
 			return GENERALERROR;
 		}
@@ -63,14 +63,14 @@ public:
 			ManagedReference<DraftSchematic* > draftSchematic =
 					creature->getZoneServer()->createObject(file.hashCode(), 0).castTo<DraftSchematic*>();
 
-			if (draftSchematic == nullptr || !draftSchematic->isValidDraftSchematic()) {
+			if (draftSchematic == NULL || !draftSchematic->isValidDraftSchematic()) {
 				creature->sendSystemMessage("File entered not valid, please be sure to use the draft schematics server script path not client path");
 				return GENERALERROR;
 			}
 
 			ManagedReference<ManufactureSchematic* > manuSchematic = ( draftSchematic->createManufactureSchematic()).castTo<ManufactureSchematic*>();
 
-			if (manuSchematic == nullptr) {
+			if (manuSchematic == NULL) {
 				creature->sendSystemMessage("Error creating ManufactureSchematic from DraftSchematic");
 				return GENERALERROR;
 			}
@@ -111,7 +111,7 @@ public:
 			ManagedReference<TangibleObject *> prototype =  (
 					creature->getZoneServer()->createObject(targetTemplate, 2)).castTo<TangibleObject*>();
 
-			if (prototype == nullptr) {
+			if (prototype == NULL) {
 				creature->sendSystemMessage("Unable to create target item, is it implemented yet?");
 				return GENERALERROR;
 			}
@@ -172,7 +172,7 @@ public:
 			if (quantity > 1) {
 				ManagedReference<FactoryCrate* > crate = prototype->createFactoryCrate(quantity, true);
 
-				if (crate == nullptr) {
+				if (crate == NULL) {
 					prototype->destroyObjectFromDatabase(true);
 					return GENERALERROR;
 				}

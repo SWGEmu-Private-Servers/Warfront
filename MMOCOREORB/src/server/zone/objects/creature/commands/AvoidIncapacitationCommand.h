@@ -5,6 +5,11 @@
 #ifndef AVOIDINCAPACITATIONCOMMAND_H_
 #define AVOIDINCAPACITATIONCOMMAND_H_
 
+#include "server/zone/ZoneServer.h"
+#include "server/zone/managers/player/PlayerManager.h"
+#include "server/zone/objects/creature/buffs/PrivateBuff.h"
+#include "server/zone/objects/creature/buffs/PrivateSkillMultiplierBuff.h"
+
 #include "JediQueueCommand.h"
 
 class AvoidIncapacitationCommand : public JediQueueCommand {
@@ -30,6 +35,11 @@ public:
 			creature->renewBuff(buffCRC, duration, true);
 
 			doForceCost(creature);
+
+			// Cut Force Regen in Half for 30 seconds.
+			ManagedReference<PrivateSkillMultiplierBuff *> regenDebuff = new PrivateSkillMultiplierBuff(creature, STRING_HASHCODE("private_force_regen_debuff"), 30, BuffType::JEDI);
+			Locker regenLocker(regenDebuff);
+			regenDebuff->setSkillModifier("private_force_regen_divisor", 2);
 
 			if (!clientEffect.isEmpty())
 				creature->playEffect(clientEffect, "");

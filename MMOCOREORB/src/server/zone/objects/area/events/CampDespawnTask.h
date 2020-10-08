@@ -23,12 +23,12 @@ public:
 	}
 
 	void run() {
-		if (campSite == nullptr)
+		if (campSite == NULL)
 			return;
 
 		ZoneServer* zoneServer = campSite->getZoneServer();
 
-		if (zoneServer != nullptr && zoneServer->isServerLoading()) {
+		if (zoneServer != NULL && zoneServer->isServerLoading()) {
 			schedule(1000);
 
 			return;

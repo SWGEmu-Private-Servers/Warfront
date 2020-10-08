@@ -42,12 +42,12 @@ public:
 
 		}
 
-		if(creature->getZoneServer() == nullptr)
+		if(creature->getZoneServer() == NULL)
 			return GENERALERROR;
 
 		CityManager* cityManager = creature->getZoneServer()->getCityManager();
 
-		if(cityManager == nullptr)
+		if(cityManager == NULL)
 			return GENERALERROR;
 
 		cityManager->sendCityReport(creature, planet, rank);

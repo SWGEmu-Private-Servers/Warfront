@@ -15,21 +15,21 @@ public:
 	int doQueueCommand(CreatureObject* creature, const uint64& target, const UnicodeString& arguments) const {
 
 		ManagedReference<PetControlDevice*> controlDevice = creature->getControlDevice().get().castTo<PetControlDevice*>();
-		if (controlDevice == nullptr)
+		if (controlDevice == NULL)
 			return GENERALERROR;
 
 		ManagedReference<AiAgent*> pet = cast<AiAgent*>(creature);
-		if( pet == nullptr )
+		if( pet == NULL )
 			return GENERALERROR;
 
 		ManagedReference< CreatureObject*> player = pet->getLinkedCreature().get();
-		if( player == nullptr )
+		if( player == NULL )
 			return GENERALERROR;
 
 		// Check if droid has power
 		if( controlDevice->getPetType() == PetManager::DROIDPET ){
 			ManagedReference<DroidObject*> droidPet = cast<DroidObject*>(pet.get());
-			if( droidPet == nullptr )
+			if( droidPet == NULL )
 				return GENERALERROR;
 
 			if( !droidPet->hasPower() ){
@@ -39,7 +39,7 @@ public:
 		}
 
 		ManagedReference<GroupObject*> group = pet->getGroup();
-		if (group == nullptr) {
+		if (group == NULL) {
 			Locker clocker(player, pet);
 			GroupManager::instance()->inviteToGroup(player, pet);
 		} else

@@ -23,7 +23,7 @@ public:
 
 		ManagedReference<CreatureObject*> targetObject = server->getZoneServer()->getObject(target).castTo<CreatureObject*>();
 
-		if(targetObject == nullptr)
+		if(targetObject == NULL)
 			return GENERALERROR;
 
 		if(targetObject == creature || !targetObject->isPlayerCreature())
@@ -31,7 +31,7 @@ public:
 
 		ManagedReference<EntertainingSession*> session = creature->getActiveSession(SessionFacadeType::ENTERTAINING).castTo<EntertainingSession*>();
 
-		if(session == nullptr)
+		if(session == NULL)
 			return GENERALERROR;
 
 		StringIdChatParameter selfMessage;

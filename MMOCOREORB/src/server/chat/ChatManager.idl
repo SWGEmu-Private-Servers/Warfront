@@ -6,25 +6,22 @@ package server.chat;
 
 import engine.core.ManagedService;
 import server.zone.ZoneServer;
+import server.chat.room.ChatRoom;
+import server.chat.room.ChatRoomMap;
 import server.zone.objects.creature.CreatureObject;
 import server.zone.objects.scene.SceneObject;
 import engine.service.proto.BaseMessage;
+import server.zone.managers.player.PlayerMap;
 import server.zone.managers.player.PlayerManager;
+import system.util.VectorMap;
 import server.zone.objects.player.PlayerObject;
 import server.zone.packets.chat.ChatInstantMessageToCharacter;
 import engine.log.Logger;
 import server.zone.objects.waypoint.WaypointObject;
 import server.chat.PendingMessageList;
-import server.chat.PersistentMessage;
-
-include server.zone.managers.player.PlayerMap;
 include server.chat.StringIdChatParameter;
 include server.chat.StringIdChatParameterVector;
 include server.chat.WaypointChatParameterVector;
-include server.chat.room.ChatRoom;
-include server.chat.room.ChatRoomMap;
-include system.util.VectorMap;
-include system.lang.ref.Reference;
 
 @dirty
 class ChatManager extends ManagedService implements Logger {
@@ -43,6 +40,11 @@ class ChatManager extends ManagedService implements Logger {
 	ChatRoom guildRoom;
 	ChatRoom auctionRoom;
 	ChatRoom systemRoom;
+	ChatRoom generalRoom;
+	ChatRoom buffRoom;
+	ChatRoom thePitRoom;
+	ChatRoom pvpRoom;
+	
 
 	transient ChatRoomMap roomMap;
 
@@ -364,8 +366,6 @@ class ChatManager extends ManagedService implements Logger {
 	public native void handleSocialInternalMessage(CreatureObject sender, final unicode arguments);
 	@local
 	public native void broadcastMessage(BaseMessage message);
-
-	@read
 	public native void broadcastChatMessage(CreatureObject player, final unicode message, unsigned long target = 0, unsigned int spatialChatType = 0, unsigned int moodType = 0, unsigned int chatFlags = 0, int languageID = 1);
 	public native void broadcastGalaxy(CreatureObject player, final string message);
 	public native void broadcastGalaxy(final string message, final string faction);
@@ -391,7 +391,7 @@ class ChatManager extends ManagedService implements Logger {
 	public native int sendMail(final string sendername, final unicode subject, @dereferenced StringIdChatParameter body, final string recipientName, WaypointObject waypoint = null);
 
 	@local
-	public native int sendMail(final string sendername, final unicode subject, final unicode body, final string recipientName, StringIdChatParameterVector stringIdParameters, WaypointChatParameterVector waypointParameters, @rawTemplate(value = "PersistentMessage*") Reference sentMail = null);
+	public native int sendMail(final string sendername, final unicode subject, final unicode body, final string recipientName, StringIdChatParameterVector stringIdParameters, WaypointChatParameterVector waypointParameters);
 
 	//////////////////////////////////////////////////////
 
@@ -410,11 +410,11 @@ class ChatManager extends ManagedService implements Logger {
 		return gameRooms.get(game);
 	}
 
-	@read
+	@dirty
 	public int getPlayerCount() {
 		return playerMap.size();
 	}
-
+	
 	@dirty
 	public ZoneServer getZoneServer() {
 		return server;
@@ -453,7 +453,35 @@ class ChatManager extends ManagedService implements Logger {
 		return systemRoom;
 	}
 
-	@read
+	/*
+	 * Returns the general chat room
+	 */
+	public ChatRoom getGeneralRoom() {
+		return generalRoom;
+	}
+
+	/*
+	 * Returns the Buffs chat room
+	 */
+	public ChatRoom getbuffRoom() {
+		return buffRoom;
+	}
+	
+	/*
+	 * Returns the ThePit chat room
+	 */
+	public ChatRoom getthePitRoom() {
+		return thePitRoom;
+	}
+	
+	/*
+	* Returns the parent room for GCW chat rooms.
+	*/
+	public ChatRoom getPvpRoom() {
+		return pvpRoom;
+	}
+
+	@dirty
 	public string getSocialType(unsigned int id) {
 		return socialTypes.get(id);
 	}

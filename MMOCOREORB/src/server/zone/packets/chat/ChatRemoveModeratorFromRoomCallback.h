@@ -38,11 +38,11 @@ public:
 	void run() {
 		ManagedReference<CreatureObject*> deoper = client->getPlayer();
 
-		if (deoper == nullptr)
+		if (deoper == NULL)
 			return;
 
 		ManagedReference<ChatManager*> chatManager = server->getChatManager();
-		if (chatManager != nullptr)
+		if (chatManager != NULL)
 			chatManager->handleChatRemoveModerator(deoper, deopeeName, roomPath, requestID);
 	}
 

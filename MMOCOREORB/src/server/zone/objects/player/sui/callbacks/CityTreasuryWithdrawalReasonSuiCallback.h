@@ -22,7 +22,7 @@ public:
 
 		ManagedReference<CityTreasuryWithdrawalSession*> session = player->getActiveSession(SessionFacadeType::CITYWITHDRAW).castTo<CityTreasuryWithdrawalSession*>();
 
-		if (session == nullptr)
+		if (session == NULL)
 			return;
 
 		if (!suiBox->isInputBox() || cancelPressed || args->size() <= 0) {

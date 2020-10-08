@@ -5,6 +5,10 @@
 #ifndef FORCEHEALQUEUECOMMAND_H_
 #define FORCEHEALQUEUECOMMAND_H_
 
+
+#include "server/zone/objects/scene/SceneObject.h"
+#include "server/zone/managers/combat/CombatManager.h"
+#include "server/zone/objects/player/PlayerObject.h"
 #include "JediQueueCommand.h"
 
 class ForceHealQueueCommand : public JediQueueCommand {
@@ -34,7 +38,7 @@ public:
 		DISEASED = 1,
 		POISONED = 2,
 		BLEEDING = 4,
-		ONFIRE   = 8
+		ONFIRE   = 8,
 	};
 
 	enum {
@@ -91,9 +95,9 @@ public:
 
 	int runCommand(CreatureObject* creature, CreatureObject* targetCreature) const;
 
-	int doQueueCommand(CreatureObject* creature, const uint64& target, const UnicodeString& arguments) const override;
+	int doQueueCommand(CreatureObject* creature, const uint64& target, const UnicodeString& arguments) const;
 
-	bool isForceHealCommand() const override {
+	bool isForceHealCommand() {
 		return true;
 	}
 
@@ -173,6 +177,16 @@ public:
 		allowedTarget = t;
 	}
 
+	float getCommandDuration(CreatureObject* object, const UnicodeString& arguments) const {
+		// The value for defaultTime currently is 1.5!
+		// Be careful with changing defaultTime...
+		// just in case defaultTime ever changes during a code merge from SWGemu codebase.
+		float defTime = defaultTime;
+
+		//return defaultTime * 3.0; // == 4 second cooldown. MASSIVE!!!!!
+
+		return defTime;
+	}
 };
 
 #endif /* FORCEHEALQUEUECOMMAND_H_ */

@@ -16,7 +16,7 @@ public:
 	}
 
 	void run() {
-		if (city == nullptr || amenity == nullptr)
+		if (city == NULL || amenity == NULL)
 			return;
 
 		Locker locker(city);

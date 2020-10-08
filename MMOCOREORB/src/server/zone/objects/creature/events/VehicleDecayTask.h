@@ -21,12 +21,12 @@ public:
 	void run() {
 		ManagedReference<TangibleObject*> vehicle = vehicleObj.get();
 
-		if (vehicle == nullptr)
+		if (vehicle == NULL)
 			return;
 
 		Reference<VehicleObjectTemplate*> vehicleTemplate = cast<VehicleObjectTemplate*>(vehicle->getObjectTemplate());
 
-		if (vehicleTemplate == nullptr)
+		if (vehicleTemplate == NULL)
 			return;
 
 		Locker locker(vehicle);

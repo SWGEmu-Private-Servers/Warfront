@@ -29,13 +29,13 @@ void DelegateSuiCallback::run(CreatureObject* creature, SuiBox* sui, uint32 even
 
 	ManagedReference<SceneObject*> usingObject = sui->getUsingObject().get();
 
-	if (usingObject == nullptr || !usingObject->isPlayerCreature()) {
+	if (usingObject == NULL || !usingObject->isPlayerCreature()) {
 		return;
 	}
 
 	CreatureObject* targetPlayer = cast<CreatureObject*>(usingObject.get());
 
-	if (targetPlayer == nullptr)
+	if (targetPlayer == NULL)
 		return;
 
 	DelegateFactionPointsCommand::doDelegate(creature, targetPlayer, tipAmount);

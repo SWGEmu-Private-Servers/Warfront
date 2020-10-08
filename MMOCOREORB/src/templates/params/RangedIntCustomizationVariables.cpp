@@ -29,7 +29,7 @@ bool RangedIntCustomizationVariables::parse(Chunk* source) {
 
 	IffStream* iffStream = source->getIffStream();
 
-	if (iffStream == nullptr) {
+	if (iffStream == NULL) {
 //		std::cout << "iffstream null\n";
 		return false;
 	}
@@ -70,7 +70,7 @@ void RangedIntCustomizationVariables::parseType1(IffStream* iffStream) {
 
 	Chunk* chunk = iffStream->openForm('RICV');
 
-	if (chunk == nullptr) {
+	if (chunk == NULL) {
 		//std::cout << "could not open shit\n";
 		return;
 	}
@@ -90,7 +90,7 @@ void RangedIntCustomizationVariables::parseType1(IffStream* iffStream) {
 
 }
 
-String RangedIntCustomizationVariables::toString() const {
+String RangedIntCustomizationVariables::toString() {
 	StringBuffer stream;
 
 	/*for (int i = 0; i < variables.size(); ++i) {

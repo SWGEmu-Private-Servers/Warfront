@@ -13,7 +13,7 @@
 
 class dtNavMesh;
 
-class RecastNavMesh : public Object, public Logger {
+class RecastNavMesh : public Object, Logger {
 	void loadAll(ObjectInputStream* stream);
 	void saveAll(ObjectOutputStream* stream);
 
@@ -23,7 +23,7 @@ class RecastNavMesh : public Object, public Logger {
 
 public:
 	RecastNavMesh() : Logger("RecastNavMesh"), header() {
-		navMesh = nullptr;
+		navMesh = NULL;
 	}
 
 	~RecastNavMesh() {
@@ -35,7 +35,7 @@ public:
 	bool parseFromBinaryStream(ObjectInputStream* stream);
 
 	bool isLoaded() const {
-		return navMesh != nullptr;
+		return navMesh != NULL;
 	}
 
 	const NavMeshSetHeader& getMeshHeader() {

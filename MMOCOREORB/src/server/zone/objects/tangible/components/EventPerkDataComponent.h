@@ -18,12 +18,6 @@ public:
 
 	}
 
-	void writeJSON(nlohmann::json& j) const {
-		DataObjectComponent::writeJSON(j);
-
-		SERIALIZE_JSON_MEMBER(deed);
-	}
-
 	bool toBinaryStream(ObjectOutputStream* stream) {
 		int _currentOffset = stream->getOffset();
 		stream->writeShort(0);

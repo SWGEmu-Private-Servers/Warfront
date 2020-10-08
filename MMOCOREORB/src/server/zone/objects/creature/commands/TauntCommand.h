@@ -25,12 +25,12 @@ public:
 
 		ManagedReference<SceneObject*> targetObject = creature->getZoneServer()->getObject(target);
 
-		if (targetObject == nullptr || !targetObject->isCreatureObject() || targetObject->isPlayerCreature())
+		if (targetObject == NULL || !targetObject->isCreatureObject() || targetObject->isPlayerCreature())
 			return INVALIDTARGET;
 
 		CreatureObject* targetCreature = cast<CreatureObject*>(targetObject.get());
 
-		if (targetCreature == nullptr)
+		if (targetCreature == NULL)
 			return INVALIDTARGET;
 
 		if (!targetCreature->isAttackableBy(creature))
@@ -59,11 +59,11 @@ public:
 	}
 
 	void sendAttackCombatSpam(TangibleObject* attacker, TangibleObject* defender, int attackResult, int damage, const CreatureAttackData& data) const {
-		if (attacker == nullptr)
+		if (attacker == NULL)
 			return;
 
 		Zone* zone = attacker->getZone();
-		if (zone == nullptr)
+		if (zone == NULL)
 			return;
 
 		String stringName = data.getCombatSpam();
@@ -85,7 +85,7 @@ public:
 			break;
 		}
 
-		CombatManager::instance()->broadcastCombatSpam(attacker, nullptr, nullptr, damage, "cbt_spam", stringName, color);
+		CombatManager::instance()->broadcastCombatSpam(attacker, NULL, NULL, damage, "cbt_spam", stringName, color);
 
 	}
 

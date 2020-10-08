@@ -39,7 +39,7 @@ public:
 	StimPack* findStimPack(CreatureObject* creature) const {
 		SceneObject* inventory = creature->getSlottedObject("inventory");
 
-		if (inventory != nullptr) {
+		if (inventory != NULL) {
 			for (int i = 0; i < inventory->getContainerObjectsSize(); ++i) {
 				SceneObject* item = inventory->getContainerObject(i);
 
@@ -56,7 +56,7 @@ public:
 			}
 		}
 
-		return nullptr;
+		return NULL;
 	}
 
 	bool canPerformSkill(CreatureObject* creature, CreatureObject* droid, StimPack* stimPack, int mindCostNew) const {
@@ -65,7 +65,7 @@ public:
 			return false;
 		}
 
-		if (stimPack == nullptr) {
+		if (stimPack == NULL) {
 			creature->sendSystemMessage("@error_message:droid_repair_no_damage_kit"); //No valid droid damage repair kit was found in your inventory.
 			return false;
 		}
@@ -114,7 +114,7 @@ public:
 
 		ManagedReference<CreatureObject*> droidOwner = droid->getLinkedCreature().get();
 
-		if (droidOwner != nullptr && droidOwner != creature) {
+		if (droidOwner != NULL && droidOwner != creature) {
 			StringIdChatParameter stringId("healing", "droid_repair_damage_other"); // %TT has repaired %TO and healed a total of %DI point of damage.
 			stringId.setTT(creature->getObjectID());
 			stringId.setDI(healthDamage + actionDamage + mindDamage);
@@ -131,7 +131,7 @@ public:
 
 		ManagedReference<SceneObject*> object = server->getZoneServer()->getObject(target);
 
-		if (object == nullptr) {
+		if (object == NULL) {
 			creature->sendSystemMessage("@error_message:droid_repair_no_target"); //You must target a droid pet to use these tools.
 			return GENERALERROR;
 		} else if (!object->isDroidObject()) {
@@ -158,14 +158,14 @@ public:
 
 		}
 
-		ManagedReference<StimPack*> stimPack = nullptr;
+		ManagedReference<StimPack*> stimPack = NULL;
 
 		if (objectID == 0) {
 			stimPack = findStimPack(creature);
 		} else {
 			SceneObject* inventory = creature->getSlottedObject("inventory");
 
-			if (inventory != nullptr) {
+			if (inventory != NULL) {
 				stimPack = inventory->getContainerObject(objectID).castTo<StimPack*>();
 			}
 		}

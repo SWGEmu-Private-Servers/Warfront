@@ -23,7 +23,7 @@ public:
 		for (int i = 0; i < categories->size(); ++i) {
 			BugCategory* category = &categories->get(i);
 
-			if (category == nullptr)
+			if (category == NULL)
 				continue;
 
 			category->insertToMessage(this);

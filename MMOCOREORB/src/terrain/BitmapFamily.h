@@ -35,7 +35,7 @@ public:
 		int size = 0 ;
 		byte* data = DataArchiveStore::instance()->getData(file, size);
 
-		if (data != nullptr) {
+		if (data != NULL) {
 			ObjectInputStream stream((char*)data, size);
 
 			try {
@@ -53,15 +53,15 @@ public:
 		return &map;
 	}
 
-	inline const String& getName() const {
+	inline String getName() {
 		return name;
 	}
 
-	inline int getVar1() const {
+	inline int getVar1() {
 		return var1;
 	}
 
-	inline const String& getFile() const {
+	inline String getFile() {
 		return file;
 	}
 };

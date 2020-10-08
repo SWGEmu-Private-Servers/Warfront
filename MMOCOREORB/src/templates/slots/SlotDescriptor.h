@@ -42,11 +42,11 @@ public:
 		iffStream->closeForm('SLTD');
 	}
 
-	void clone(Vector<String>& copyVec) const {
+	void clone(Vector<String>& copyVec) {
 		slots.clone(copyVec);
 	}
 
-	const Vector<String>* getSlots() const {
+	Vector<String>* getSlots() {
 		return &slots;
 	}
 };

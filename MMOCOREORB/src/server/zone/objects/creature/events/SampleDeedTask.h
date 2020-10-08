@@ -24,7 +24,7 @@ public:
 	}
 
 	void run() {
-		if (deed == nullptr || player == nullptr)
+		if (deed == NULL || player == NULL)
 			return;
 
 		Locker locker(player);
@@ -87,7 +87,7 @@ public:
 					if (count >= maxSamples ){
 						// nuke deed you killed it
 						ManagedReference<SceneObject*> deedContainer = deed->getParent().get();
-						if (deedContainer != nullptr) {
+						if (deedContainer != NULL) {
 							deed->destroyObjectFromWorld(true);
 						}
 						deed->destroyObjectFromDatabase(true);
@@ -101,7 +101,7 @@ public:
 	void award(int cl, float rollMod) {
 		int xp = DnaManager::instance()->generateXp(cl);
 		ManagedReference<PlayerManager*> playerManager = player->getZoneServer()->getPlayerManager();
-		if(playerManager != nullptr)
+		if(playerManager != NULL)
 			playerManager->awardExperience(player, "bio_engineer_dna_harvesting", xp, true);
 		int quality = deed->getQuality();
 		int newQuality = quality;

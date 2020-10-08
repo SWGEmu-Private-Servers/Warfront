@@ -9,7 +9,7 @@ import system.util.SortedVector;
 import engine.log.Logger;
 include server.zone.packets.scene.AttributeListMessage;
 import server.zone.objects.creature.CreatureObject;
-include server.zone.objects.area.ActiveArea;
+import server.zone.objects.area.ActiveArea;
 include templates.params.OptionBitmask;
 include templates.params.ObserverEventType;
 import server.zone.objects.factorycrate.FactoryCrate;
@@ -24,7 +24,6 @@ include server.zone.objects.scene.variables.AutoDeltaSet;
 include server.zone.objects.scene.variables.StringId;
 include system.thread.atomic.AtomicInteger;
 
-@json
 class TangibleObject extends SceneObject {
 	protected boolean targetable;
 
@@ -98,10 +97,9 @@ class TangibleObject extends SceneObject {
 
 		antiDecayKitObject = null;
 
-		luaStringData.setAllowOverwriteInsertPlan();
+		luaStringData.setNoDuplicateInsertPlan();
 	}
 
-	@dirty
 	public void initializeMembers() {
 		faction = 0;
 		factionStatus = 0;
@@ -133,15 +131,13 @@ class TangibleObject extends SceneObject {
 	 * Adds this object's skill mod map to the target object's skill mod map
 	 * @param targetObject The targeted object containing the SkillModMap which will be affected.
 	 */
-	@read
+	@local
 	public abstract native void addTemplateSkillMods(TangibleObject targetObject);
 
-	@read
 	public abstract void applySkillModsTo(CreatureObject creature) {
 
 	}
 
-	@dirty
 	public abstract void removeSkillModsFrom(CreatureObject creature) {
 
 	}
@@ -163,12 +159,10 @@ class TangibleObject extends SceneObject {
 	 * @param targetObject the targeted object containing the SkillModMap which will be affected.
 	 */
 	@local
-	@read
 	public abstract native void removeTemplateSkillMods(TangibleObject tangibleObject);
 
-	@read
 	@local
-	public final native VectorMap<string, int> getTemplateSkillMods();
+	public native VectorMap<string, int> getTemplateSkillMods();
 
 	/**
 	 * Reads and sets the template data from a SharedTangibleObjectTemplate LuaObject
@@ -177,7 +171,6 @@ class TangibleObject extends SceneObject {
 	 * @param templateData templateData points to the SharedTangibleObjectTemplate LuaObject that is used to initialize the TangibleObject members
 	 */
 	@local
-	@dirty
 	public native void loadTemplateData(SharedObjectTemplate templateData);
 
 	/**
@@ -185,7 +178,6 @@ class TangibleObject extends SceneObject {
 	 * @pre {transient members are not initialized }
 	 * @post { transient members are initialized }
 	 */
-	@dirty
 	public native void initializeTransientMembers();
 
 	/**
@@ -201,7 +193,7 @@ class TangibleObject extends SceneObject {
 	 * @post { this locked }
 	 */
 	@local
-	public native void setObjectName(@dereferenced final StringId stringID, boolean notifyClient);
+	public native void setObjectName(@dereferenced StringId stringID, boolean notifyClient);
 
 	/**
 	 * Updates the custom name of the object
@@ -341,9 +333,8 @@ class TangibleObject extends SceneObject {
 	 * @return returns true if SceneObject defender exists in the defender vector
 	 */
 	@preLocked
-	@local
-	@read
-	public boolean hasDefender(final SceneObject defender) {
+	@dirty
+	public boolean hasDefender(SceneObject defender) {
 		for (int i = 0; i < defenderList.size(); ++i) {
 			if (defenderList.get(i) == defender)
 				return true;
@@ -433,7 +424,7 @@ class TangibleObject extends SceneObject {
 	public native void removeAllVisibleComponents(boolean notifyClient = true);
 
 	@preLocked
-	@read
+	@dirty
 	public boolean hasVisibleComponent(int value) {
 		return visibleComponents.contains(value);
 	}
@@ -461,7 +452,7 @@ class TangibleObject extends SceneObject {
 	@preLocked
 	public native void dropFromDefenderLists();
 
-	@read
+	@dirty
 	public byte getObjectVisible() {
 		return objectVisible;
 	}
@@ -502,24 +493,24 @@ class TangibleObject extends SceneObject {
 		return customizationVariables;
 	}
 
-	@read
+	@dirty
 	public abstract int getUseCount() {
 		return useCount;
 	}
 
-	@read
+	@dirty
 	public int getMaxCondition() {
 		return maxCondition;
 	}
 
 	public native void setMaxCondition(int maxCond, boolean notifyClient = true);
 
-	@read
+	@dirty
 	public int getConditionDamage() {
 		return (int)conditionDamage;
 	}
 
-	@read
+	@dirty
 	public int getVolume() {
 		return volume;
 	}
@@ -528,12 +519,12 @@ class TangibleObject extends SceneObject {
 		complexity = value;
 	}
 
-	@read
+	@dirty
 	public float getComplexity() {
 		return complexity;
 	}
 
-	@read
+	@dirty
 	public unsigned int getOptionsBitmask() {
 		return optionsBitmask;
 	}
@@ -548,17 +539,17 @@ class TangibleObject extends SceneObject {
 			clearOptionBit(OptionBitmask.YELLOW, notifyClient);
 	}
 
-	@read
+	@dirty
 	public int getLevel() {
 		return level;
 	}
 
-	@read
+	@dirty
 	public boolean getIsCraftedEnhancedItem() {
 		return isCraftedEnhancedItem;
 	}
 
-	@read
+	@dirty
 	public unsigned int getPvpStatusBitmask() {
 		return pvpStatusBitmask;
 	}
@@ -568,24 +559,24 @@ class TangibleObject extends SceneObject {
 		return true;
 	}
 
-	@read
+	@dirty
 	public void getCustomizationString(string variables) {
 		customizationVariables.getData(variables);
 	}
 
 	@local
-	@read
-	public final DeltaVector<SceneObject> getDefenderList() {
+	@dirty
+	@preLocked
+	public DeltaVector<SceneObject> getDefenderList() {
 		return defenderList;
 	}
 
 	@local
-	@read
-	public final AutoDeltaSet<int> getVisibleComponents() {
+	public AutoDeltaSet<int> getVisibleComponents() {
 		return visibleComponents;
 	}
 
-	@read
+	@dirty
 	public SceneObject getMainDefender() {
 		if(defenderList.size() > 0)
 			return defenderList.get(0);
@@ -702,7 +693,7 @@ class TangibleObject extends SceneObject {
 		junkValue = jValue;
 	}
 
-	@read
+	@dirty
 	public abstract int getJunkValue() {
 		return junkValue;
 	}
@@ -728,22 +719,20 @@ class TangibleObject extends SceneObject {
 	@reference
 	public native FactoryCrate createFactoryCrate(int maxSize, boolean insertSelf = false);
 
-	@dirty
 	public native boolean canRepair(CreatureObject player);
 
 	public native void repair(CreatureObject player);
 
-	@dirty
 	public abstract string repairAttempt(int repairChance) {
 		return "Repairing is not implemented for this item";
 	}
 
-	@read
+	@dirty
 	public boolean isBroken() {
 		return maxCondition < 2 || getConditionDamage() >= getMaxCondition();
 	}
 
-	@read
+	@dirty
 	protected float getConditionReduction(float value) {
 		if(isBroken())
 			return 0.5 * value;
@@ -757,7 +746,7 @@ class TangibleObject extends SceneObject {
 		return reductionPercent * value;
 	}
 
-	@read
+	@dirty
 	public abstract float getHitChance(){
 		return 0;
 	}
@@ -822,37 +811,16 @@ class TangibleObject extends SceneObject {
 		return null;
 	}
 
-	@read
-	public abstract boolean isNoTrade() {
-		if (antiDecayKitObject) {
-			return antiDecayKitObject.isNoTrade() || super.isNoTrade();
-		}
-
-		return super.isNoTrade();
-	}
-
-	@read
 	public boolean hasAntiDecayKit() {
-		return antiDecayKitObject;
-	}
-
-	@read
-	public unsigned long getAntiDecayKitObjectID() {
-		if (!hasAntiDecayKit()) {
-		    return 0;
-		}
-
-		return antiDecayKitObject.getObjectID();
+		return antiDecayKitObject != null;
 	}
 
 	@preLocked
 	public void applyAntiDecayKit(CreatureObject player, SceneObject adk) {
-		if (!hasAntiDecayKit()) {
+		if(!hasAntiDecayKit()) {
 			antiDecayKitObject = adk;
 
-			SceneObject parent = adk.getParent();
-
-			if (parent)
+			if(adk.getParent() != null)
 				adk.destroyObjectFromWorld(true);
 
 			sendAttributeListTo(player);
@@ -861,7 +829,7 @@ class TangibleObject extends SceneObject {
 
 	@preLocked
 	public SceneObject removeAntiDecayKit() {
-		if (hasAntiDecayKit()) {
+		if(hasAntiDecayKit()) {
 			SceneObject adk = antiDecayKitObject;
 			antiDecayKitObject = null;
 			return adk;
@@ -869,15 +837,8 @@ class TangibleObject extends SceneObject {
 		return null;
 	}
 
-	public abstract native void destroyObjectFromDatabase(boolean destroyContainedObjects = false);
-
-	@read
 	public native boolean isCityStreetLamp();
-
-	@read
 	public native boolean isCityStatue();
-
-	@read
 	public native boolean isCityFountain();
 
 	@read
@@ -897,7 +858,10 @@ class TangibleObject extends SceneObject {
 
 	@preLocked
 	public void setLuaStringData(final string key, final string data) {
-		luaStringData.put(key, data);
+		if (luaStringData.contains(key))
+			luaStringData.get(key) = data;
+		else
+			luaStringData.put(key, data);
 	}
 
 	@preLocked
@@ -905,14 +869,12 @@ class TangibleObject extends SceneObject {
 		luaStringData.drop(key);
 	}
 
-	@read
+	@dirty
 	public string getLuaStringData(final string key) {
 		return luaStringData.get(key);
 	}
-
+	
 	public native void setDisabled(boolean disabled);
-
-	@read
 	public native boolean isDisabled();
 
 	@dirty

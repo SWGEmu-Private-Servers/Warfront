@@ -5,16 +5,20 @@
 #include "Features.h"
 #include "engine/lua/Lua.h"
 
-using namespace server::features;
+Features::Features()
+	: HashTable<String, String>() {
+}
 
-Features::Features() {
+Features::~Features() {
 }
 
 bool Features::loadFeatures() {
-	Lua lua;
+	Lua* lua = new Lua();
 
-	if (!lua.runFile("conf/features.lua"))
+	if (!lua->runFile("conf/features.lua"))
 		return false;
+
+	delete lua;
 
 	return true;
 }

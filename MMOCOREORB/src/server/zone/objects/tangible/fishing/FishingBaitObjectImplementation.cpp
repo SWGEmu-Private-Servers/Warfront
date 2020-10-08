@@ -13,6 +13,6 @@ void FishingBaitObjectImplementation::fillAttributeList(AttributeListMessage* al
 	// BAIT STATUS ONLY VISIBLE IN FISHING MENU
 }
 
-int FishingBaitObjectImplementation::getUseCount() const {
+int FishingBaitObjectImplementation::getUseCount() {
 	return TangibleObjectImplementation::getUseCount();
 }

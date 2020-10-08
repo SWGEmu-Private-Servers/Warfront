@@ -20,10 +20,9 @@
 #include "server/zone/objects/player/sui/callbacks/GamblingRouletteSuiCallback.h"
 #include "server/zone/objects/player/sui/callbacks/GamblingSlotPayoutSuiCallback.h"
 #include "server/zone/managers/minigames/GamblingBet.h"
-#include "server/zone/objects/transaction/TransactionLog.h"
 
 void GamblingManagerImplementation::registerPlayer(GamblingTerminal* terminal, CreatureObject* player) {
-	if (terminal == nullptr || player == nullptr)
+	if (terminal == NULL || player == NULL)
 		return;
 
 	Locker _locker(_this.getReferenceUnsafeStaticCast());
@@ -40,7 +39,7 @@ void GamblingManagerImplementation::registerPlayer(GamblingTerminal* terminal, C
 }
 
 uint32 GamblingManagerImplementation::createWindow(GamblingTerminal* terminal, CreatureObject* player) {
-	if (terminal == nullptr || player == nullptr)
+	if (terminal == NULL || player == NULL)
 		return 0;
 
 	uint32 boxID=0;
@@ -65,13 +64,13 @@ uint32 GamblingManagerImplementation::createWindow(GamblingTerminal* terminal, C
 }
 
 uint32 GamblingManagerImplementation::createSlotWindow(CreatureObject* player, uint32 payoutBoxID) {
-	if (player == nullptr)
+	if (player == NULL)
 		return 0;
 
 	ManagedReference<GamblingTerminal*> terminal = slotGames.get(player);
 	ZoneServer* server = player->getZoneServer();
 
-	if (terminal == nullptr)
+	if (terminal == NULL)
 		return 0;
 
 	String prompt = "Press the button corresponding to the desired action.";
@@ -119,7 +118,7 @@ uint32 GamblingManagerImplementation::createSlotWindow(CreatureObject* player, u
 }
 
 uint32 GamblingManagerImplementation::createRouletteWindow(CreatureObject* player) {
-	if (player == nullptr)
+	if (player == NULL)
 		return 0;
 
 	int totalBet = 0;
@@ -176,7 +175,7 @@ uint32 GamblingManagerImplementation::createRouletteWindow(CreatureObject* playe
 }
 
 uint32 GamblingManagerImplementation::createPayoutWindow(CreatureObject* player) {
-	if (player == nullptr)
+	if (player == NULL)
 		return 0;
 
 	String prompt = "The following is the payout schedule for this slot machine.\n \nLegend:\nXXX: denotes any 3 of the same number\n*X|Y|Z: denotes any combination of the 3 numbers";
@@ -210,7 +209,7 @@ uint32 GamblingManagerImplementation::createPayoutWindow(CreatureObject* player)
 
 void GamblingManagerImplementation::refreshRouletteMenu(CreatureObject* player) {
 
-	if (player != nullptr) {
+	if (player != NULL) {
 
 		ManagedReference<GamblingTerminal*> terminal = rouletteGames.get(player);
 		terminal->closeMenu(player, false);
@@ -221,7 +220,7 @@ void GamblingManagerImplementation::refreshRouletteMenu(CreatureObject* player) 
 }
 
 void GamblingManagerImplementation::refreshSlotMenu(CreatureObject* player, GamblingTerminal* terminal) {
-	if (player == nullptr || terminal == nullptr)
+	if (player == NULL || terminal == NULL)
 		return;
 
 	terminal->closeMenu(player, false);
@@ -231,7 +230,7 @@ void GamblingManagerImplementation::refreshSlotMenu(CreatureObject* player, Gamb
 }
 
 void GamblingManagerImplementation::handleSlot(CreatureObject* player, bool cancel, bool other) {
-	if (player == nullptr)
+	if (player == NULL)
 		return;
 
 	ManagedReference<GamblingTerminal*> terminal = slotGames.get(player);
@@ -254,7 +253,7 @@ void GamblingManagerImplementation::handleSlot(CreatureObject* player, bool canc
 }
 
 void GamblingManagerImplementation::bet(CreatureObject* player, int amount, int target, int machineType) {
-	if (player == nullptr)
+	if (player == NULL)
 		return;
 
 	if (machineType == 0) {
@@ -265,7 +264,7 @@ void GamblingManagerImplementation::bet(CreatureObject* player, int amount, int 
 }
 
 void GamblingManagerImplementation::bet(GamblingTerminal* terminal, CreatureObject* player, int amount, int target) {
-	if (player == nullptr || terminal == nullptr)
+	if (player == NULL || terminal == NULL)
 		return;
 
 	switch (terminal->getMachineType()) {
@@ -295,10 +294,7 @@ void GamblingManagerImplementation::bet(GamblingTerminal* terminal, CreatureObje
 			} else {
 				Locker _locker(terminal);
 
-				{
-					TransactionLog trx(player, TrxCode::GAMBLINGSLOTSTANDARD, amount, true);
-					player->subtractCashCredits(amount);
-				}
+				player->setCashCredits(player->getCashCredits() - amount,true);
 
 				StringIdChatParameter textPlayer("base_player","prose_pay_success");
 				textPlayer.setDI(amount);
@@ -348,10 +344,7 @@ void GamblingManagerImplementation::bet(GamblingTerminal* terminal, CreatureObje
 
 			} else {
 				Locker _locker(terminal);
-				{
-					TransactionLog trx(player, TrxCode::GAMBLINGROULETTE, amount, true);
-					player->subtractCashCredits(amount);
-				}
+				player->setCashCredits(player->getCashCredits() - amount,true);
 				terminal->getBets()->add(new GamblingBet(player, amount, roulette.get(target)));
 				StringIdChatParameter textPlayer("gambling/default_interface","prose_bet_placed");
 				textPlayer.setDI(amount);
@@ -364,7 +357,7 @@ void GamblingManagerImplementation::bet(GamblingTerminal* terminal, CreatureObje
 
 void GamblingManagerImplementation::startGame(CreatureObject* player, int machineType) {
 
-	if (player != nullptr) {
+	if (player != NULL) {
 		switch (machineType) {
 			case GamblingTerminal::SLOTMACHINE: {
 				startGame(slotGames.get(player));
@@ -380,7 +373,7 @@ void GamblingManagerImplementation::startGame(CreatureObject* player, int machin
 
 void GamblingManagerImplementation::startGame(GamblingTerminal* terminal) {
 
-	if (terminal != nullptr) {
+	if (terminal != NULL) {
 
 		switch (terminal->getMachineType()) {
 			case GamblingTerminal::SLOTMACHINE: {
@@ -410,7 +403,7 @@ void GamblingManagerImplementation::startGame(GamblingTerminal* terminal) {
 }
 
 void GamblingManagerImplementation::createEvent(GamblingTerminal* terminal, int time) {
-	if ((terminal != nullptr) && (time > 0) && (time < 60000)) {
+	if ((terminal != NULL) && (time > 0) && (time < 60000)) {
 
 		terminal->setEvent(new GamblingEvent(terminal, terminal->getGameCount()));
 		terminal->getEvent()->schedule(time);
@@ -419,7 +412,7 @@ void GamblingManagerImplementation::createEvent(GamblingTerminal* terminal, int 
 
 void GamblingManagerImplementation::continueGame(GamblingTerminal* terminal) {
 
-	if (terminal != nullptr) {
+	if (terminal != NULL) {
 		Locker _locker(terminal);
 
 		if (terminal->getPlayersWindows()->size() != 0) {
@@ -472,7 +465,7 @@ void GamblingManagerImplementation::continueGame(GamblingTerminal* terminal) {
 }
 
 void GamblingManagerImplementation::stopGame(GamblingTerminal* terminal, bool cancel) {
-	if (terminal != nullptr) {
+	if (terminal != NULL) {
 		Locker _locker(terminal);
 
 		switch (terminal->getMachineType()) {
@@ -493,7 +486,7 @@ void GamblingManagerImplementation::stopGame(GamblingTerminal* terminal, bool ca
 				} else {
 					terminal->closeAllMenus();
 
-					if ((terminal->getEvent() != nullptr) && (terminal->getState() >= GamblingTerminal::GAMESTARTED)) {
+					if ((terminal->getEvent() != NULL) && (terminal->getState() >= GamblingTerminal::GAMESTARTED)) {
 						terminal->getEvent()->cancel();
 					}
 
@@ -515,7 +508,7 @@ void GamblingManagerImplementation::stopGame(GamblingTerminal* terminal, bool ca
 
 					terminal->closeAllMenus();
 
-					if (terminal->getEvent() != nullptr) {
+					if (terminal->getEvent() != NULL) {
 						terminal->getEvent()->cancel();
 					}
 
@@ -531,7 +524,7 @@ void GamblingManagerImplementation::stopGame(GamblingTerminal* terminal, bool ca
 void GamblingManagerImplementation::calculateOutcome(GamblingTerminal* terminal) {
 
 
-	if (terminal != nullptr) {
+	if (terminal != NULL) {
 
 		Locker locker(terminal);
 
@@ -543,7 +536,8 @@ void GamblingManagerImplementation::calculateOutcome(GamblingTerminal* terminal)
 
 				ManagedReference<CreatureObject*> player = terminal->getPlayersWindows()->elementAt(0).getKey();
 
-				if ((bet != nullptr) && (player != nullptr)) {
+
+				if ((bet != NULL) && (player != NULL)) {
 
 					if (terminal->getFirst() == terminal->getSecond() && terminal->getSecond() == terminal->getThird()) {
 
@@ -555,10 +549,7 @@ void GamblingManagerImplementation::calculateOutcome(GamblingTerminal* terminal)
 						textPlayer.setDI(win);
 						player->sendSystemMessage(textPlayer);
 
-						{
-							TransactionLog trx(TrxCode::GAMBLINGSLOTSTANDARD, player, win, true);
-							player->addCashCredits(win, true);
-						}
+						player->setCashCredits(player->getCashCredits() + win, true);
 
 					} else if ((0 < terminal->getFirst() && terminal->getFirst() < 4) && (0 < terminal->getSecond() && terminal->getSecond() < 4) && (0 < terminal->getThird() && terminal->getThird() < 4)) {
 
@@ -570,10 +561,8 @@ void GamblingManagerImplementation::calculateOutcome(GamblingTerminal* terminal)
 						textPlayer.setDI(win);
 						player->sendSystemMessage(textPlayer);
 
-						{
-							TransactionLog trx(TrxCode::GAMBLINGSLOTSTANDARD, player, win, true);
-							player->addCashCredits(win, true);
-						}
+						player->setCashCredits(player->getCashCredits() + win, true);
+
 					} else {
 
 						player->sendSystemMessage("Sorry, you did not win this round. Please try again.");
@@ -588,7 +577,7 @@ void GamblingManagerImplementation::calculateOutcome(GamblingTerminal* terminal)
 
 				VectorMap<ManagedReference<CreatureObject*>, int>* winnings = terminal->getWinnings();
 
-				auto bets = terminal->getBets();
+				Vector<GamblingBet*>* bets = terminal->getBets();
 
 				int tempReward;
 				String tempTarget;
@@ -718,7 +707,7 @@ void GamblingManagerImplementation::calculateOutcome(GamblingTerminal* terminal)
 
 						CreatureObject* player = winnings->elementAt(i).getKey();
 
-						if (player != nullptr) {
+						if (player != NULL) {
 
 							Locker _locker(player);
 
@@ -733,10 +722,7 @@ void GamblingManagerImplementation::calculateOutcome(GamblingTerminal* terminal)
 							textPlayer.setDI(winnings->get(i));
 							player->sendSystemMessage(textPlayer);
 
-							{
-								TransactionLog trx(TrxCode::GAMBLINGROULETTE, player, winnings->get(i), true);
-								player->addCashCredits(winnings->get(i), true);
-							}
+							player->setCashCredits(player->getCashCredits() + winnings->get(i), true);
 						}
 					}
 				}
@@ -749,14 +735,14 @@ void GamblingManagerImplementation::calculateOutcome(GamblingTerminal* terminal)
 
 void GamblingManagerImplementation::leaveTerminal(CreatureObject* player, int machineType) {
 
-	if (player != nullptr) {
+	if (player != NULL) {
 
 		switch (machineType) {
 			case GamblingTerminal::SLOTMACHINE: {
 
 				ManagedReference<GamblingTerminal*> terminal = slotGames.get(player);
 
-				if (terminal != nullptr) {
+				if (terminal != NULL) {
 
 					Locker locker(terminal);
 
@@ -772,7 +758,7 @@ void GamblingManagerImplementation::leaveTerminal(CreatureObject* player, int ma
 
 				ManagedReference<GamblingTerminal*> terminal = rouletteGames.get(player);
 
-				if (terminal != nullptr) {
+				if (terminal != NULL) {
 					Locker locker(terminal);
 
 					if (terminal->getPlayersWindows()->contains(player)) {

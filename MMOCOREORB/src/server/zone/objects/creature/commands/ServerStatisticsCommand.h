@@ -16,7 +16,7 @@ public:
 	static int executeCommand(CreatureObject* creature, uint64 target, const UnicodeString& arguments) {
 		PlayerObject* ghost = creature->getPlayerObject();
 
-		if (ghost == nullptr || ghost->getAdminLevel() < 15)
+		if (ghost == NULL || ghost->getAdminLevel() < 15)
 			return 1;
 
 		StringTokenizer args(arguments.toString());
@@ -37,7 +37,7 @@ public:
 	}
 
 	static void sendSyntax(CreatureObject* player) {
-		if (player != nullptr)
+		if (player != NULL)
 			player->sendSystemMessage("Syntax: /server statistics");
 	}
 };

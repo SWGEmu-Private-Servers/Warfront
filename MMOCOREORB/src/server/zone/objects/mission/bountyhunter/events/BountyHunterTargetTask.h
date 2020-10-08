@@ -59,24 +59,24 @@ public:
 	void run() {
 		ManagedReference<BountyMissionObjective*> objectiveRef = objective.get();
 
-		if (objectiveRef == nullptr)
+		if (objectiveRef == NULL)
 			return;
 
 		ManagedReference<CreatureObject*> playerRef = player.get();
 
-		if (playerRef == nullptr)
+		if (playerRef == NULL)
 			return;
 
 		ZoneServer* zoneServer = playerRef->getZoneServer();
 
 		Zone* zone = zoneServer->getZone(zoneName);
 
-		if (zone == nullptr)
+		if (zone == NULL)
 			return;
 
 		ManagedReference<MissionObject*> strongMissionRef = mission.get();
 
-		if (strongMissionRef == nullptr)
+		if (strongMissionRef == NULL)
 			return;
 
 		if (destination == Vector3(0, 0, 0)) {
@@ -99,7 +99,7 @@ public:
 
 		Zone* playerZone = playerRef->getZone();
 
-		if (!targetSpawned && playerZone != nullptr && playerZone->getZoneName() == zoneName) {
+		if (!targetSpawned && playerZone != NULL && playerZone->getZoneName() == zoneName) {
 			Vector3 playerPosition = playerRef->getWorldPosition();
 			playerPosition.setZ(0);
 
@@ -142,12 +142,12 @@ private:
 				ZoneServer* zoneServer = player->getZoneServer();
 				Zone* zone = zoneServer->getZone(zoneName);
 
-				if (zone == nullptr)
+				if (zone == NULL)
 					return;
 
 				ManagedReference<MissionObject*> strongMissionRef = mission.get();
 
-				if (strongMissionRef == nullptr)
+				if (strongMissionRef == NULL)
 					return;
 
 				Locker clocker(strongMissionRef, player);
@@ -171,7 +171,7 @@ private:
 	void updateToSpawnableTargetPosition() {
 		ManagedReference<CreatureObject*> playerRef = player.get();
 
-		if (playerRef == nullptr || playerRef->getZone() == nullptr)
+		if (playerRef == NULL || playerRef->getZone() == NULL)
 			return;
 
 		Zone* zone = playerRef->getZone();
@@ -221,13 +221,13 @@ private:
 	bool canSpawnTargetAt(const Vector3& position) {
 		ManagedReference<CreatureObject*> playerRef = player.get();
 
-		if (playerRef == nullptr || playerRef->getZone() == nullptr) {
+		if (playerRef == NULL || playerRef->getZone() == NULL) {
 			return false;
 		}
 
 		Zone* zone = playerRef->getZone();
 
-		if (zone->getPlanetManager()->isBuildingPermittedAt(position.getX(), position.getY(), nullptr)) {
+		if (zone->getPlanetManager()->isBuildingPermittedAt(position.getX(), position.getY(), NULL)) {
 			return true;
 		}
 

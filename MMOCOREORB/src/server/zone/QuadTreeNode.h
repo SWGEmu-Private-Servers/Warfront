@@ -31,7 +31,6 @@
 
 //#ifdef WITH_STM
 #include "engine/stm/TransactionalReference.h"
-#include "engine/stm/TransactionalMemoryManager.h"
 //#endif
 
 /**
@@ -46,7 +45,6 @@ namespace zone {
 
 class QuadTree;
 class QuadTreeEntry;
-class QuadTreeEntryImplementation;
 
 class QuadTreeNode: public Object {
 	SortedVector<Reference<QuadTreeEntry*> > objects;
@@ -114,8 +112,8 @@ public:
 
 	// Check if this node has children nodes
 	inline bool hasSubNodes() const {
-		return nwNode != nullptr || neNode != nullptr || swNode != nullptr || seNode
-				!= nullptr;
+		return nwNode != NULL || neNode != NULL || swNode != NULL || seNode
+				!= NULL;
 	}
 
 	// Test if the point is inside this node
@@ -126,7 +124,7 @@ public:
 	// Test if the object is inside this node
 	bool testInside(QuadTreeEntry* obj) const;
 
-	String toStringData() const;
+	String toStringData();
 
 	friend class server::zone::QuadTree;
 	friend class server::zone::QuadTreeEntryImplementation;

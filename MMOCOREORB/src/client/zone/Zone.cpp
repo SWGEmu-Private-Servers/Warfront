@@ -14,15 +14,15 @@ Zone::Zone(int instance, uint64 characterObjectID, uint32 account, uint32 sessio
 	characterID = characterObjectID;
 	accountID = account;
 	sessionID = session;
-	player = nullptr;
+	player = NULL;
 
 	objectManager = new ObjectManager();
 	objectManager->setZone(this);
 
 	objectController = new ObjectController(this);
 
-	client = nullptr;
-	clientThread = nullptr;
+	client = NULL;
+	clientThread = NULL;
 
 	Zone::instance = instance;
 	started = false;
@@ -30,7 +30,7 @@ Zone::Zone(int instance, uint64 characterObjectID, uint32 account, uint32 sessio
 
 Zone::~Zone() {
 	delete objectManager;
-	objectManager = nullptr;
+	objectManager = NULL;
 
 	clientThread->stop();
 }
@@ -79,7 +79,7 @@ void Zone::insertPlayer() {
 void Zone::insertPlayer(PlayerCreature* pl) {
 	//lock();
 
-	/*if (player == nullptr) {
+	/*if (player == NULL) {
 		player = pl;
 
 		player->insertToZone(this);
@@ -110,7 +110,7 @@ PlayerCreature* Zone::getSelfPlayer() {
 }
 
 void Zone::disconnect() {
-	if (client != nullptr) {
+	if (client != NULL) {
 		client->disconnect();
 	}
 }
@@ -122,7 +122,7 @@ void Zone::sceneStarted() {
 void Zone::follow(const String& name) {
 	SceneObject* object = objectManager->getObject(name);
 
-	if (object == nullptr) {
+	if (object == NULL) {
 		client->getClient()->error(name + " not found");
 
 		return;
@@ -141,7 +141,7 @@ void Zone::stopFollow() {
 
 	Locker _locker(player);
 
-	player->setFollow(nullptr);
+	player->setFollow(NULL);
 	client->getClient()->info("stopped following", true);
 }
 

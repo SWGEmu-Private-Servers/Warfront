@@ -12,7 +12,7 @@
 int MissionObserverImplementation::notifyObserverEvent(uint32 eventType, Observable* observable, ManagedObject* arg1, int64 arg2) {
 	ManagedReference<MissionObjective*> objective = missionObjective.get();
 
-	if (objective == nullptr)
+	if (objective == NULL)
 		return 1;
 	else
 		return objective->notifyObserverEvent(_this.getReferenceUnsafeStaticCast(), eventType, observable, arg1, arg2);

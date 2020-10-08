@@ -8,10 +8,6 @@
 #ifndef AITEMPLATE_H_
 #define AITEMPLATE_H_
 
-#include "system/lang/Object.h"
-#include "engine/util/u3d/Vector3.h"
-#include "engine/lua/LuaObject.h"
-
 class LuaAiTemplate : public Object {
 public:
 	uint32 id;
@@ -93,7 +89,7 @@ public:
 			b->classType = behavior.getIntAt(4);
 
 			tree.add(b);
-			if (b == nullptr) {
+			if (b == NULL) {
 				System::out << behavior.getStringAt(1) << " " << behavior.getStringAt(2) << " " << behavior.getStringAt(3) << " " << behavior.getStringAt(4) << " ";
 			}
 

@@ -29,12 +29,12 @@ public:
 
 		ManagedReference<CreatureObject*> player = cast<CreatureObject*>(creature);
 
-		if (player == nullptr)
+		if (player == NULL)
 			return GENERALERROR;
 
 		ManagedReference<PlayerObject*> ghost = player->getPlayerObject();
 
-		if (ghost == nullptr)
+		if (ghost == NULL)
 			return GENERALERROR;
 
 		ManagedReference<GroupObject*> group = player->getGroup();
@@ -71,14 +71,14 @@ public:
 	}
 
 	void getWounds(CreatureObject* leader, GroupObject* group, int* wounds) const {
-		if (group == nullptr || leader == nullptr)
+		if (group == NULL || leader == NULL)
 			return;
 
 		for (int i = 0; i < group->getGroupSize(); i++) {
 
 			ManagedReference<CreatureObject*> member = group->getGroupMember(i);
 
-			if (member == nullptr)
+			if (member == NULL)
 				continue;
 
 			if (!member->isPlayerCreature())
@@ -99,7 +99,7 @@ public:
 	}
 
 	bool distributeWounds(CreatureObject* leader, GroupObject* group, int* wounds) const {
-		if (group == nullptr || leader == nullptr)
+		if (group == NULL || leader == NULL)
 			return false;
 
 		int woundsPerMember = ceil((float)wounds[1]/(float)wounds[0]);
@@ -110,7 +110,7 @@ public:
 
 			ManagedReference<CreatureObject*> member = group->getGroupMember(i);
 
-			if (member == nullptr)
+			if (member == NULL)
 				continue;
 
 			if (!member->isPlayerCreature())

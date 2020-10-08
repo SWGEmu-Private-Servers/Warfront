@@ -27,12 +27,12 @@ public:
 	}
 
 	void run() {
-		if (server == nullptr || server->isServerShuttingDown())
+		if (server == NULL || server->isServerShuttingDown())
 			return;
 
 		ManagedReference<GuildObject*> guild = guildObject.get();
 
-		if (guild == nullptr)
+		if (guild == NULL)
 			return;
 
 		Locker locker(guild);

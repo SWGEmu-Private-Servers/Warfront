@@ -9,7 +9,6 @@ import server.zone.objects.creature.CreatureObject;
 include server.zone.objects.creature.buffs.BuffType;
 import server.zone.objects.scene.SceneObject;
 
-@json
 class GallopBuff extends PlayerVehicleBuff {
 	public GallopBuff(CreatureObject creo, unsigned int buffcrc, float duration) {
 		super(creo, buffcrc, duration, BuffType.SKILL);
@@ -17,13 +16,13 @@ class GallopBuff extends PlayerVehicleBuff {
 
 	public void activate(boolean applyModifiers) {
 		super.activate(true);
-
+	
 		SceneObject rider = super.creature.getSlottedObject("rider");
-		if(!rider)
+		if(rider == null)
 			return;
-
+	
 		CreatureObject creo = rider.asCreatureObject();
-		if(creo)
+		if(creo != null)
 			creo.removeMountedCombatSlow();
 	}
 
@@ -31,11 +30,11 @@ class GallopBuff extends PlayerVehicleBuff {
 		super.deactivate(true);
 
 		SceneObject rider = super.creature.getSlottedObject("rider");
-		if(!rider)
+		if(rider == null)
 			return;
-
+	
 		CreatureObject creo = rider.asCreatureObject();
-		if(creo)
+		if(creo != null)
 			creo.addMountedCombatSlow();
 	}
 }

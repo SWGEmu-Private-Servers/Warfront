@@ -15,7 +15,7 @@ public:
 	}
 
 	void run() {
-		if (structure == nullptr)
+		if (structure == NULL)
 			return;
 
 		Locker locker(structure);

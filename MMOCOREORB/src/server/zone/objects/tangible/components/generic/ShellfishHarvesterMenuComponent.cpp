@@ -17,7 +17,7 @@ void ShellfishHarvesterMenuComponent::fillObjectMenuResponse(SceneObject* sceneO
 		return;
 
 	TangibleObject* tano = cast<TangibleObject*>(sceneObject);
-	if(tano == nullptr)
+	if(tano == NULL)
 		return;
 
 	TangibleObjectMenuComponent::fillObjectMenuResponse(sceneObject, menuResponse, player);

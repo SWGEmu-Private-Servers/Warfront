@@ -22,7 +22,7 @@ public:
 
 		TangibleObject* usingObject = suiBox->getUsingObject().get().castTo<TangibleObject*>();
 
-		if (usingObject == nullptr || usingObject->getObjectTemplate()->getFullTemplateString() != "object/tangible/encoded_disk/message_fragment_base.iff") {
+		if (usingObject == NULL || usingObject->getObjectTemplate()->getFullTemplateString() != "object/tangible/encoded_disk/message_fragment_base.iff") {
 			return;
 		}
 
@@ -31,10 +31,10 @@ public:
 			return;
 		}
 
-		TangibleObject* partOne = nullptr;
-		TangibleObject* partTwo = nullptr;
-		TangibleObject* partThree = nullptr;
-		TangibleObject* partFour = nullptr;
+		TangibleObject* partOne = NULL;
+		TangibleObject* partTwo = NULL;
+		TangibleObject* partThree = NULL;
+		TangibleObject* partFour = NULL;
 
 		String usingObjectName = usingObject->getCustomObjectName().toString();
 		String usingObjectFaction = "";
@@ -55,20 +55,20 @@ public:
 			usingObjectFaction = "Rebel";
 		}
 
-		if (usingObjectFaction.isEmpty() || (partOne == nullptr && partTwo == nullptr && partThree == nullptr && partFour == nullptr)) {
+		if (usingObjectFaction.isEmpty() || (partOne == NULL && partTwo == NULL && partThree == NULL && partFour == NULL)) {
 			return;
 		}
 
 		SceneObject* inventory = player->getSlottedObject("inventory");
 
-		if (inventory == nullptr) {
+		if (inventory == NULL) {
 			return;
 		}
 
 		for (int i = 0; i < inventory->getContainerObjectsSize(); i++) {
 			TangibleObject* item = inventory->getContainerObject(i).castTo<TangibleObject*>();
 
-			if (item == nullptr || item->getObjectTemplate()->getFullTemplateString() != "object/tangible/encoded_disk/message_fragment_base.iff") {
+			if (item == NULL || item->getObjectTemplate()->getFullTemplateString() != "object/tangible/encoded_disk/message_fragment_base.iff") {
 				continue;
 			}
 
@@ -79,25 +79,25 @@ public:
 			}
 
 			if (itemName.contains("[1/4]")) {
-				if (partOne == nullptr) {
+				if (partOne == NULL) {
 					partOne = item;
 				}
 			} else if (itemName.contains("[2/4]")) {
-				if (partTwo == nullptr) {
+				if (partTwo == NULL) {
 					partTwo = item;
 				}
 			} else if (itemName.contains("[3/4]")) {
-				if (partThree == nullptr) {
+				if (partThree == NULL) {
 					partThree = item;
 				}
 			} else if (itemName.contains("[4/4]")) {
-				if (partFour == nullptr) {
+				if (partFour == NULL) {
 					partFour = item;
 				}
 			}
 		}
 
-		if (partOne == nullptr || partTwo == nullptr || partThree == nullptr || partFour == nullptr) {
+		if (partOne == NULL || partTwo == NULL || partThree == NULL || partFour == NULL) {
 			player->sendSystemMessage("@encoded_disk/message_fragment:sys_not_all_parts"); // You don't have all of the fragments of this message.
 			return;
 		}
@@ -110,7 +110,7 @@ public:
 		String fullTemplate = "object/tangible/encoded_disk/message_assembled_base.iff";
 		ManagedReference<TangibleObject*> assembledMessage = server->createObject(fullTemplate.hashCode(), 1).castTo<TangibleObject*>();
 
-		if (assembledMessage == nullptr) {
+		if (assembledMessage == NULL) {
 			return;
 		}
 
@@ -118,7 +118,7 @@ public:
 
 		CoaMessageDataComponent* data = assembledMessage->getDataObjectComponent()->castTo<CoaMessageDataComponent*>();
 
-		if (data == nullptr) {
+		if (data == NULL) {
 			assembledMessage->destroyObjectFromDatabase(true);
 			return;
 		}

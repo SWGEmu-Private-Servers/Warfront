@@ -283,6 +283,7 @@
 #include "GrantBadgeCommand.h"
 #include "GrantPadawanTrialsEligibilityCommand.h"
 #include "GrantSkillCommand.h"
+#include "RegrantSkillsCommand.h"
 #include "GrantTitleCommand.h"
 #include "GrantZoningRightsCommand.h"
 #include "GroupChatCommand.h"
@@ -300,7 +301,7 @@
 #include "HarvesterHarvestCommand.h"
 #include "HarvesterMakeCrateCommand.h"
 #include "HarvesterSelectResourceCommand.h"
-#include "HarvesterTakeSurveyCommand.h"
+#include "HarvesterTakeSurvey Command.h"
 #include "HasVeteranRewardCommand.h"
 #include "HaveconsentCommand.h"
 #include "HeadShot1Command.h"
@@ -838,8 +839,22 @@
 #include "InspacerrCommand.h"
 #include "RequestSpaceTrainerCommand.h"
 
+//Warfront custom commands
 
-
+#include "BhShieldCommand.h"
+#include "PistolWhipCommand.h"
+#include "PoisonGasCloudCommand.h"
+#include "OrbitalStrikeCommand.h
+#include "VenomDartCommand.h"
+#include "SetPvPCommand.h"
+#include "EscapeCommand.h"
+#include "DirtyTrickCommand.h"
+#include "StandFastCommand.h"
+#include "RemoteDetonator.h"
+#include "StasisFieldCommand.h"
+#include "WarDevCommand.h"
+#include "WarDevMoveObjectCommand.h"
+#include "WarDevRotateObjectCommand.h"
 
 #endif /* COMMANDSNEW_H_ */
 

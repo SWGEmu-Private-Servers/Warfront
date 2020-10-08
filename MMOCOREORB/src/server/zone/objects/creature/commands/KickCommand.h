@@ -28,11 +28,11 @@ public:
 			ManagedReference<SceneObject* > object =
 					server->getZoneServer()->getObject(target);
 
-			ManagedReference<CreatureObject*> player = nullptr;
+			ManagedReference<CreatureObject*> player = NULL;
 
 			StringTokenizer args(arguments.toString());
 
-			if (object == nullptr || !object->isPlayerCreature()) {
+			if (object == NULL || !object->isPlayerCreature()) {
 				String firstName;
 
 				if (args.hasMoreTokens()) {
@@ -45,7 +45,7 @@ public:
 				player = cast<CreatureObject*>( object.get());
 			}
 
-			if (player == nullptr) {
+			if (player == NULL) {
 				creature->sendSystemMessage("Usage: /kick <firstName> <reason>");
 				return GENERALERROR;
 			}

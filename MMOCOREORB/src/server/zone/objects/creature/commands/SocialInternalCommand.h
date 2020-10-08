@@ -29,7 +29,7 @@ public:
 
 
 		ChatManager* chatManager = server->getChatManager();
-		if (chatManager == nullptr)
+		if (chatManager == NULL)
 			return GENERALERROR;
 
 		chatManager->handleSocialInternalMessage(creature, arguments);
@@ -47,7 +47,7 @@ public:
 
 		Reference<CreatureObject*> creo = server->getZoneServer()->getObject(targetid, true).castTo<CreatureObject*>();
 
-		if (creo == nullptr)
+		if (creo == NULL)
 			return SUCCESS;
 
 		if (creo->isPlayerCreature()) {
@@ -59,7 +59,7 @@ public:
 			if (creo->isEntertaining() && creo->isInRange(creature, 40.0f)) {
 				ManagedReference<EntertainingSession*> session = creo->getActiveSession(SessionFacadeType::ENTERTAINING).castTo<EntertainingSession*>();
 
-				if (session != nullptr && session->getApplauseCount() < 100)
+				if (session != NULL && session->getApplauseCount() < 100)
 					session->incrementApplauseCount();
 			}
 
@@ -69,7 +69,7 @@ public:
 		// If target is a pet, enqueue command to handle it
 		Reference<AiAgent*> aiAgent = creo->asAiAgent();
 
-		if(aiAgent == nullptr)
+		if(aiAgent == NULL)
 			return SUCCESS;
 
 		Locker crossLocker(aiAgent, creature);
@@ -77,7 +77,7 @@ public:
 		if (aiAgent->isPet()) {
 
 			PetManager* petManager = aiAgent->getZoneServer()->getPetManager();
-			if (petManager == nullptr)
+			if (petManager == NULL)
 				return GENERALERROR;
 
 			petManager->enqueueOwnerOnlyPetCommand(creature, aiAgent, STRING_HASHCODE("petemote"), arguments.toString() );
@@ -86,7 +86,7 @@ public:
 
 			ReactionManager* reactionManager = creature->getZoneServer()->getReactionManager();
 
-			if (reactionManager != nullptr)
+			if (reactionManager != NULL)
 				reactionManager->emoteReaction(creature, aiAgent, emoteid);
 
 		}

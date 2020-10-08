@@ -18,19 +18,19 @@ class ImageDesignManager : public Singleton<ImageDesignManager>, public Object, 
 	void updateColorVariable(const Vector<String>& fullVariables, uint32 value, TangibleObject* tano, int skillLevel);
 	int getSkillLevel(CreatureObject* imageDesigner, const String& skillMod);
 
-	void updateCustomization(CreatureObject* imageDesigner, CustomizationData* customData, float value, CreatureObject* creo = nullptr);
-	void updateColorCustomization(CreatureObject* imageDesigner, CustomizationData* customData, uint32 value, TangibleObject* hairObject, CreatureObject* creo = nullptr);
+	void updateCustomization(CreatureObject* imageDesigner, CustomizationData* customData, float value, CreatureObject* creo = NULL);
+	void updateColorCustomization(CreatureObject* imageDesigner, CustomizationData* customData, uint32 value, TangibleObject* hairObject, CreatureObject* creo = NULL);
 
 public:
 	ImageDesignManager();
 	~ImageDesignManager();
 
-	void updateCustomization(CreatureObject* imageDesigner, const String& customizationName, float value, CreatureObject* creo = nullptr);
-	void updateColorCustomization(CreatureObject* imageDesigner, const String& customizationName, uint32 value, TangibleObject* hairObject, CreatureObject* creo = nullptr);
+	void updateCustomization(CreatureObject* imageDesigner, const String& customizationName, float value, CreatureObject* creo = NULL);
+	void updateColorCustomization(CreatureObject* imageDesigner, const String& customizationName, uint32 value, TangibleObject* hairObject, CreatureObject* creo = NULL);
 
-	const Vector<CustomizationData>* getCustomizationData(const String& speciesGender, const String& customizationName);
+	Vector<CustomizationData>* getCustomizationData(const String& speciesGender, const String& customizationName);
 
-	String getSpeciesGenderString(CreatureObject* creo = nullptr);
+	String getSpeciesGenderString(CreatureObject* creo = NULL);
 
 	TangibleObject* updateHairObject(CreatureObject* creo, TangibleObject* hairObject);
 

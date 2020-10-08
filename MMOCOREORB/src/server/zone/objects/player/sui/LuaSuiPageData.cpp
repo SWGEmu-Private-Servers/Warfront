@@ -53,7 +53,7 @@ int LuaSuiPageData::_setObject(lua_State* L) {
 }
 
 int LuaSuiPageData::_getObject(lua_State* L) {
-	if (realObject == nullptr)
+	if (realObject == NULL)
 		lua_pushnil(L);
 	else
 		lua_pushlightuserdata(L, realObject.get());
@@ -176,7 +176,7 @@ int LuaSuiPageData::subscribeToPropertyForEvent(lua_State* L) {
 int LuaSuiPageData::sendTo(lua_State* L) {
 	CreatureObject* creo = static_cast<CreatureObject*>(lua_touserdata(L, -1));
 
-	if (creo != nullptr)
+	if (creo != NULL)
 		realObject->sendTo(creo);
 
 	return 0;
@@ -185,7 +185,7 @@ int LuaSuiPageData::sendTo(lua_State* L) {
 int LuaSuiPageData::sendUpdateTo(lua_State* L) {
 	CreatureObject* creo = static_cast<CreatureObject*>(lua_touserdata(L, -1));
 
-	if (creo != nullptr)
+	if (creo != NULL)
 		realObject->sendUpdateTo(creo);
 
 	return 0;

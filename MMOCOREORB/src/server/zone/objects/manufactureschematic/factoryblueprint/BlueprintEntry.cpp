@@ -107,7 +107,7 @@ void BlueprintEntry::clearMatches() {
 
 bool BlueprintEntry::hasEnoughResources() {
 
-	if(inputHopper == nullptr)
+	if(inputHopper == NULL)
 		return false;
 
 	int count = 0;
@@ -115,7 +115,7 @@ bool BlueprintEntry::hasEnoughResources() {
 	for(int i = 0; i < matchingHopperItems.size(); ++i) {
 		TangibleObject* object = matchingHopperItems.get(i);
 
-		if (object == nullptr) {
+		if (object == NULL) {
 			matchingHopperItems.remove(i);
 			--i;
 			continue;
@@ -178,7 +178,7 @@ void BlueprintEntry::removeResources(FactoryObject* factory) {
 			factory->broadcastToOperators(rcnod3);
 		}
 
-		if(object->getUseCount() <= 0)
+		if(object->getUseCount() == 0)
 			matchingHopperItems.removeElement(object);
 
 		break;
@@ -202,15 +202,4 @@ void BlueprintEntry::print() {
 	}
 
 	System::out << "*******************" << endl;
-}
-
-void to_json(nlohmann::json& j, const BlueprintEntry& entry) {
-	j["type"] = entry.type;
-	j["key"] = entry.key;
-	j["displayedName"] = entry.displayedName;
-	j["serialNumber"] = entry.serialNumber;
-	j["identical"] = entry.identical;
-	j["quantity"] = entry.quantity;
-	j["inputHopper"] = entry.inputHopper;
-	j["matchingHoppperItems"] = entry.matchingHopperItems;
 }

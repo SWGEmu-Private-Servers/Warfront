@@ -35,15 +35,11 @@ public:
 		return &mfrc;
 	}
 
-	inline const MapFractal* getMfrc() const {
-		return &mfrc;
-	}
-
-	inline int getVar1() const {
+	inline int getVar1() {
 		return var1;
 	}
 
-	inline const String& getName() const {
+	inline String& getName() {
 		return var2;
 	}
 };

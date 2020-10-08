@@ -11,7 +11,6 @@
 #include "server/zone/objects/player/sui/SuiCallback.h"
 #include "server/zone/objects/player/PlayerObject.h"
 #include "server/zone/objects/building/BuildingObject.h"
-#include "server/zone/objects/transaction/TransactionLog.h"
 
 class CloningStoreSuiCallback : public SuiCallback {
 public:
@@ -22,7 +21,7 @@ public:
 	void run(CreatureObject* player, SuiBox* suiBox, uint32 eventIndex, Vector<UnicodeString>* args) {
 		bool cancelPressed = (eventIndex == 1);
 
-		if (!suiBox->isMessageBox() || cancelPressed || player == nullptr)
+		if (!suiBox->isMessageBox() || cancelPressed || player == NULL)
 			return;
 
 		int bank = player->getBankCredits();
@@ -32,7 +31,7 @@ public:
 
 		ManagedReference<SceneObject*> term = suiBox->getUsingObject().get();
 
-		if (term == nullptr) {
+		if (term == NULL) {
 			StringIdChatParameter params;
 			params.setStringId("@ui:action_target_not_found_prose");
 			params.setTT("@terminal_name:terminal_cloning");
@@ -51,7 +50,7 @@ public:
 
 		ManagedReference<PlayerObject*> ghost = player->getPlayerObject();
 
-		if (ghost == nullptr) {
+		if (ghost == NULL) {
 			return;
 		}
 
@@ -68,28 +67,21 @@ public:
 			}
 
 			//pay bank portion
-			TransactionLog trxBank(player, TrxCode::CLONINGSYSTEM, cost - diff);
-
 			player->subtractBankCredits(cost - diff);
-
-			TransactionLog trxCash(player, TrxCode::CLONINGSYSTEM, diff, true);
-			trxCash.groupWith(trxBank);
-
 			player->subtractCashCredits(diff);
 		} else {
-			TransactionLog trx(player, TrxCode::INSURANCESYSTEM, cost);
 			player->subtractBankCredits(cost);
 		}
 
 		ManagedReference<SceneObject*> building = term->getRootParent();
 
-		if (building == nullptr || !building->isBuildingObject()) {
+		if (building == NULL || !building->isBuildingObject()) {
 			return;
 		}
 
 		ManagedReference<BuildingObject*> buildingObject = dynamic_cast<BuildingObject*>(building.get());
 
-		if (buildingObject != nullptr) {
+		if (buildingObject != NULL) {
 			ghost->setCloningFacility(buildingObject);
 		}
 

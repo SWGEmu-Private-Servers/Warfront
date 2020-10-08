@@ -47,11 +47,11 @@ public:
 	~RangedIntCustomizationVariable() {
 	}
 
-	inline int getDefaultValue() const {
+	inline int getDefaultValue() {
 		return defaultValue;
 	}
 
-	String toString() const {
+	String toString() {
 		StringBuffer stream;
 		/*stream << "variableName" << " = " << variableName.toString() << "\n";
 		stream << "minValueInclusive" << " = " << minValueInclusive.toString() << "\n";
@@ -75,7 +75,7 @@ public:
 
 		Chunk* chunk = iffStream->openChunk('PCNT');
 
-		if (chunk == nullptr) {
+		if (chunk == NULL) {
 			//std::cout << "could not open pcnt\n";
 			return false;
 		}
@@ -108,7 +108,7 @@ public:
 		return true;
 	}
 
-	const String& getVariableName() const {
+	String getVariableName() {
 		return variableName.get();
 	}
 

@@ -34,7 +34,7 @@ public:
 		ManagedReference<Creature*> creature = mob.get();
 		ManagedReference<CreatureObject*> player = play.get();
 
-		if (creature == nullptr || player == nullptr)
+		if (creature == NULL || player == NULL)
 			return;
 
 		Locker locker(creature);
@@ -64,7 +64,7 @@ public:
 		ChatManager* chatManager = player->getZoneServer()->getChatManager();
 		ManagedReference<PlayerObject*> ghost = player->getPlayerObject();
 
-		if (ghost == nullptr)
+		if (ghost == NULL)
 			return;
 
 		switch (currentPhase) {
@@ -106,7 +106,7 @@ public:
 		ManagedReference<CreatureObject*> player = play.get();
 		ManagedReference<Creature*> creature = mob.get();
 
-		if (creature == nullptr || player == nullptr)
+		if (creature == NULL || player == NULL)
 			return;
 
 		ZoneServer* zoneServer = player->getZoneServer();
@@ -119,14 +119,14 @@ public:
 		PlayerManager* playerManager = zoneServer->getPlayerManager();
 		ObjectManager* objectManager = zoneServer->getObjectManager();
 
-		if (datapad == nullptr || playerManager == nullptr || objectManager == nullptr) {
+		if (datapad == NULL || playerManager == NULL || objectManager == NULL) {
 			resetStatus();
 			return;
 		}
 
 		ManagedReference<PetControlDevice*> controlDevice = zoneServer->createObject(objectString.hashCode(), 1).castTo<PetControlDevice*>();
 
-		if (controlDevice == nullptr) {
+		if (controlDevice == NULL) {
 			resetStatus();
 			return;
 		}
@@ -176,16 +176,16 @@ public:
 
 			float respawn = agent->getRespawnTimer() * 1000;
 
-			if (respawn > 0 && agent->getHomeObject().get() == nullptr) {
+			if (respawn > 0 && agent->getHomeObject().get() == NULL) {
 
 				if (agent->getRandomRespawn()) {
 					respawn = System::random(respawn) + (respawn / 2.f);
 				}
 
 				uint32 tempCRC = 0;
-				auto crTemplate = agent->getCreatureTemplate();
+				CreatureTemplate* crTemplate = agent->getCreatureTemplate();
 
-				if (crTemplate != nullptr)
+				if (crTemplate != NULL)
 					tempCRC = crTemplate->getTemplateName().hashCode();
 
 				PatrolPoint* homeLoc = agent->getHomeLocation();
@@ -212,9 +212,9 @@ public:
 		ManagedReference<PlayerObject*> ghost = player->getPlayerObject();
 		ghost->addToActivePets(creature);
 
-		auto creatureTemplate = creature->getCreatureTemplate();
+		CreatureTemplate* creatureTemplate = creature->getCreatureTemplate();
 
-		if (creatureTemplate != nullptr)
+		if (creatureTemplate != NULL)
 			playerManager->awardExperience(player, "creaturehandler", 20 * creatureTemplate->getLevel());
 		else
 			playerManager->awardExperience(player, "creaturehandler", 20 * creature->getLevel());
@@ -226,7 +226,7 @@ public:
 	void resetStatus() {
 		ManagedReference<Creature*> creature = mob.get();
 
-		if (creature == nullptr)
+		if (creature == NULL)
 			return;
 
 		creature->setPvpStatusBitmask(originalMask, true);

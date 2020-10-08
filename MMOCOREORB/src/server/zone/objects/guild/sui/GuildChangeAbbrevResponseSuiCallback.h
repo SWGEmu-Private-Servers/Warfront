@@ -22,7 +22,7 @@ public:
 
 		ManagedReference<GuildManager*> guildManager = server->getGuildManager();
 		ManagedReference<GuildObject*> guild = guildObject.get();
-		if (guild == nullptr || guildManager == nullptr)
+		if (guild == NULL || guildManager == NULL)
 			return;
 
 		Locker glocker(guild, player);

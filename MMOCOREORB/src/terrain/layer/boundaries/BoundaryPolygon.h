@@ -16,7 +16,7 @@
 
 #include <limits>
 
-class BoundaryPolygon : public Boundary {
+class BoundaryPolygon : public ProceduralRule<'BPOL'>,  public Boundary {
 	Vector<Point2D*> vertices;
 	int localWaterTableEnabled;
 	float localWaterTableHeight;
@@ -30,7 +30,7 @@ public:
 		return vertices;
 	}
 
-	BoundaryPolygon() : Boundary('BPOL'), localWaterTableEnabled(0), localWaterTableHeight(0), shaderSize(0) {
+	BoundaryPolygon() : localWaterTableEnabled(0), localWaterTableHeight(0), shaderSize(0) {
 		//ruleType = BOUNDARYPOLYGON;
 
 		minX = 800000000;
@@ -45,12 +45,12 @@ public:
 			delete vertices.get(i);
 	}
 
-	void executeRule(ProceduralTerrainAppearance* generator) final {
+	void executeRule(ProceduralTerrainAppearance* generator) {
 		if (localWaterTableEnabled != 0)
 			generator->insertWaterBoundary(this);
 	}
 
-	void translateBoundary(float x, float y) final {
+	void translateBoundary(float x, float y) {
 		minX = 800000000;
 		minY = 800000000;
 
@@ -95,8 +95,8 @@ public:
 		}
 	}
 
-	float checkInfluence(float x, float y) const final {
-		Point2D* lastPoint = nullptr;
+	float checkInfluence(float x, float y) {
+		Point2D* lastPoint = NULL;
 
 		float result = 0;
 
@@ -193,11 +193,11 @@ public:
 		return result;
 	}
 
-	float process(float x, float y) const final {
+	float process(float x, float y) {
 		return checkInfluence(x, y);
 	}
 
-	bool containsPoint(float px, float py) const final {
+	bool containsPoint(float px, float py) {
 		//System::out << "checking in polygon if contains point with vertices.size(): " << vertices.size() << endl;
 
 		/*int nvert = vertices.size();
@@ -239,7 +239,7 @@ public:
 
 			/* First check if the ray is possible to cross the line */
 			if ( px > x1 && px <= x2 && ( py < vertices.get(i)->getY() || py <= vertices.get((i+1) % vertices.size())->getY() ) ) {
-				static const float eps = 0.000001f;
+				static const float eps = 0.000001;
 
 				/* Calculate the equation of the line */
 				float dx = vertices.get((i+1) % vertices.size())->getX() - vertices.get(i)->getX();
@@ -269,7 +269,7 @@ public:
 		return false;
 	}
 
-	void parseFromIffStream(engine::util::IffStream* iffStream) override {
+	void parseFromIffStream(engine::util::IffStream* iffStream) {
 		uint32 version = iffStream->getNextFormType();
 
 		iffStream->openForm(version);
@@ -313,23 +313,27 @@ public:
 		initialize();
 	}
 
-	float getLocalWaterTableHeight() const final {
+	float getLocalWaterTableHeight() const {
 		return localWaterTableHeight;
 	}
 
-	float getMinX() const final {
+	bool isEnabled() {
+		return informationHeader.isEnabled();
+	}
+
+	float getMinX() const {
 		return minX;
 	}
 
-	float getMaxX() const final {
+	float getMaxX() const {
 		return maxX;
 	}
 
-	float getMinY() const final {
+	float getMinY() const {
 		return minY;
 	}
 
-	float getMaxY() const final {
+	float getMaxY() const {
 		return maxY;
 	}
 };

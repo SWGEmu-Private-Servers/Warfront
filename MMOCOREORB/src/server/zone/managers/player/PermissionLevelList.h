@@ -80,8 +80,8 @@ public:
 
 	static void loadLevels() {
 		lua.init();
-		lua.registerFunction("includeFile", &includeFile);
-		lua.registerFunction("addLevel", &addLevel);
+		lua_register(lua.getLuaState(), "includeFile", &includeFile);
+		lua_register(lua.getLuaState(), "addLevel", &addLevel);
 		lua.runFile("scripts/staff/levels/serverobjects.lua");
 	}
 
@@ -134,7 +134,7 @@ public:
 
 	Vector<String>* getPermissionSkills(uint32 permissionLevel) {
 		if(!contains(permissionLevel))
-			return nullptr;
+			return NULL;
 		else
 			return get(permissionLevel)->getSkillList();
 	}

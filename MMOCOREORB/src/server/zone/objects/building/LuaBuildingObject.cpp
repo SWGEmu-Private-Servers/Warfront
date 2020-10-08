@@ -43,7 +43,7 @@ LuaBuildingObject::LuaBuildingObject(lua_State *L) : LuaTangibleObject(L) {
 #ifdef DYNAMIC_CAST_LUAOBJECTS
 	realObject = dynamic_cast<BuildingObject*>(_getRealSceneObject());
 
-	E3_ASSERT(!_getRealSceneObject() || realObject != nullptr);
+	assert(!_getRealSceneObject() || realObject != NULL);
 #else
 	realObject = reinterpret_cast<BuildingObject*>(lua_touserdata(L, 1));
 #endif
@@ -58,7 +58,7 @@ int LuaBuildingObject::_setObject(lua_State* L) {
 #ifdef DYNAMIC_CAST_LUAOBJECTS
 	realObject = dynamic_cast<BuildingObject*>(_getRealSceneObject());
 
-	E3_ASSERT(!_getRealSceneObject() || realObject != nullptr);
+	assert(!_getRealSceneObject() || realObject != NULL);
 #else
 	realObject = reinterpret_cast<BuildingObject*>(lua_touserdata(L, -1));
 #endif
@@ -79,7 +79,7 @@ int LuaBuildingObject::getNamedCell(lua_State* L) {
 
 	CellObject* cell = realObject->getCell(name);
 
-	if (cell == nullptr) {
+	if (cell == NULL) {
 		lua_pushnil(L);
 	} else {
 		lua_pushlightuserdata(L, cell);
@@ -167,12 +167,12 @@ int LuaBuildingObject::initializeStaticGCWBase(lua_State* L) {
 
 	Zone* zone = realObject->getZone();
 
-	if (zone == nullptr)
+	if (zone == NULL)
 		return 0;
 
 	GCWManager* gcwMan = zone->getGCWManager();
 
-	if (gcwMan == nullptr)
+	if (gcwMan == NULL)
 		return 0;
 
 	gcwMan->unregisterGCWBase(realObject);

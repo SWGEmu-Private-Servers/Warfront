@@ -10,8 +10,6 @@
 
 #include "engine/engine.h"
 
-#include "engine/util/json_utils.h"
-
 #include "server/zone/objects/scene/variables/DeltaVector.h"
 #include "server/zone/objects/tangible/TangibleObject.h"
 #include "server/zone/objects/tangible/wearables/ArmorObject.h"
@@ -26,73 +24,10 @@ public:
 	WearablesDeltaVector() : DeltaVector<ManagedReference<TangibleObject*> >() {
 		protectionArmorMap.setAllowOverwriteInsertPlan();
 
-		//addSerializableVariable("protectionArmorMap", &protectionArmorMap);
+		addSerializableVariable("protectionArmorMap", &protectionArmorMap);
 	}
 
-	bool readObjectMember(ObjectInputStream* stream, const String& name) {
-		if (name == "protectionArmorMap") {
-			TypeInfo<VectorMap<uint8, Vector<ManagedReference<ArmorObject*> > >>::parseFromBinaryStream(&protectionArmorMap, stream);
-
-			return true;
-		}
-
-		return DeltaVector<ManagedReference<TangibleObject*> >::readObjectMember(stream, name);
-	}
-
-	int writeObjectMembers(ObjectOutputStream* stream) {
-		static String _name = "protectionArmorMap";
-		int _offset;
-		uint32 _totalSize;
-
-		_name.toBinaryStream(stream);
-		_offset = stream->getOffset();
-		stream->writeInt(0);
-		TypeInfo<VectorMap<uint8, Vector<ManagedReference<ArmorObject*> > >>::toBinaryStream(&protectionArmorMap, stream);
-		_totalSize = (uint32) (stream->getOffset() - (_offset + 4));
-		stream->writeInt(_offset, _totalSize);
-
-		return 1 + DeltaVector<ManagedReference<TangibleObject*> >::writeObjectMembers(stream);
-	}
-
-	friend void to_json(nlohmann::json& j, const WearablesDeltaVector& vec) {
-		j["protectionArmorMap"] = vec.protectionArmorMap;
-
-		const DeltaVector<ManagedReference<TangibleObject*> >& dv = vec;
-
-		to_json(j, dv);
-	}
-
-
-	bool toBinaryStream(ObjectOutputStream* stream) override {
-		int _currentOffset = stream->getOffset();
-		stream->writeShort(0);
-		int _varCount = writeObjectMembers(stream);
-		stream->writeShort(_currentOffset, _varCount);
-
-		return true;
-	}
-
-	bool parseFromBinaryStream(ObjectInputStream* stream) override {
-		uint16 _varCount = stream->readShort();
-
-		for (int i = 0; i < _varCount; ++i) {
-			String _name;
-			_name.parseFromBinaryStream(stream);
-
-			uint32 _varSize = stream->readInt();
-
-			int _currentOffset = stream->getOffset();
-
-			if(readObjectMember(stream, _name)) {
-			}
-
-			stream->setOffset(_currentOffset + _varSize);
-		}
-
-		return true;
-	}
-
-	void insertItemToMessage(ManagedReference<TangibleObject*>* item, BaseMessage* msg) const override {
+	void insertItemToMessage(ManagedReference<TangibleObject*>* item, BaseMessage* msg) {
 		TangibleObject* object = item->get();
 
 		String custString;
@@ -104,7 +39,7 @@ public:
 		msg->insertInt(object->getClientObjectCRC()); //CRC of the object
 	}
 
-	bool add(const ManagedReference<TangibleObject*>& element, DeltaMessage* message = nullptr, int updates = 1) override {
+	bool add(ManagedReference<TangibleObject*> element, DeltaMessage* message = NULL, int updates = 1) {
 		if (element->isArmorObject()) {
 			ManagedReference<ArmorObject*> armor = cast<ArmorObject*>(element.get());
 			uint8 hitLocations = armor->getHitLocation();
@@ -125,7 +60,7 @@ public:
 		return DeltaVector<ManagedReference<TangibleObject*> >::add(element, message, updates);
 	}
 
-	ManagedReference<TangibleObject*> remove(int index, DeltaMessage* message = nullptr, int updates = 1) override {
+	bool remove(int index, DeltaMessage* message = NULL, int updates = 1) {
 		ManagedReference<TangibleObject*> element = get(index);
 
 		if (element->isArmorObject()) {
@@ -149,7 +84,7 @@ public:
 	}
 
 
-	Vector<ManagedReference<ArmorObject*> > getArmorAtHitLocation(uint8 hl) const {
+	Vector<ManagedReference<ArmorObject*> > getArmorAtHitLocation(uint8 hl) {
 
 		// TODO: Migrate and remove this when the object versioning and migration system is in place
 
@@ -195,6 +130,8 @@ public:
 
 		return protectionArmorMap.get((uint8)ArmorObjectTemplate::NOLOCATION);
 	}
+
+
 
 	void addArmor(uint8 hitLocation, ManagedReference<ArmorObject*> armor) {
 		Vector<ManagedReference<ArmorObject*> > armors = protectionArmorMap.get(hitLocation);

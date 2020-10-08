@@ -39,7 +39,7 @@ public:
 
 		Reference<Task*> task = player->getPendingTask("meditate");
 
-		if (task != nullptr) {
+		if (task != NULL) {
 			player->sendSystemMessage("@jedi_spam:already_in_meditative_state");
 			return GENERALERROR;
 		}

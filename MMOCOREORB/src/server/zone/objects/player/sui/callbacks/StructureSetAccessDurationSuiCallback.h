@@ -27,7 +27,7 @@ public:
 		ManagedReference<StructureSetAccessFeeSession*> session =
 				creature->getActiveSession(SessionFacadeType::SETSTRUCTUREACCESSFEE).castTo<StructureSetAccessFeeSession*>();
 
-		if (session == nullptr)
+		if (session == NULL)
 			return;
 
 		try {

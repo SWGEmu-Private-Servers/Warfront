@@ -114,7 +114,7 @@ public:
 			}
 		} catch (const Exception& e) {
 			/*delete menuResponse;
-			menuResponse = nullptr;*/
+			menuResponse = NULL;*/
 
 			throw e;
 		}
@@ -126,7 +126,7 @@ public:
 
 		/*CreatureObject* player = client->getPlayer();
 
-		if (player != nullptr)
+		if (player != NULL)
 			player->info("received object menu request");*/
 
 	}
@@ -135,7 +135,7 @@ public:
 		//menuResponse->setCounter(counter);
 		ManagedReference<CreatureObject*> player = client->getPlayer();
 
-		if (player == nullptr)
+		if (player == NULL)
 			return;
 
 		Reference<ObjectMenuResponse*> menuResponse = new ObjectMenuResponse(player, objectID, 0);

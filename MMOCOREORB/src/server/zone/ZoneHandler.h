@@ -6,29 +6,32 @@
 #define ZONEHANDLER_H_
 
 #include "server/zone/ZoneServer.h"
+
 #include "server/zone/ZoneClientSession.h"
 
 namespace server {
   namespace zone {
 
-	class ZoneSessionMap : public HashTable<uint64, Reference<ZoneClientSession*> > {
+	class ZoneSessionMap : public HashTable<uint64, Reference<ZoneClientSession*> >,
+			public HashTableIterator<uint64, Reference<ZoneClientSession*> > {
 
 		int maxConnections;
 
 	public:
-		ZoneSessionMap(int maxconn = 10000) : HashTable<uint64, Reference<ZoneClientSession*> >((int) (maxconn * 1.25f)) {
+		ZoneSessionMap(int maxconn = 10000) : HashTable<uint64, Reference<ZoneClientSession*> >((int) (maxconn * 1.25f)),
+				HashTableIterator<uint64, Reference<ZoneClientSession*> >(this) {
 			maxConnections = maxconn;
 		}
 
 		bool add(ZoneClientSession* client) {
-			if (HashTable<uint64, Reference<ZoneClientSession*> >::put(client->getSession()->getNetworkID(), client) == nullptr) {
+			if (HashTable<uint64, Reference<ZoneClientSession*> >::put(client->getSession()->getNetworkID(), client) == NULL) {
 				return true;
 			} else
 				return false;
 		}
 
 		bool remove(ZoneClientSession* client) {
-			if (HashTable<uint64, Reference<ZoneClientSession*> >::remove(client->getSession()->getNetworkID()) != nullptr) {
+			if (HashTable<uint64, Reference<ZoneClientSession*> >::remove(client->getSession()->getNetworkID()) != NULL) {
 				return true;
 			} else
 				return false;
@@ -84,7 +87,7 @@ namespace server {
 
 			ManagedReference<ZoneClientSession*> client = getClientSession(session);
 
-			if (client != nullptr)
+			if (client != NULL)
 				server->handleMessage(client, message);
 		}
 

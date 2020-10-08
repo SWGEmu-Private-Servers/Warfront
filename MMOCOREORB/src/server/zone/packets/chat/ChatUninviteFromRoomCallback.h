@@ -38,11 +38,11 @@ public:
 	void run() {
 		ManagedReference<CreatureObject*> uninviter = client->getPlayer();
 
-		if (uninviter == nullptr)
+		if (uninviter == NULL)
 			return;
 
 		ManagedReference<ChatManager*> chatManager = server->getChatManager();
-		if (chatManager != nullptr)
+		if (chatManager != NULL)
 			chatManager->handleChatUninvitePlayer(uninviter, uninviteeName, roomPath, requestID);
 	}
 

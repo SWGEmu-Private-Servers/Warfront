@@ -30,14 +30,14 @@ public:
 	void run() {
 		ManagedReference<TangibleObject*> strongRef = lair.get();
 
-		if (strongRef == nullptr)
+		if (strongRef == NULL)
 			return;
 
 
 		ManagedReference<LairObserver*> strongObserver = observer.get();
 		ManagedReference<TangibleObject*> strongAttackerRef = attacker.get();
 
-		if (strongObserver == nullptr)
+		if (strongObserver == NULL)
 			return;
 
 		Locker locker(strongRef);

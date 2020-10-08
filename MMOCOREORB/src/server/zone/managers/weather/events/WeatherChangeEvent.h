@@ -26,7 +26,7 @@ public:
 	void run() {
 		ManagedReference<WeatherManager*> wm = weatherManager.get();
 
-		if (wm != nullptr) {
+		if (wm != NULL) {
 			wm->createNewWeatherPattern();
 		}
 	}

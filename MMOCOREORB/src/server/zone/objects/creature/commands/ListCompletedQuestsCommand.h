@@ -23,11 +23,11 @@ public:
 
 		PlayerObject* ghost = creature->getPlayerObject();
 
-		if (ghost == nullptr)
+		if (ghost == NULL)
 			return GENERALERROR;
 
 		PlayerManager* playerManager = server->getZoneServer()->getPlayerManager();
-		ManagedReference<CreatureObject*> targetObj = nullptr;
+		ManagedReference<CreatureObject*> targetObj = NULL;
 
 		if (creature->getTargetID() != 0) {
 			targetObj = server->getZoneServer()->getObject(creature->getTargetID()).castTo<CreatureObject*>();
@@ -45,7 +45,7 @@ public:
 			targetObj = playerManager->getPlayer(targetName);
 		}
 
-		if (targetObj == nullptr)
+		if (targetObj == NULL)
 			return INVALIDTARGET;
 
 		if (!targetObj->isPlayerCreature())
@@ -53,7 +53,7 @@ public:
 
 		PlayerObject* targetGhost = targetObj->getPlayerObject();
 
-		if (targetGhost == nullptr)
+		if (targetGhost == NULL)
 			return INVALIDTARGET;
 
 		ManagedReference<SuiListBox*> box = new SuiListBox(creature, 0);

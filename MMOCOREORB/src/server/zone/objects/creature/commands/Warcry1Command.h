@@ -23,20 +23,25 @@ public:
 		if (!checkInvalidLocomotions(creature))
 			return INVALIDLOCOMOTION;
 
+		if (creature->isInvisible()) {
+			return GENERALERROR;
+
+		}
+
 		Reference<TangibleObject*> targetObject = server->getZoneServer()->getObject(target).castTo<TangibleObject*>();
 
-		if (targetObject == nullptr || !targetObject->isCreatureObject())
+		if (targetObject == NULL || !targetObject->isCreatureObject())
 			return INVALIDTARGET;
 
 		int res = doCombatAction(creature, target);
 
 		if (res == TOOFAR)
-			CombatManager::instance()->broadcastCombatSpam(creature, targetObject, nullptr, 0, "cbt_spam", "warcry_out_of_range", 0);
+			CombatManager::instance()->broadcastCombatSpam(creature, targetObject, NULL, 0, "cbt_spam", "warcry_out_of_range", 0);
 
 		if (res == SUCCESS && creature->isPlayerCreature()) {
 			ManagedReference<PlayerObject*> ghost = creature->getPlayerObject();
 
-			if (ghost != nullptr && !ghost->getCommandMessageString(STRING_HASHCODE("warcry1")).isEmpty() && creature->checkCooldownRecovery("command_message")) {
+			if (ghost != NULL && !ghost->getCommandMessageString(STRING_HASHCODE("warcry1")).isEmpty() && creature->checkCooldownRecovery("command_message")) {
 					UnicodeString shout(ghost->getCommandMessageString(STRING_HASHCODE("warcry1")));
 					server->getChatManager()->broadcastChatMessage(creature, shout, 0, 80, creature->getMoodID(), 0, ghost->getLanguageID());
 					creature->updateCooldownTimer("command_message", 30 * 1000);

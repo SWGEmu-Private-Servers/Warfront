@@ -18,12 +18,12 @@
 int PlaceCityHallComponent::placeStructure(StructureDeed* deed, CreatureObject* creature, float x, float y, int angle) const {
 	PlayerObject* ghost = creature->getPlayerObject();
 
-	if (ghost == nullptr)
+	if (ghost == NULL)
 		return 1;
 
 	Zone* zone = creature->getZone();
 
-	if (zone == nullptr)
+	if (zone == NULL)
 		return 1;
 
 	//Check the capped cities on this planet.
@@ -38,10 +38,10 @@ int PlaceCityHallComponent::placeStructure(StructureDeed* deed, CreatureObject* 
 
 	ManagedReference<BuildingObject*> declaredResidence = zone->getZoneServer()->getObject(declaredOidResidence).castTo<BuildingObject*>();
 
-	if (declaredResidence != nullptr) {
+	if (declaredResidence != NULL) {
 		ManagedReference<CityRegion*> city = declaredResidence->getCityRegion().get();
 
-		if (city != nullptr && city->isMayor(creature->getObjectID())) {
+		if (city != NULL && city->isMayor(creature->getObjectID())) {
 			creature->sendSystemMessage("@city/city:already_mayor"); //You are already the mayor of a city.  You may not be mayor of another city.
 			return 1;
 		}
@@ -65,10 +65,10 @@ int PlaceCityHallComponent::notifyStructurePlaced(StructureDeed* deed, CreatureO
 
 	PlayerObject* ghost = creature->getPlayerObject();
 
-	if (ghost != nullptr && structure->isBuildingObject()) {
+	if (ghost != NULL && structure->isBuildingObject()) {
 		ManagedReference<CityRegion*> city = structure->getCityRegion().get();
 
-		if (city != nullptr && city->isMayor(creature->getObjectID())) {
+		if (city != NULL && city->isMayor(creature->getObjectID())) {
 			Locker locker(city);
 
 			city->setCityHall(structure);
@@ -77,7 +77,7 @@ int PlaceCityHallComponent::notifyStructurePlaced(StructureDeed* deed, CreatureO
 
 			locker.release();
 
-			StructureManager::instance()->declareResidence(creature, structure, true);
+			StructureManager::instance()->declareResidence(creature, structure);
 		}
 	}
 

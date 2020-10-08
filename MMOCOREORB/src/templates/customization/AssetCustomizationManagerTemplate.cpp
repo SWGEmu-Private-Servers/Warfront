@@ -10,29 +10,29 @@
 #include "templates/customization/BasicRangedIntCustomizationVariable.h"
 
 AssetCustomizationManagerTemplate::AssetCustomizationManagerTemplate() {
-	ulstTable = nullptr;
+	ulstTable = NULL;
 	ulstTableCount = 0;
-	ucmpTable = nullptr;
+	ucmpTable = NULL;
 	ucmpTableCount = 0;
-	vnofTable = nullptr;
+	vnofTable = NULL;
 	vnofTableCount = 0;
-	nameTable = nullptr;
+	nameTable = NULL;
 	nameTableCount = 0;
-	pnofTable = nullptr;
+	pnofTable = NULL;
 	pnofTableCount = 0;
-	defvTable = nullptr;
+	defvTable = NULL;
 	defvTableCount = 0;
-	irngTable = nullptr;
+	irngTable = NULL;
 	irngTableCount = 0;
-	rtypTable = nullptr;
+	rtypTable = NULL;
 	rtypTableCount = 0;
-	uidxTable = nullptr;
+	uidxTable = NULL;
 	uidxTableCount = 0;
-	llstTable = nullptr;
+	llstTable = NULL;
 	llstTableCount = 0;
-	lidxTable = nullptr;
+	lidxTable = NULL;
 	lidxTableCount = 0;
-	cidxTable = nullptr;
+	cidxTable = NULL;
 	cidxTableCount = 0;
 }
 
@@ -53,14 +53,12 @@ AssetCustomizationManagerTemplate::~AssetCustomizationManagerTemplate() {
 
 void* AssetCustomizationManagerTemplate::getCustomizationVariablesFromMap(uint16 key, uint64 a2, bool skipSharedOwner, VectorMap<String, Reference<CustomizationVariable*> >& result) {
 	void* uidxResult = searchUidx(key);
-	void* returnValue = nullptr;
+	void* returnValue = NULL;
 
 	if (uidxResult) {
-		//Logger::console.info("UIDXRESULT NOT nullptr", true);
+		//Logger::console.info("UIDXRESULT NOT NULL", true);
 
-		uint16 currentIndex;
-		memcpy(&currentIndex, (uint16*)uidxResult + 1, sizeof(uint16));
-
+		uint16 currentIndex = *((uint16*)uidxResult + 1);
 		uint16 finalIndex = currentIndex + *((byte*)uidxResult + 4);
 
 		while (currentIndex < finalIndex) {
@@ -104,20 +102,19 @@ void* AssetCustomizationManagerTemplate::getCustomizationVariablesFromMap(uint16
 			currentIndex++;
 		}
 	}
-		//Logger::console.info("UIDXRESULT nullptr", true);
+		//Logger::console.info("UIDXRESULT NULL", true);
 	returnValue = searchLidx(key);
 
-	if (returnValue != nullptr) {
-		//Logger::console.info("RETURN VALUE NOT nullptr", true);
+	if (returnValue != NULL) {
+		//Logger::console.info("RETURN VALUE NOT NULL", true);
 
-		uint16 v23;
-		memcpy(&v23, (uint16*)returnValue + 1, sizeof(v23));
+		uint16 v23 = *((uint16*)returnValue + 1);
 
 		for (int i = v23 + *((byte*)returnValue + 4); v23 < i; ++v23) {
 			returnValue = getCustomizationVariablesFromMap(*(uint16*)(llstTable + 2 * v23), a2, skipSharedOwner, result);
 		}
 	}/* else
-			Logger::console.info("RETURN VALUE nullptr", true);*/
+			Logger::console.info("RETURN VALUE NULL", true);*/
 
 
 	return returnValue;
@@ -134,12 +131,8 @@ void AssetCustomizationManagerTemplate::getCustomizationVariables(uint32 appeara
 
 int AssetCustomizationManagerTemplate::cidxCompareFunction(const void* key, const void* value) {
 	//return *(uint16*)key - *(uint16*)value;
-
-	uint32 val;
-	memcpy(&val, value, sizeof(val));
-
-	uint32 k;
-	memcpy(&k, key, sizeof(k));
+	uint32 val = *(uint32*)value;
+	uint32 k = *(uint32*)key;
 
 	if (val <= k)
 		return val < k;
@@ -148,13 +141,7 @@ int AssetCustomizationManagerTemplate::cidxCompareFunction(const void* key, cons
 }
 
 int AssetCustomizationManagerTemplate::lidxCompareFunction(const void* key, const void* value) {
-	uint16 keyVal;
-	memcpy(&keyVal, key, sizeof(keyVal));
-
-	uint16 val;
-	memcpy(&val, value, sizeof(val));
-
-	return keyVal - val;
+	return *(uint16*)key - *(uint16*)value;
 }
 
 void AssetCustomizationManagerTemplate::getRTYP(byte a1, bool& pallete, uint16& resultIndex) {
@@ -176,10 +163,10 @@ uint16 AssetCustomizationManagerTemplate::searchCidx(uint32 appearenceFileCRC) {
 	void* result = bsearch(&appearenceFileCRC, cidxTable, cidxTableCount, 6, cidxCompareFunction);
 
 	if (result) {
-		//Logger::console.info("RESULT NOT nullptr", true);
+		//Logger::console.info("RESULT NOT NULL", true);
 		returnValue = *((uint16*)result + 2);
 	} else {
-		//Logger::console.info("RESULT nullptr", true);
+		//Logger::console.info("RESULT NULL", true);
 		returnValue = 0;
 	}
 

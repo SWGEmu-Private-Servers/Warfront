@@ -23,7 +23,7 @@ public:
 	int doQueueCommand(CreatureObject* creature, const uint64& target, const UnicodeString& arguments) const {
 
 		ManagedReference<PetControlDevice*> controlDevice = creature->getControlDevice().get().castTo<PetControlDevice*>();
-		if (controlDevice == nullptr)
+		if (controlDevice == NULL)
 			return GENERALERROR;
 
 		// Creature specific command
@@ -34,14 +34,14 @@ public:
 			return GENERALERROR;
 
 		ManagedReference<AiAgent*> pet = cast<AiAgent*>(creature);
-		if( pet == nullptr )
+		if( pet == NULL )
 			return GENERALERROR;
 
 		ManagedReference< CreatureObject*> player = pet->getLinkedCreature().get();
-		if( player == nullptr )
+		if( player == NULL )
 			return GENERALERROR;
 
-		if( pet->getCooldownTimerMap() == nullptr )
+		if( pet->getCooldownTimerMap() == NULL )
 			return GENERALERROR;
 
 		// Check pet states
@@ -50,13 +50,13 @@ public:
 
 		// Find food sceno (either provided in arguments or first food in inventory)
 		Locker clocker(player, creature);
-		ManagedReference<SceneObject*> foodSceno = nullptr;
+		ManagedReference<SceneObject*> foodSceno = NULL;
 		StringTokenizer args(arguments.toString());
 		if (!args.hasMoreTokens()){
 
 			// Find food in player inventory
 			ManagedReference<SceneObject*> inventory = player->getSlottedObject("inventory");
-			if (inventory == nullptr){
+			if (inventory == NULL){
 				player->sendSystemMessage("Player inventory not found");
 				return GENERALERROR;
 			}
@@ -87,7 +87,7 @@ public:
 		}
 
 		// Valid food not found
-		if( foodSceno == nullptr || foodSceno->getGameObjectType() != SceneObjectType::FOOD){
+		if( foodSceno == NULL || foodSceno->getGameObjectType() != SceneObjectType::FOOD){
 			pet->showFlyText("npc_reaction/flytext","nofood", 204, 0, 0); // "You don't have any food to give!"
 			return GENERALERROR;
 		}
@@ -100,7 +100,7 @@ public:
 
 		// Food found
 		ManagedReference<Consumable*> consumable = cast<Consumable*>(foodSceno.get());
-		if( consumable == nullptr ){
+		if( consumable == NULL ){
 			player->sendSystemMessage("Error with consumable object");
 			return GENERALERROR;
 		}

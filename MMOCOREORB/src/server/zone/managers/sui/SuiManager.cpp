@@ -27,10 +27,9 @@
 #include "server/zone/objects/tangible/eventperk/ShuttleBeacon.h"
 #include "server/zone/objects/player/sui/SuiBoxPage.h"
 #include "server/zone/managers/loot/LootManager.h"
-#include "server/zone/objects/transaction/TransactionLog.h"
 
 SuiManager::SuiManager() : Logger("SuiManager") {
-	server = nullptr;
+	server = NULL;
 	setGlobalLogging(true);
 	setLogging(false);
 }
@@ -42,12 +41,12 @@ void SuiManager::handleSuiEventNotification(uint32 boxID, CreatureObject* player
 
 	ManagedReference<PlayerObject*> ghost = player->getPlayerObject();
 
-	if (ghost == nullptr)
+	if (ghost == NULL)
 		return;
 
 	ManagedReference<SuiBox*> suiBox = ghost->getSuiBox(boxID);
 
-	if (suiBox == nullptr)
+	if (suiBox == NULL)
 		return;
 
 	//Remove the box from the player, callback can readd it to the player if needed.
@@ -56,20 +55,20 @@ void SuiManager::handleSuiEventNotification(uint32 boxID, CreatureObject* player
 
 	Reference<SuiCallback*> callback = suiBox->getCallback();
 
-	if (callback != nullptr) {
+	if (callback != NULL) {
 		Reference<LuaSuiCallback*> luaCallback = cast<LuaSuiCallback*>(callback.get());
 
-		if (luaCallback != nullptr && suiBox->isSuiBoxPage()) {
+		if (luaCallback != NULL && suiBox->isSuiBoxPage()) {
 			Reference<SuiBoxPage*> boxPage = cast<SuiBoxPage*>(suiBox.get());
 
-			if (boxPage != nullptr) {
+			if (boxPage != NULL) {
 				Reference<SuiPageData*> pageData = boxPage->getSuiPageData();
 
-				if (pageData != nullptr) {
+				if (pageData != NULL) {
 					try {
 						Reference<SuiCommand*> suiCommand = pageData->getCommand(eventIndex);
 
-						if (suiCommand != nullptr && suiCommand->getCommandType() == SuiCommand::SCT_subscribeToEvent) {
+						if (suiCommand != NULL && suiCommand->getCommandType() == SuiCommand::SCT_subscribeToEvent) {
 							StringTokenizer callbackString(suiCommand->getNarrowParameter(2));
 							callbackString.setDelimeter(":");
 
@@ -91,7 +90,9 @@ void SuiManager::handleSuiEventNotification(uint32 boxID, CreatureObject* player
 		return;
 	}
 
-	debug() << "Unknown message callback with SuiWindowType: " << hex << windowType << ". Falling back on old handler system.";
+	StringBuffer msg;
+	msg << "Unknown message callback with SuiWindowType: " << hex << windowType << ". Falling back on old handler system.";
+	//info(msg, true);
 
 	switch (windowType) {
 	case SuiWindowType::DANCING_START:
@@ -133,7 +134,7 @@ void SuiManager::handleSetObjectName(CreatureObject* player, SuiBox* suiBox, uin
 
 	ManagedReference<SceneObject*> object = suiBox->getUsingObject().get();
 
-	if (object == nullptr)
+	if (object == NULL)
 		return;
 
 	if (args->size() < 1)
@@ -226,14 +227,20 @@ void SuiManager::handleBankTransfer(CreatureObject* player, SuiBox* suiBox, uint
 
 	ManagedReference<SceneObject*> bankObject = suiBank->getBank();
 
-	if (bankObject == nullptr)
+	if (bankObject == NULL)
 		return;
 
 	if (!player->isInRange(bankObject, 5))
 		return;
 
-	TransactionLog trx(player, player, TrxCode::BANK, 0, false);
-	player->transferCredits(cash, bank);
+	uint32 currentCash = player->getCashCredits();
+	uint32 currentBank = player->getBankCredits();
+
+	if ((currentCash + currentBank) == ((uint32) cash + (uint32) bank)) {
+		player->setCashCredits(cash);
+		player->setBankCredits(bank);
+	}
+
 }
 
 void SuiManager::handleFishingAction(CreatureObject* player, SuiBox* suiBox, uint32 cancel, Vector<UnicodeString>* args) {
@@ -278,9 +285,6 @@ void SuiManager::handleFishingAction(CreatureObject* player, SuiBox* suiBox, uin
 }
 
 void SuiManager::handleCharacterBuilderSelectItem(CreatureObject* player, SuiBox* suiBox, uint32 cancel, Vector<UnicodeString>* args) {
-	if (!ConfigManager::instance()->getCharacterBuilderEnabled())
-		return;
-
 	ZoneServer* zserv = player->getZoneServer();
 
 	if (args->size() < 1)
@@ -301,19 +305,19 @@ void SuiManager::handleCharacterBuilderSelectItem(CreatureObject* player, SuiBox
 
 	ManagedReference<SuiCharacterBuilderBox*> cbSui = cast<SuiCharacterBuilderBox*>( suiBox);
 
-	const CharacterBuilderMenuNode* currentNode = cbSui->getCurrentNode();
+	CharacterBuilderMenuNode* currentNode = cbSui->getCurrentNode();
 
 	PlayerObject* ghost = player->getPlayerObject();
 
 	//If cancel was pressed then we kill the box/menu.
-	if (cancel != 0 || ghost == nullptr)
+	if (cancel != 0 || ghost == NULL)
 		return;
 
 	//Back was pressed. Send the node above it.
 	if (otherPressed) {
-		const CharacterBuilderMenuNode* parentNode = currentNode->getParentNode();
+		CharacterBuilderMenuNode* parentNode = currentNode->getParentNode();
 
-		if(parentNode == nullptr)
+		if(parentNode == NULL)
 			return;
 
 		cbSui->setCurrentNode(parentNode);
@@ -323,10 +327,10 @@ void SuiManager::handleCharacterBuilderSelectItem(CreatureObject* player, SuiBox
 		return;
 	}
 
-	const CharacterBuilderMenuNode* node = currentNode->getChildNodeAt(index);
+	CharacterBuilderMenuNode* node = currentNode->getChildNodeAt(index);
 
 	//Node doesn't exist or the index was out of bounds. Should probably resend the menu here.
-	if (node == nullptr) {
+	if (node == NULL) {
 		ghost->addSuiBox(cbSui);
 		player->sendMessage(cbSui->generateMessage());
 		return;
@@ -340,12 +344,12 @@ void SuiManager::handleCharacterBuilderSelectItem(CreatureObject* player, SuiBox
 	} else {
 		ManagedReference<SceneObject*> scob = cbSui->getUsingObject().get();
 
-		if (scob == nullptr)
+		if (scob == NULL)
 			return;
 
 		CharacterBuilderTerminal* bluefrog = scob.castTo<CharacterBuilderTerminal*>();
 
-		if (bluefrog == nullptr)
+		if (bluefrog == NULL)
 			return;
 
 		String templatePath = node->getTemplatePath();
@@ -368,7 +372,6 @@ void SuiManager::handleCharacterBuilderSelectItem(CreatureObject* player, SuiBox
 					player->setShockWounds(0);
 				} else {
 					player->sendSystemMessage("Not within combat.");
-					return;
 				}
 			} else if (templatePath == "fill_force_bar") {
 				if (ghost->isJedi()) {
@@ -390,7 +393,6 @@ void SuiManager::handleCharacterBuilderSelectItem(CreatureObject* player, SuiBox
 					ghost->setDrinkFilling(0);
 				} else {
 					player->sendSystemMessage("Not within combat.");
-					return;
 				}
 
 			} else if (templatePath.beginsWith("crafting_apron_")) {
@@ -398,7 +400,7 @@ void SuiManager::handleCharacterBuilderSelectItem(CreatureObject* player, SuiBox
 				//"object/tangible/wearables/ithorian/apron_chef_jacket_s01_ith.iff"
 
 				ManagedReference<SceneObject*> inventory = player->getSlottedObject("inventory");
-				if (inventory == nullptr) {
+				if (inventory == NULL) {
 					return;
 				}
 
@@ -406,7 +408,7 @@ void SuiManager::handleCharacterBuilderSelectItem(CreatureObject* player, SuiBox
 
 				ManagedReference<WearableObject*> apron = zserv->createObject(itemCrc, 2).castTo<WearableObject*>();
 
-				if (apron == nullptr) {
+				if (apron == NULL) {
 					player->sendSystemMessage("There was an error creating the requested item. Please report this issue.");
 					ghost->addSuiBox(cbSui);
 					player->sendMessage(cbSui->generateMessage());
@@ -471,13 +473,9 @@ void SuiManager::handleCharacterBuilderSelectItem(CreatureObject* player, SuiBox
 					apron->setCustomObjectName(apronName, false);
 				}
 
-				TransactionLog trx(TrxCode::CHARACTERBUILDER, player, apron);
-
 				if (inventory->transferObject(apron, -1, true)) {
-					trx.commit();
 					apron->sendTo(player, true);
 				} else {
-					trx.abort() << "Failed to transferObject to player inventory";
 					apron->destroyObjectFromDatabase(true);
 					return;
 				}
@@ -491,10 +489,7 @@ void SuiManager::handleCharacterBuilderSelectItem(CreatureObject* player, SuiBox
 				bluefrog->enhanceCharacter(player);
 
 			} else if (templatePath == "credits") {
-				{
-					TransactionLog trx(TrxCode::CHARACTERBUILDER, player, 50000, true);
-					player->addCashCredits(50000, true);
-				}
+				player->addCashCredits(50000, true);
 				player->sendSystemMessage("You have received 50.000 Credits");
 
 			} else if (templatePath == "faction_rebel") {
@@ -540,12 +535,7 @@ void SuiManager::handleCharacterBuilderSelectItem(CreatureObject* player, SuiBox
 					return;
 
 				LootManager* lootManager = zserv->getLootManager();
-				TransactionLog trx(TrxCode::CHARACTERBUILDER, player);
-				if (lootManager->createLoot(trx, inventory, templatePath, 300, true)) {
-					trx.commit(true);
-				} else {
-					trx.abort() << "createLoot " << templatePath << " failed.";
-				}
+				lootManager->createLoot(inventory, templatePath, 300, true);
 
 			} else if (templatePath == "max_xp") {
 				ghost->maximizeExperience();
@@ -566,7 +556,6 @@ void SuiManager::handleCharacterBuilderSelectItem(CreatureObject* player, SuiBox
 
 				} else {
 					player->sendSystemMessage("Unknown selection.");
-					return;
 				}
 			}
 
@@ -576,7 +565,7 @@ void SuiManager::handleCharacterBuilderSelectItem(CreatureObject* player, SuiBox
 		} else { // Items
 			ManagedReference<SceneObject*> inventory = player->getSlottedObject("inventory");
 
-			if (inventory == nullptr) {
+			if (inventory == NULL) {
 				return;
 			}
 
@@ -591,7 +580,7 @@ void SuiManager::handleCharacterBuilderSelectItem(CreatureObject* player, SuiBox
 
 			ManagedReference<SceneObject*> item = zserv->createObject(node->getTemplateCRC(), 1);
 
-			if (item == nullptr) {
+			if (item == NULL) {
 				player->sendSystemMessage("There was an error creating the requested item. Please report this issue.");
 				ghost->addSuiBox(cbSui);
 				player->sendMessage(cbSui->generateMessage());
@@ -614,22 +603,18 @@ void SuiManager::handleCharacterBuilderSelectItem(CreatureObject* player, SuiBox
 				if (item->getServerObjectCRC() == 0x46BD798B) { // Jukebox
 					Jukebox* jbox = item.castTo<Jukebox*>();
 
-					if (jbox != nullptr)
+					if (jbox != NULL)
 						jbox->setOwner(player);
 				} else if (item->getServerObjectCRC() == 0x255F612C) { // Shuttle Beacon
 					ShuttleBeacon* beacon = item.castTo<ShuttleBeacon*>();
 
-					if (beacon != nullptr)
+					if (beacon != NULL)
 						beacon->setOwner(player);
 				}
 				ghost->addEventPerk(item);
 			}
 
-			TransactionLog trx(TrxCode::CHARACTERBUILDER, player, item);
-
 			if (inventory->transferObject(item, -1, true)) {
-				trx.commit();
-
 				item->sendTo(player, true);
 
 				StringIdChatParameter stringId;
@@ -638,7 +623,6 @@ void SuiManager::handleCharacterBuilderSelectItem(CreatureObject* player, SuiBox
 				player->sendSystemMessage(stringId);
 
 			} else {
-				trx.abort() << "Failed to transferObject to player inventory";
 				item->destroyObjectFromDatabase(true);
 				player->sendSystemMessage("Error putting item in inventory.");
 				return;
@@ -647,24 +631,22 @@ void SuiManager::handleCharacterBuilderSelectItem(CreatureObject* player, SuiBox
 			ghost->addSuiBox(cbSui);
 			player->sendMessage(cbSui->generateMessage());
 		}
-
-		player->info("[CharacterBuilder] gave player " + templatePath, true);
 	}
 }
 
 void SuiManager::sendKeypadSui(SceneObject* keypad, SceneObject* creatureSceneObject, const String& play, const String& callback) {
 
-	if (keypad == nullptr)
+	if (keypad == NULL)
 		return;
 
-	if (creatureSceneObject == nullptr || !creatureSceneObject->isCreatureObject())
+	if (creatureSceneObject == NULL || !creatureSceneObject->isCreatureObject())
 		return;
 
 	CreatureObject* creature = cast<CreatureObject*>(creatureSceneObject);
 
 	PlayerObject* playerObject = creature->getPlayerObject();
 
-	if (playerObject != nullptr) {
+	if (playerObject != NULL) {
 		ManagedReference<SuiKeypadBox*> keypadSui = new SuiKeypadBox(creature, 0x00);
 		keypadSui->setCallback(new LuaSuiCallback(creature->getZoneServer(), play, callback));
 		keypadSui->setUsingObject(keypad);
@@ -677,17 +659,17 @@ void SuiManager::sendKeypadSui(SceneObject* keypad, SceneObject* creatureSceneOb
 
 void SuiManager::sendConfirmSui(SceneObject* terminal, SceneObject* player, const String& play, const String& callback, const String& prompt, const String& button) {
 
-	if (terminal == nullptr)
+	if (terminal == NULL)
 		return;
 
-	if (player == nullptr || !player->isCreatureObject())
+	if (player == NULL || !player->isCreatureObject())
 		return;
 
 	CreatureObject* creature = cast<CreatureObject*>(player);
 
 	PlayerObject* playerObject = creature->getPlayerObject();
 
-	if (playerObject != nullptr) {
+	if (playerObject != NULL) {
 		ManagedReference<SuiMessageBox*> confirmSui = new SuiMessageBox(creature, 0x00);
 		confirmSui->setCallback(new LuaSuiCallback(creature->getZoneServer(), play, callback));
 		confirmSui->setUsingObject(terminal);
@@ -703,17 +685,17 @@ void SuiManager::sendConfirmSui(SceneObject* terminal, SceneObject* player, cons
 }
 
 void SuiManager::sendInputBox(SceneObject* terminal, SceneObject* player, const String& play, const String& callback, const String& prompt, const String& button) {
-	if (terminal == nullptr)
+	if (terminal == NULL)
 		return;
 
-	if (player == nullptr || !player->isCreatureObject())
+	if (player == NULL || !player->isCreatureObject())
 		return;
 
 	CreatureObject* creature = cast<CreatureObject*>(player);
 
 	PlayerObject* playerObject = creature->getPlayerObject();
 
-	if (playerObject != nullptr) {
+	if (playerObject != NULL) {
 		ManagedReference<SuiInputBox*> confirmSui = new SuiInputBox(creature, 0x00);
 		confirmSui->setCallback(new LuaSuiCallback(creature->getZoneServer(), play, callback));
 		confirmSui->setUsingObject(terminal);
@@ -729,17 +711,17 @@ void SuiManager::sendInputBox(SceneObject* terminal, SceneObject* player, const 
 }
 
 void SuiManager::sendMessageBox(SceneObject* usingObject, SceneObject* player, const String& title, const String& text, const String& okButton, const String& screenplay, const String& callback, unsigned int windowType ) {
-	if (usingObject == nullptr)
+	if (usingObject == NULL)
 		return;
 
-	if (player == nullptr || !player->isCreatureObject())
+	if (player == NULL || !player->isCreatureObject())
 		return;
 
 	CreatureObject* creature = cast<CreatureObject*>(player);
 
 	PlayerObject* playerObject = creature->getPlayerObject();
 
-	if (playerObject != nullptr) {
+	if (playerObject != NULL) {
 		ManagedReference<SuiMessageBox*> messageBox = new SuiMessageBox(creature, windowType);
 		messageBox->setCallback(new LuaSuiCallback(creature->getZoneServer(), screenplay, callback));
 		messageBox->setPromptTitle(title);
@@ -755,19 +737,19 @@ void SuiManager::sendMessageBox(SceneObject* usingObject, SceneObject* player, c
 }
 
 void SuiManager::sendListBox(SceneObject* usingObject, SceneObject* player, const String& title, const String& text, const uint8& numOfButtons, const String& cancelButton, const String& otherButton, const String& okButton, LuaObject& options, const String& screenplay, const String& callback, const float& forceCloseDist) {
-	if (usingObject == nullptr)
+	if (usingObject == NULL)
 		return;
 
-	if (player == nullptr || !player->isCreatureObject())
+	if (player == NULL || !player->isCreatureObject())
 		return;
 
 	CreatureObject* creature = cast<CreatureObject*>(player);
 
 	PlayerObject* playerObject = creature->getPlayerObject();
 
-	if (playerObject != nullptr) {
+	if (playerObject != NULL) {
 
-		ManagedReference<SuiListBox*> box = nullptr;
+		ManagedReference<SuiListBox*> box = NULL;
 
 		switch (numOfButtons) {
 		case 1:
@@ -815,19 +797,19 @@ void SuiManager::sendListBox(SceneObject* usingObject, SceneObject* player, cons
 }
 
 void SuiManager::sendTransferBox(SceneObject* usingObject, SceneObject* player, const String& title, const String& text, LuaObject& optionsAddFrom, LuaObject& optionsAddTo, const String& screenplay, const String& callback) {
-	if (usingObject == nullptr)
+	if (usingObject == NULL)
 		return;
 
-	if (player == nullptr || !player->isCreatureObject())
+	if (player == NULL || !player->isCreatureObject())
 		return;
 
 	CreatureObject* creature = cast<CreatureObject*>(player);
 
 	PlayerObject* playerObject = creature->getPlayerObject();
 
-	if (playerObject != nullptr) {
+	if (playerObject != NULL) {
 
-		ManagedReference<SuiTransferBox*> box = nullptr;
+		ManagedReference<SuiTransferBox*> box = NULL;
 
 		box = new SuiTransferBox(creature, 0x00);
 
@@ -864,15 +846,15 @@ void SuiManager::sendTransferBox(SceneObject* usingObject, SceneObject* player, 
 
 int32 SuiManager::sendSuiPage(CreatureObject* creature, SuiPageData* pageData, const String& play, const String& callback, unsigned int windowType) {
 
-	if (pageData == nullptr)
+	if (pageData == NULL)
 		return 0;
 
-	if (creature == nullptr || !creature->isPlayerCreature())
+	if (creature == NULL || !creature->isPlayerCreature())
 		return 0;
 
 	PlayerObject* playerObject = creature->getPlayerObject();
 
-	if (playerObject != nullptr) {
+	if (playerObject != NULL) {
 		ManagedReference<SuiBoxPage*> boxPage = new SuiBoxPage(creature, pageData, windowType);
 		boxPage->setCallback(new LuaSuiCallback(creature->getZoneServer(), play, callback));
 		creature->sendMessage(boxPage->generateMessage());

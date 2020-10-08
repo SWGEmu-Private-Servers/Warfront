@@ -21,7 +21,7 @@ public:
 
 		ManagedReference<PetControlDevice*> controlDevice = creature->getControlDevice().get().castTo<PetControlDevice*>();
 
-		if (controlDevice == nullptr)
+		if (controlDevice == NULL)
 			return GENERALERROR;
 
 		// Droid specific command
@@ -30,25 +30,25 @@ public:
 
 		// droid must have a trap module
 		ManagedReference<DroidObject*> droid = cast<DroidObject*>(creature);
-		if (droid == nullptr)
+		if (droid == NULL)
 			return GENERALERROR;
 
 		// we need the owner
 		ManagedReference<CreatureObject*> owner = droid->getLinkedCreature().get();
 
-		if (owner == nullptr)
+		if (owner == NULL)
 			return GENERALERROR;
 
 		Locker olock(owner, creature);
 
 		auto module = droid->getModule("trap_module").castTo<DroidTrapModuleDataComponent*>();
-		if (module == nullptr) {
+		if (module == NULL) {
 			return GENERALERROR;
 		}
 
 		// trap must be a trap
 		ManagedReference<TangibleObject*> trap = module->getTrap();
-		if (trap == nullptr || !trap->isTrapObject()) {
+		if (trap == NULL || !trap->isTrapObject()) {
 			droid->showFlyText("npc_reaction/flytext","confused", 204, 0, 0);  // "?!!?!?!"
 			return GENERALERROR;
 		}
@@ -61,7 +61,7 @@ public:
 
 		// target must be a creature
 		Reference<CreatureObject*> target = server->getZoneServer()->getObject(targetID, true).castTo<CreatureObject*>();
-		if (target == nullptr || !target->isCreature()) {
+		if (target == NULL || !target->isCreature()) {
 			droid->showFlyText("npc_reaction/flytext","confused", 204, 0, 0);  // "?!!?!?!"
 			owner->sendSystemMessage("@pet/droid_modules:invalid_trap_target"); // "That is not a valid target."
 			return INVALIDTARGET;
@@ -82,9 +82,9 @@ public:
 		}
 
 		// check droid state
-		if (droid->getLocalZone() == nullptr) {  // Not outdoors
+		if (droid->getLocalZone() == NULL) {  // Not outdoors
 			ManagedReference<SceneObject*> parent = droid->getParent().get();
-			if (parent == nullptr || !parent->isCellObject()) { // Not indoors either
+			if (parent == NULL || !parent->isCellObject()) { // Not indoors either
 				return GENERALERROR;
 			}
 		}
@@ -102,14 +102,14 @@ public:
 
 		// get trap meta data
 		SharedObjectTemplate* templateData = TemplateManager::instance()->getTemplate(trap->getServerObjectCRC());
-		if (templateData == nullptr) {
+		if (templateData == NULL) {
 			error("No template for: " + String::valueOf(trap->getServerObjectCRC()));
 			return GENERALERROR;
 		}
 
 		// get trap template
 		TrapTemplate* trapData = cast<TrapTemplate*> (templateData);
-		if (trapData == nullptr) {
+		if (trapData == NULL) {
 			error("No TrapTemplate for: " + String::valueOf(trap->getServerObjectCRC()));
 			return GENERALERROR;
 		}
@@ -143,9 +143,9 @@ public:
 			}
 
 			int targetDefense = target->getSkillMod(trapData->getDefenseMod());
-			const Time* cooldown = droid->getCooldownTime("throwtrap");
+			Time* cooldown = droid->getCooldownTime("throwtrap");
 
-			if (cooldown != nullptr && !cooldown->isPast()) {
+			if (cooldown != NULL && !cooldown->isPast()) {
 				StringIdChatParameter msg;
 				msg.setStringId("@pet/droid_modules:cant_throw_yet");
 				Time now;
@@ -182,7 +182,7 @@ public:
 			module->decrementTrap();
 
 			StringIdChatParameter message;
-			ManagedReference<Buff*> buff = nullptr;
+			ManagedReference<Buff*> buff = NULL;
 			int damage = 0;
 
 			if (hit) {
@@ -195,7 +195,7 @@ public:
 				if (state != 0)
 					buff->addState(state);
 
-				const auto skillMods = trapData->getSkillMods();
+				VectorMap<String, int>* skillMods = trapData->getSkillMods();
 				for (int i = 0; i < skillMods->size(); ++i) {
 					buff->setSkillModifier(skillMods->elementAt(i).getKey(), skillMods->get(i));
 				}

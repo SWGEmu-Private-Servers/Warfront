@@ -21,34 +21,34 @@
 
 ZoneProcessServerImplementation::ZoneProcessServerImplementation(ZoneServer* server) {
 	zoneServer = server;
-	nameManager = nullptr;
-	holocronManager = nullptr;
-	suiManager = nullptr;
-	objectController = nullptr;
-	professionManager = nullptr;
-	zonePacketHandler = nullptr;
-	vendorManager = nullptr;
-	fishingManager = nullptr;
-	gamblingManager = nullptr;
-	forageManager = nullptr;
+	nameManager = NULL;
+	holocronManager = NULL;
+	suiManager = NULL;
+	objectController = NULL;
+	professionManager = NULL;
+	zonePacketHandler = NULL;
+	vendorManager = NULL;
+	fishingManager = NULL;
+	gamblingManager = NULL;
+	forageManager = NULL;
 }
 
 void ZoneProcessServerImplementation::stop() {
-	zonePacketHandler = nullptr;
-	nameManager = nullptr;
-	holocronManager = nullptr;
-	suiManager = nullptr;
-	professionManager = nullptr;
-	vendorManager = nullptr;
-	fishingManager = nullptr;
-	gamblingManager = nullptr;
-	forageManager = nullptr;
-	zoneServer = nullptr;
-	playerCreationManager = nullptr;
+	zonePacketHandler = NULL;
+	nameManager = NULL;
+	holocronManager = NULL;
+	suiManager = NULL;
+	professionManager = NULL;
+	vendorManager = NULL;
+	fishingManager = NULL;
+	gamblingManager = NULL;
+	forageManager = NULL;
+	zoneServer = NULL;
+	playerCreationManager = NULL;
 
-	if (objectController != nullptr) {
+	if (objectController != NULL) {
 		objectController->finalize();
-		objectController = nullptr;
+		objectController = NULL;
 	}
 }
 

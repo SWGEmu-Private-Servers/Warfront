@@ -32,7 +32,7 @@ public:
 
 		creature->removePendingTask("despawn");
 
-		if (zone == nullptr)
+		if (zone == NULL)
 			return;
 
 		creature->destroyObjectFromWorld(false);

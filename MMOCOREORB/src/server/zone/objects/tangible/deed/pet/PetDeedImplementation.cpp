@@ -34,7 +34,7 @@ void PetDeedImplementation::loadTemplateData(SharedObjectTemplate* templateData)
 	DeedImplementation::loadTemplateData(templateData);
 	PetDeedTemplate* deedData = dynamic_cast<PetDeedTemplate*>(templateData);
 
-	if (deedData == nullptr)
+	if (deedData == NULL)
 		return;
 
 	controlDeviceObjectTemplate = deedData->getControlDeviceObjectTemplate();
@@ -122,9 +122,9 @@ void PetDeedImplementation::fillAttributeList(AttributeListMessage* alm, Creatur
 		alm->insertAttribute("spec_atk_2", "---");
 
 	CreatureTemplateManager* creatureTemplateManager = CreatureTemplateManager::instance();
-	Reference<CreatureTemplate*> petTemplate =  creatureTemplateManager->getTemplate( mobileTemplate.hashCode() );
+	ManagedReference<CreatureTemplate*> petTemplate =  creatureTemplateManager->getTemplate( mobileTemplate.hashCode() );
 	bool allowRanged = false;
-	if (petTemplate != nullptr) {
+	if (petTemplate != NULL) {
 		if (petTemplate->getWeapons().size() > 0) {
 			allowRanged = true;
 		}
@@ -183,15 +183,14 @@ void PetDeedImplementation::setupAttacks() {
 		}
 	}
 }
-
-const CreatureAttackMap* PetDeedImplementation::getAttacks() const {
+CreatureAttackMap* PetDeedImplementation::getAttacks() {
 	return &attacks;
 }
 
-String PetDeedImplementation::getTemplateName() const {
+String PetDeedImplementation::getTemplateName() {
 	CreatureTemplateManager* creatureTemplateManager = CreatureTemplateManager::instance();
-	Reference<CreatureTemplate*> petTemplate =  creatureTemplateManager->getTemplate( mobileTemplate.hashCode() );
-	if (petTemplate == nullptr) {
+	ManagedReference<CreatureTemplate*> petTemplate =  creatureTemplateManager->getTemplate( mobileTemplate.hashCode() );
+	if (petTemplate == NULL) {
 		return "";
 	}
 
@@ -213,11 +212,11 @@ void PetDeedImplementation::updateCraftingValues(CraftingValues* values, bool fi
 	ManagedReference<ManufactureSchematic*> manufact = values->getManufactureSchematic();
 	float clFactor = 0;
 
-	if (manufact == nullptr) {
+	if (manufact == NULL) {
 		String templateName;
 		SharedObjectTemplate* templ = getObjectTemplate();
 
-		if (templ != nullptr) {
+		if (templ != NULL) {
 			templateName = templ->getFullTemplateString();
 		}
 
@@ -288,8 +287,8 @@ void PetDeedImplementation::updateCraftingValues(CraftingValues* values, bool fi
 		}
 	}
 	CreatureTemplateManager* creatureTemplateManager = CreatureTemplateManager::instance();
-	Reference<CreatureTemplate*> petTemplate =  creatureTemplateManager->getTemplate( mobileTemplate.hashCode() );
-	if (petTemplate != nullptr) {
+	ManagedReference<CreatureTemplate*> petTemplate =  creatureTemplateManager->getTemplate( mobileTemplate.hashCode() );
+	if (petTemplate != NULL) {
 		// get min CL from the template
 		int skinFactor = petTemplate->getLevel();
 		if (level > 75) {
@@ -315,15 +314,14 @@ void PetDeedImplementation::fillObjectMenuResponse(ObjectMenuResponse* menuRespo
 
 int PetDeedImplementation::handleObjectMenuSelect(CreatureObject* player, byte selectedID) {
 	if (selectedID == 21) {
-		if (generated || !player->hasSkill("outdoors_bio_engineer_novice") || !isASubChildOf(player))
+		if(generated || !player->hasSkill("outdoors_bio_engineer_novice") || !isASubChildOf(player))
 			return 1;
-
 		if (player->isRidingMount()) {
 			player->sendSystemMessage("You cannot sample DNA while mounted");
 			return 1;
 		}
 
-		if(player->getPendingTask("sampledeed") != nullptr) {
+		if(player->getPendingTask("sampledeed") != NULL) {
 			player->sendSystemMessage("@bio_engineer:harvest_dna_already_harvesting");
 			return 1;
 		}
@@ -335,7 +333,7 @@ int PetDeedImplementation::handleObjectMenuSelect(CreatureObject* player, byte s
 
 		Locker clocker(_this.getReferenceUnsafeStaticCast());
 
-		Reference<SampleDeedTask*> task = new SampleDeedTask(_this.getReferenceUnsafeStaticCast(), player);
+		ManagedReference<SampleDeedTask*> task = new SampleDeedTask(_this.getReferenceUnsafeStaticCast(), player);
 		player->addPendingTask("sampledeed",task,0);
 		return 0;
 	}
@@ -344,14 +342,14 @@ int PetDeedImplementation::handleObjectMenuSelect(CreatureObject* player, byte s
 		if (generated || !isASubChildOf(player))
 			return 1;
 
-		if (player->isInCombat() || player->getParentRecursively(SceneObjectType::BUILDING) != nullptr) {
+		if (player->isInCombat() || player->getParentRecursively(SceneObjectType::BUILDING) != NULL) {
 			player->sendSystemMessage("@pet/pet_menu:cant_call"); //You can only unpack vehicles while Outside and not in Combat.
 			return 1;
 		}
 
 		ManagedReference<SceneObject*> datapad = player->getSlottedObject("datapad");
 
-		if (datapad == nullptr) {
+		if (datapad == NULL) {
 			player->sendSystemMessage("Datapad doesn't exist when trying to call pet");
 			return 1;
 		}
@@ -368,7 +366,7 @@ int PetDeedImplementation::handleObjectMenuSelect(CreatureObject* player, byte s
 		for (int i = 0; i < datapad->getContainerObjectsSize(); ++i) {
 			ManagedReference<SceneObject*> object = datapad->getContainerObject(i);
 
-			if (object != nullptr && object->isPetControlDevice()) {
+			if (object != NULL && object->isPetControlDevice()) {
 				PetControlDevice* device = cast<PetControlDevice*>( object.get());
 
 				if (device->getPetType() == PetManager::CREATUREPET) {
@@ -392,7 +390,7 @@ int PetDeedImplementation::handleObjectMenuSelect(CreatureObject* player, byte s
 		for (int i = 0; i < ghost->getActivePetsSize(); ++i) {
 			ManagedReference<AiAgent*> object = ghost->getActivePet(i);
 
-			if (object != nullptr && object->isCreature()) {
+			if (object != NULL && object->isCreature()) {
 				if (++currentlySpawned >= maxPets) {
 					player->sendSystemMessage("@pet/pet_menu:too_many"); // You can't control any more pets. Store one first
 					return 1;
@@ -408,15 +406,15 @@ int PetDeedImplementation::handleObjectMenuSelect(CreatureObject* player, byte s
 		}
 
 		Reference<CreatureManager*> creatureManager = player->getZone()->getCreatureManager();
-		if( creatureManager == nullptr ){
+		if( creatureManager == NULL ){
 			player->sendSystemMessage("Internal Pet Deed Error #307");
 			return 1;
 		}
 
 		CreatureTemplateManager* creatureTemplateManager = CreatureTemplateManager::instance();
-		Reference<CreatureTemplate*> petTemplate = creatureTemplateManager->getTemplate( mobileTemplate.hashCode() );
+		ManagedReference<CreatureTemplate*> petTemplate = creatureTemplateManager->getTemplate( mobileTemplate.hashCode() );
 
-		if (petTemplate == nullptr) {
+		if (petTemplate == NULL) {
 			player->sendSystemMessage("wrong pet template;mobileTemplate=[" + mobileTemplate + "]" );
 			return 1;
 		}
@@ -438,7 +436,7 @@ int PetDeedImplementation::handleObjectMenuSelect(CreatureObject* player, byte s
 		// All checks complete, lets setup the control device and do it.
 		ManagedReference<PetControlDevice*> controlDevice = (server->getZoneServer()->createObject(controlDeviceObjectTemplate.hashCode(), 1)).castTo<PetControlDevice*>();
 
-		if (controlDevice == nullptr) {
+		if (controlDevice == NULL) {
 			player->sendSystemMessage("wrong pet control device;controlDevice=[" + controlDeviceObjectTemplate + "]" );
 			return 1;
 		}
@@ -447,7 +445,7 @@ int PetDeedImplementation::handleObjectMenuSelect(CreatureObject* player, byte s
 
 		String templateToSpawn = creatureManager->getTemplateToSpawn(mobileTemplate.hashCode());
 		ManagedReference<CreatureObject*> creatureObject = creatureManager->createCreature(templateToSpawn.hashCode(), true, 0 );
-		if( creatureObject == nullptr ) {
+		if( creatureObject == NULL ) {
 			controlDevice->destroyObjectFromDatabase(true);
 			player->sendSystemMessage("wrong pet template;mobileTemplate=[" + mobileTemplate + "]" );
 			return 1;
@@ -456,7 +454,7 @@ int PetDeedImplementation::handleObjectMenuSelect(CreatureObject* player, byte s
 		Locker clocker(creatureObject, player);
 
 		ManagedReference<Creature*> pet = creatureObject.castTo<Creature*>();
-		if( pet == nullptr ) {
+		if( pet == NULL ) {
 			controlDevice->destroyObjectFromDatabase(true);
 			creatureObject->destroyObjectFromDatabase(true);
 			player->sendSystemMessage("Internal Pet Deed Error #348" );
@@ -473,7 +471,7 @@ int PetDeedImplementation::handleObjectMenuSelect(CreatureObject* player, byte s
 
 		// Copy color customization from deed to pet
 		CustomizationVariables* customVars = getCustomizationVariables();
-		if( customVars != nullptr ){
+		if( customVars != NULL ){
 			for (int i = 0; i < customVars->size(); ++i) {
 				uint8 id = customVars->elementAt(i).getKey();
 				int16 val = customVars->elementAt(i).getValue();
@@ -505,7 +503,7 @@ int PetDeedImplementation::handleObjectMenuSelect(CreatureObject* player, byte s
 		//Remove the deed from it's container.
 		ManagedReference<SceneObject*> deedContainer = getParent().get();
 
-		if (deedContainer != nullptr) {
+		if (deedContainer != NULL) {
 			destroyObjectFromWorld(true);
 		}
 
@@ -517,7 +515,7 @@ int PetDeedImplementation::handleObjectMenuSelect(CreatureObject* player, byte s
 	return DeedImplementation::handleObjectMenuSelect(player, selectedID);
 }
 
-bool PetDeedImplementation::isSpecialResist(int type) const {
+bool PetDeedImplementation::isSpecialResist(int type) {
 	return specialResists & type;
 }
 void PetDeedImplementation::setSpecialResist(int type) {

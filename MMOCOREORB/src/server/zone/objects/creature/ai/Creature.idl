@@ -4,7 +4,6 @@
 
 package server.zone.objects.creature.ai;
 
-import engine.service.proto.BasePacket;
 import server.zone.objects.creature.CreatureObject;
 import server.zone.objects.creature.ai.AiAgent;
 import server.zone.packets.object.ObjectMenuResponse;
@@ -14,8 +13,8 @@ import server.zone.Zone;
 include system.util.SortedVector;
 include engine.log.Logger;
 
-@json
 class Creature extends AiAgent {
+
 	@dereferenced
 	private transient SortedVector<unsigned long> alreadyHarvested;
 
@@ -89,7 +88,7 @@ class Creature extends AiAgent {
 	@local
 	public native void loadTemplateDataForBaby(CreatureTemplate templateData);
 
-	public native void scheduleDespawn();
+	public native void scheduleDespawn(); 
 
 	public native boolean hasOrganics();
 
@@ -139,49 +138,49 @@ class Creature extends AiAgent {
 	}
 
 	public float getTame() {
-		if (!super.npcTemplate)
+		if (super.npcTemplate == null)
 			return 0;
 
 		return super.npcTemplate.getTame();
 	}
 
 	public string getMeatType() {
-		if (!super.npcTemplate)
+		if (super.npcTemplate == null)
 			return "";
 
 		return super.npcTemplate.getMeatType();
 	}
 
 	public string getBoneType() {
-		if (!super.npcTemplate)
+		if (super.npcTemplate == null)
 			return "";
 
 		return super.npcTemplate.getBoneType();
 	}
 
 	public string getHideType() {
-		if (!super.npcTemplate)
+		if (super.npcTemplate == null)
 			return "";
 
 		return super.npcTemplate.getHideType();
 	}
 
 	public string getMilkType() {
-		if (!super.npcTemplate)
+		if (super.npcTemplate == null)
 			return "";
 
 		return super.npcTemplate.getMilkType();
 	}
 
 	public float getMilk() {
-		if (!super.npcTemplate || isEventMob())
+		if (super.npcTemplate == null || isEventMob())
 			return 0;
 
 		return super.npcTemplate.getMilk();
 	}
 
 	public float getHideMax() {
-		if (!super.npcTemplate || isEventMob())
+		if (super.npcTemplate == null || isEventMob())
 			return 0;
 
 		if (isBaby())
@@ -191,7 +190,7 @@ class Creature extends AiAgent {
 	}
 
 	public float getBoneMax() {
-		if (!super.npcTemplate || isEventMob())
+		if (super.npcTemplate == null || isEventMob())
 			return 0;
 
 		if (isBaby())
@@ -201,7 +200,7 @@ class Creature extends AiAgent {
 	}
 
 	public float getMeatMax() {
-		if (!super.npcTemplate || isEventMob())
+		if (super.npcTemplate == null || isEventMob())
 			return 0;
 
 		if (isBaby())
@@ -211,7 +210,7 @@ class Creature extends AiAgent {
 	}
 
 	public int getBaseXp() {
-		if (!super.npcTemplate)
+		if (super.npcTemplate == null)
 			return 0;
 
 		if (isBaby() || isEventMob())
@@ -221,7 +220,7 @@ class Creature extends AiAgent {
 	}
 
 	public string getControlDeviceTemplate() {
-		if (!super.npcTemplate)
+		if (super.npcTemplate == null)
 			return "";
 
 		return super.npcTemplate.getControlDeviceTemplate();
@@ -229,15 +228,11 @@ class Creature extends AiAgent {
 
 	public native boolean isMount();
 
-	@dirty
-	@local
-	public native void sendMessage(BasePacket msg);
-
 	public int getAdultLevel() {
-		if (super.petDeed) {
+		if (super.petDeed != null) {
 			return super.petDeed.getLevel();
-		}
-		if (!super.npcTemplate)
+		}	
+		if (super.npcTemplate == null)
 			return super.getLevel();
 
 		return super.npcTemplate.getLevel();

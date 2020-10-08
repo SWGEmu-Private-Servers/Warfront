@@ -19,7 +19,7 @@ public:
 	}
 
 	void run() {
-		if (firework == nullptr)
+		if (firework == NULL)
 			return;
 
 		try {
@@ -30,8 +30,8 @@ public:
 			player->error("unreported exception on FireworkEvent::run()");
 		}
 
-		firework = nullptr;
-		player = nullptr;
+		firework = NULL;
+		player = NULL;
 	}
 };
 

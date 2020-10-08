@@ -23,29 +23,20 @@ public:
 		if (!checkInvalidLocomotions(creature))
 			return INVALIDLOCOMOTION;
 
-		if (!creature->checkCooldownRecovery("eject")) {
-			creature->error("tried /eject before cooldown completed " + arguments.toString());
-			creature->sendSystemMessage("You must wait more than 60 seconds between /eject attempts.");
-			creature->getCooldownTimerMap()->updateToCurrentAndAddMili("eject", 60000); // Make them wait more (macro much?)
-			return GENERALERROR;
-		}
-
-		creature->getCooldownTimerMap()->updateToCurrentAndAddMili("eject", 60000); // 60 Seconds
-
 		creature->sendSystemMessage("@error_message:sys_eject_request"); //Processing eject request...
 
 		/*
 string/en/error_message.stf	122	sys_eject_fail_move	The ejection attempt failed because you moved.
 		 */
 
-		if (creature->getParent() != nullptr) {
+		if (creature->getParent() != NULL) {
 			creature->sendSystemMessage("@error_message:sys_eject_fail_contained"); //The ejection attempt failed because you are inside a building.
 			return GENERALERROR;
 		}
 
 		ManagedReference<Zone*> zone = creature->getZone();
 
-		if (zone == nullptr)
+		if (zone == NULL)
 			return GENERALERROR;
 
 		float x = creature->getPositionX();
@@ -60,7 +51,7 @@ string/en/error_message.stf	122	sys_eject_fail_move	The ejection attempt failed 
 		Locker _lock(zone);
 
 		//Find nearest building.
-		ManagedReference<BuildingObject*> closestBuilding = nullptr;
+		ManagedReference<BuildingObject*> closestBuilding = NULL;
 		float minRange = 16000.f;
 
 		CloseObjectsVector* vec = (CloseObjectsVector*) creature->getCloseObjects();
@@ -71,7 +62,7 @@ string/en/error_message.stf	122	sys_eject_fail_move	The ejection attempt failed 
 		for (int i = 0; i < closeObjects.size(); ++i) {
 			ManagedReference<SceneObject*> obj = cast<SceneObject*>( closeObjects.get(i));
 
-			if (obj == nullptr || !obj->isBuildingObject())
+			if (obj == NULL || !obj->isBuildingObject())
 				continue;
 
 			float objRange = obj->getDistanceTo(creature);
@@ -82,12 +73,10 @@ string/en/error_message.stf	122	sys_eject_fail_move	The ejection attempt failed 
 			}
 		}
 
-		if (closestBuilding == nullptr) {
+		if (closestBuilding == NULL) {
 			creature->sendSystemMessage("@error_message:sys_eject_fail_proximity"); //The eject attempt failed because there isn't a building nearby.
 			return GENERALERROR;
 		}
-
-		creature->error("used /eject " + arguments.toString());
 
 		closestBuilding->ejectObject(creature);
 		creature->sendSystemMessage("@error_message:sys_eject_success"); //You have been moved to the nearest building's ejection point.

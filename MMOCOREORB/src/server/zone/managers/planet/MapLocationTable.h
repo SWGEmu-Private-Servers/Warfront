@@ -49,19 +49,19 @@ public:
 
 	void dropObject(SceneObject* object);
 
-	bool containsObject(SceneObject* object) const;
+	bool containsObject(SceneObject* object);
 
 	void updateObjectsIcon(SceneObject* object, byte icon);
 
-	const SortedVector<MapLocationEntry>& getLocation(const String& name) const;
+	SortedVector<MapLocationEntry>& getLocation(const String& name);
 
-	const SortedVector<MapLocationEntry>& get(int index) const {
+	SortedVector<MapLocationEntry>& get(int index) {
 		return locations.elementAt(index).getValue();
 	}
 
-	int findLocation(const String& name) const;
+	int findLocation(const String& name);
 
-	int size() const {
+	int size() {
 		return locations.size();
 	}
 };

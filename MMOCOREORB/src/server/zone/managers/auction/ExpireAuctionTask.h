@@ -24,7 +24,7 @@ public:
 		ManagedReference<AuctionManager*> strongRef = auctionManager.get();
 		ManagedReference<AuctionItem*> strongRefItem = item.get();
 
-		if (strongRef == nullptr || strongRefItem == nullptr)
+		if (strongRef == NULL || strongRefItem == NULL)
 			return;
 
 		strongRef->expireAuction(strongRefItem);

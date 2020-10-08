@@ -18,7 +18,7 @@ void BuffImplementation::init() {
 	skillModifiers.setNoDuplicateInsertPlan();
 	skillModifiers.setNullValue(0);
 
-	E3_ASSERT(buffDuration >= 0);
+	assert(buffDuration >= 0);
 }
 
 void BuffImplementation::initializeTransientMembers() {
@@ -48,7 +48,7 @@ void BuffImplementation::loadBuffDurationEvent(CreatureObject* creo) {
 
 void BuffImplementation::notifyLoadFromDatabase() {
 /*
-	if (buffEvent != nullptr && buffEvent->isScheduled()) {
+	if (buffEvent != NULL && buffEvent->isScheduled()) {
 		buffEvent->cancel();
 		error("Buff had event scheduled before it was loaded!");
 	}
@@ -74,7 +74,7 @@ void BuffImplementation::sendTo(CreatureObject* player) {
 }
 
 void BuffImplementation::setBuffEventNull() {
-	buffEvent = nullptr;
+	buffEvent = NULL;
 }
 
 void BuffImplementation::sendDestroyTo(CreatureObject* player) {
@@ -84,28 +84,26 @@ void BuffImplementation::sendDestroyTo(CreatureObject* player) {
 	}
 }
 
-Time BuffImplementation::getTimeApplied() const {
+Time BuffImplementation::getTimeApplied() {
 	return timeApplied;
 }
 
-int BuffImplementation::compareTo(const Buff* buff) const {
+int BuffImplementation::compareTo(Buff *buff) {
 	Time rhs = buff->getTimeApplied();
-
 	return timeApplied.compareTo(rhs);
 }
-
 void BuffImplementation::activate(bool applyModifiers) {
-	debug() << "activating buff with crc " << hex << buffCRC;
-
+	//info("activating buff with crc " + String::hexvalueOf((int)buffCRC), true);
 	try {
-		if (applyModifiers)
+
+		if(applyModifiers)
 			applyAllModifiers();
 
 		scheduleBuffEvent();
 
 		timeApplied.updateToCurrentTime();
 
-		debug() << "nextExecutionTime miliDifference:" << nextExecutionTime.miliDifference();
+		//info("nextExecutionTime miliDifference:" + String::valueOf(nextExecutionTime.miliDifference()), true);
 
 		ManagedReference<CreatureObject*> creo = creature.get();
 		if (creo->isPlayerCreature())
@@ -121,7 +119,7 @@ void BuffImplementation::activate(bool applyModifiers) {
 			creo->sendStateCombatSpam(startSpam.getFile(), startSpam.getStringID(), spamColor, 0, broadcastSpam);
 		}
 
-	} catch (const Exception& e) {
+	} catch (Exception& e) {
 		error(e.getMessage());
 		e.printStackTrace();
 	}
@@ -148,11 +146,11 @@ void BuffImplementation::removeAllModifiers() {
 void BuffImplementation::deactivate(bool removeModifiers) {
 	ManagedReference<CreatureObject*> strongRef = creature.get();
 
-	if (strongRef == nullptr)
+	if (strongRef == NULL)
 		return;
 
 	try {
-		if (removeModifiers)
+		if(removeModifiers)
 			removeAllModifiers();
 
 		if (strongRef->isPlayerCreature())
@@ -170,7 +168,7 @@ void BuffImplementation::deactivate(bool removeModifiers) {
 
 		clearBuffEvent();
 
-	} catch (const Exception& e) {
+	} catch (Exception& e) {
 		error(e.getMessage());
 		e.printStackTrace();
 	}
@@ -216,65 +214,62 @@ void BuffImplementation::parseSkillModifierString(const String& modifierstring) 
 	}
 }
 
-String BuffImplementation::getAttributeModifierString() const {
+String BuffImplementation::getAttributeModifierString() {
 	if (attributeModifiers.size() == 0)
 		return String("none");
 
-	StringBuffer retString;
+	String retString = "";
 
 	for (int i = 0; i < attributeModifiers.size(); i++) {
-		const auto& entry = attributeModifiers.elementAt(i);
-		retString << CreatureAttribute::getName(entry.getKey()) << " +"
-			<< entry.getValue() << ";";
+		VectorMapEntry<byte, int> entry = attributeModifiers.elementAt(i);
+		retString += CreatureAttribute::getName(entry.getKey()) + " +" + String::valueOf(entry.getValue()) + ";";
 	}
 
-	return retString.toString();
+	return retString;
 }
 
-String BuffImplementation::getSkillModifierString() const {
+String BuffImplementation::getSkillModifierString() {
 	if (skillModifiers.size() == 0)
 		return String("none");
 
-	StringBuffer retString;
+	String retString = "";
 
 	for (int i = 0; i < skillModifiers.size(); i++) {
-		const auto& entry = skillModifiers.elementAt(i);
-		retString << entry.getKey() << " +" << entry.getValue() << "; ";
+		VectorMapEntry<String, int> entry = skillModifiers.elementAt(i);
+		retString += entry.getKey() + " +" + String::valueOf(entry.getValue()) + "; ";
 	}
 
-	return retString.toString();
+	return retString;
 }
 
 void BuffImplementation::scheduleBuffEvent() {
 	buffEvent = new BuffDurationEvent(creature.get(), _this.getReferenceUnsafeStaticCast());
 	buffEvent->schedule((int) (buffDuration * 1000));
-	AtomicTime time;
-	Core::getTaskManager()->getNextExecutionTime(buffEvent, time);
-
-	nextExecutionTime = time.getTimeObject();
+	Core::getTaskManager()->getNextExecutionTime(buffEvent, nextExecutionTime);
 }
 
-float BuffImplementation::getTimeLeft() const {
-	if (buffEvent == nullptr || !buffEvent->isScheduled()) {
-		//info("buffEvent == nullptr || !buffEvent->isScheduled()", true);
+float BuffImplementation::getTimeLeft() {
+	if (buffEvent == NULL || !buffEvent->isScheduled()) {
+		//info("buffEvent == NULL || !buffEvent->isScheduled()", true);
 		return 0.0f;
 	}
 
-	AtomicTime next;
+	Time next;
 
 	Core::getTaskManager()->getNextExecutionTime(buffEvent, next);
 
-	float timeleft = round(Time().miliDifference(next.getTimeObject()) / 1000.0f);
+	float timeleft = round(Time().miliDifference(next) / 1000.0f);
 
 	//info("timeLeft = " + String::valueOf(timeleft), true);
 
 	return Math::max(0.0f, timeleft);
 }
 
+
 void BuffImplementation::applyAttributeModifiers() {
 	ManagedReference<CreatureObject*> creo = creature.get();
 
-	if (creo == nullptr)
+	if (creo == NULL)
 		return;
 
 	int size = attributeModifiers.size();
@@ -326,7 +321,7 @@ void BuffImplementation::applyAttributeModifiers() {
 void BuffImplementation::applySkillModifiers() {
 	ManagedReference<CreatureObject*> creo = creature.get();
 
-	if (creo == nullptr)
+	if (creo == NULL)
 		return;
 
 	int size = skillModifiers.size();
@@ -349,7 +344,7 @@ void BuffImplementation::applySkillModifiers() {
 void BuffImplementation::applyStates() {
 	ManagedReference<CreatureObject*> creo = creature.get();
 
-	if (creo == nullptr)
+	if (creo == NULL)
 		return;
 
 	int size = states.size();
@@ -363,7 +358,7 @@ void BuffImplementation::applyStates() {
 void BuffImplementation::removeAttributeModifiers() {
 	ManagedReference<CreatureObject*> creo = creature.get();
 
-	if (creo == nullptr)
+	if (creo == NULL)
 		return;
 
 	int size = attributeModifiers.size();
@@ -412,7 +407,7 @@ void BuffImplementation::removeAttributeModifiers() {
 void BuffImplementation::removeSkillModifiers() {
 	ManagedReference<CreatureObject*> creo = creature.get();
 
-	if (creo == nullptr)
+	if (creo == NULL)
 		return;
 
 	int size = skillModifiers.size();
@@ -436,7 +431,7 @@ void BuffImplementation::removeSkillModifiers() {
 void BuffImplementation::removeStates() {
 	ManagedReference<CreatureObject*> creo = creature.get();
 
-	if (creo == nullptr)
+	if (creo == NULL)
 		return;
 
 	int size = states.size();
@@ -447,18 +442,18 @@ void BuffImplementation::removeStates() {
 }
 
 void BuffImplementation::clearBuffEvent() {
-	if (buffEvent != nullptr) {
+	if (buffEvent != NULL) {
 		if (buffEvent->isScheduled())
 			buffEvent->cancel();
 
-		buffEvent->setBuffObject(nullptr);
-		buffEvent = nullptr;
+		buffEvent->setBuffObject(NULL);
+		buffEvent = NULL;
 		nextExecutionTime.updateToCurrentTime();
 	}
 }
 
-bool BuffImplementation::isActive() const {
-	return (buffEvent != nullptr && buffEvent->isScheduled());
+bool BuffImplementation::isActive() {
+	return (buffEvent != NULL && buffEvent->isScheduled());
 }
 
 void BuffImplementation::setStartMessage(StringIdChatParameter& start) {

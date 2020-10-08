@@ -32,13 +32,13 @@ public:
 			if (commandType.beginsWith("screenplaystate")) {
 				ManagedReference<SceneObject*> obj = server->getZoneServer()->getObject(target);
 
-				if (obj == nullptr || !obj->isCreatureObject()) {
+				if (obj == NULL || !obj->isCreatureObject()) {
 					return INVALIDTARGET;
 				}
 
 				CreatureObject* targetCreature = cast<CreatureObject*>(obj.get());
 
-				if (targetCreature == nullptr) {
+				if (targetCreature == NULL) {
 					return INVALIDTARGET;
 				}
 

@@ -84,7 +84,7 @@ public:
 
 		ManagedReference<CreatureObject*> player = client->getPlayer();
 
-		if (player != nullptr && chatManager != nullptr)
+		if (player != NULL && chatManager != NULL)
 			chatManager->sendRoomList(player);
 	}
 };

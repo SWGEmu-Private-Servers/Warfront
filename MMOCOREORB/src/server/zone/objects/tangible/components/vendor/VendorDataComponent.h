@@ -23,17 +23,17 @@ protected:
 	bool disabled;
 	bool registered;
 
-	SerializableTime lastSuccessfulUpdate;
+	Time lastSuccessfulUpdate;
 
 	int maintAmount;
 
-	SerializableTime lastXpAward;
+	Time lastXpAward;
 	int awardUsageXP;
 
 	bool adBarking;
 
-	SerializableTime emptyTimer;
-	SerializableTime inactiveTimer;
+	Time emptyTimer;
+	Time inactiveTimer;
 
 	bool mail1Sent;
 
@@ -77,8 +77,6 @@ public:
 
 	void runVendorUpdate();
 
-	void writeJSON(nlohmann::json& j) const;
-
 	void setOwnerId(uint64 id) {
 		ownerId = id;
 	}
@@ -96,7 +94,7 @@ public:
 		updateUID();
 
 		ManagedReference<SceneObject*> strongParent = parent.get();
-		if (strongParent == nullptr)
+		if (strongParent == NULL)
 			return;
 
 		originalDirection = strongParent->getDirectionAngle();
@@ -172,12 +170,12 @@ public:
 	inline bool isEmpty() {
 		ManagedReference<AuctionManager*> auctionManager = auctionMan.get();
 
-		if (auctionManager == nullptr)
+		if (auctionManager == NULL)
 			return false;
 
 		ManagedReference<AuctionsMap*> auctionsMap =
 				auctionManager->getAuctionMap();
-		if (auctionsMap == nullptr) {
+		if (auctionsMap == NULL) {
 			return false;
 		}
 

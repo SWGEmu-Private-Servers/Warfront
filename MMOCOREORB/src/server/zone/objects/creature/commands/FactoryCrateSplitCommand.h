@@ -35,7 +35,7 @@ public:
 
 		ManagedReference<FactoryCrate* > factoryCrate = server->getZoneServer()->getObject(target).castTo<FactoryCrate*>();
 
-		if (factoryCrate == nullptr || !creature->isPlayerCreature())
+		if (factoryCrate == NULL || !creature->isPlayerCreature())
 			return INVALIDTARGET;
 
 		if(!factoryCrate->isASubChildOf(creature)) {
@@ -48,7 +48,7 @@ public:
 		ManagedReference<SceneObject*> objectsParent = factoryCrate->getParent().get();
 
 
-		if(objectsParent == nullptr)
+		if(objectsParent == NULL)
 			return GENERALERROR;
 
 		if (objectsParent->isCellObject()) {

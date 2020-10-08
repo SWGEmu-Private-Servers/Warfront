@@ -30,12 +30,12 @@ public:
 
 			CreatureObject* player = cast<CreatureObject*>(creature);
 
-			if (player == nullptr)
+			if (player == NULL)
 				return GENERALERROR;
 
 			GamblingManager* gamblingManager = server->getGamblingManager();
 
-			if (gamblingManager == nullptr)
+			if (gamblingManager == NULL)
 				return GENERALERROR;
 
 			if (!gamblingManager->isPlaying(player)) {

@@ -14,7 +14,7 @@ bool ContainerObjectComponent::checkContainerPermission(SceneObject* sceneObject
 
 	Container* container = dynamic_cast<Container*>(sceneObject);
 
-	if (container != nullptr) {
+	if (container != NULL) {
 		if (container->isContainerLocked() && container->isSliced()) {
 			creature->sendSystemMessage("@slicing/slicing:broken");
 			return false;

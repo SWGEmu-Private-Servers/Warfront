@@ -6,6 +6,7 @@
 #include "server/zone/managers/creature/CreatureTemplateManager.h"
 #include "server/zone/objects/creature/conversation/DeliverMissionConversationObserver.h"
 #include "server/zone/objects/creature/conversation/InformantMissionConversationObserver.h"
+#include "server/zone/objects/creature/conversation/ConversationObserver.h"
 #include "server/zone/objects/creature/conversation/LuaConversationObserver.h"
 #include "server/zone/objects/creature/conversation/PetTrainingConversationObserver.h"
 
@@ -23,11 +24,11 @@ ConversationObserver* ConversationManager::getConversationObserver(uint32 conver
 		return conversationObservers.get(conversationTemplateCRC).get();
 	} else {
 		if (CreatureTemplateManager::DEBUG_MODE)
-			return nullptr;
+			return NULL;
 		//No observer, create it.
-		ManagedReference<ConversationObserver*> conversationObserver = nullptr;
+		ManagedReference<ConversationObserver*> conversationObserver = NULL;
 		ConversationTemplate* conversationTemplate = CreatureTemplateManager::instance()->getConversationTemplate(conversationTemplateCRC);
-		if (conversationTemplate != nullptr) {
+		if (conversationTemplate != NULL) {
 			switch (conversationTemplate->getConversationTemplateType()) {
 			case ConversationTemplate::ConversationTemplateTypeNormal:
 				conversationObserver = new ConversationObserver(conversationTemplateCRC);
@@ -49,7 +50,7 @@ ConversationObserver* ConversationManager::getConversationObserver(uint32 conver
 				break;
 			}
 
-			if (conversationObserver != nullptr) {
+			if (conversationObserver != NULL) {
 				//Add it to the map.
 				conversationObservers.put(conversationTemplateCRC, conversationObserver);
 			}

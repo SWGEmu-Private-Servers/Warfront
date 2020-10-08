@@ -38,7 +38,7 @@ public:
 
 			String planetName = luaPlanetObj.getStringField("name");
 
-			Reference<PlanetSpawnMap*> planet = nullptr;
+			Reference<PlanetSpawnMap*> planet = NULL;
 
 			if (planetSpawnMaps.contains(planetName.hashCode())) {
 				planet = planetSpawnMaps.get(planetName.hashCode());
@@ -88,10 +88,6 @@ public:
 	 * @return the requested planet.
 	 */
 	PlanetSpawnMap* getPlanet(const uint32 planetCRC) {
-		return planetSpawnMaps.get(planetCRC);
-	}
-
-	const PlanetSpawnMap* getPlanet(const uint32 planetCRC) const {
 		return planetSpawnMaps.get(planetCRC);
 	}
 

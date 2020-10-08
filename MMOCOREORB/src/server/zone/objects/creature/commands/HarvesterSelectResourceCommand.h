@@ -30,7 +30,7 @@ public:
 
 		ManagedReference<SceneObject*> object = server->getZoneServer()->getObject(target);
 
-		if (object == nullptr || !object->isInstallationObject())
+		if (object == NULL || !object->isInstallationObject())
 			return GENERALERROR;
 
 		InstallationObject* inso = cast<InstallationObject*>( object.get());

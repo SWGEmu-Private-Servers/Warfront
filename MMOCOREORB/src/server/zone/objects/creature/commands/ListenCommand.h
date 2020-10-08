@@ -28,7 +28,7 @@ public:
 
 		ManagedReference<PlayerManager*> playerManager = server->getPlayerManager();
 
-		if (playerManager != nullptr)
+		if (playerManager != NULL)
 			playerManager->startListen(creature, target);
 
 		return SUCCESS;

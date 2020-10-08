@@ -19,7 +19,7 @@ namespace events {
 
 class DroidHarvestTask : public Task {
 
-	Reference<DroidHarvestModuleDataComponent*> module;
+	ManagedReference<DroidHarvestModuleDataComponent*> module;
 
 public:
 	DroidHarvestTask(DroidHarvestModuleDataComponent* module) : Task() {
@@ -29,13 +29,13 @@ public:
 	void run() {
 		// ReVamp: This should always run while the droid is active. auto harvest should just auto add targets to the module.
 		// droid command should just add a single target id, and this re-scheduling task should just pick it up.
-		if( module == nullptr){
+		if( module == NULL){
 			return;
 		}
 
 		Reference<DroidObject*> droid = module->getDroidObject();
 
-		if (droid == nullptr) {
+		if (droid == NULL) {
 			return;
 		}
 
@@ -43,14 +43,14 @@ public:
 		droid->removePendingTask( "droid_harvest" );
 
 		ManagedReference<CreatureObject*> owner = droid->getLinkedCreature().get();
-		if (owner == nullptr) {
+		if (owner == NULL) {
 			return;
 		}
 		// Check if droid is spawned
-		if( droid->getLocalZone() == nullptr ){  // Not outdoors
+		if( droid->getLocalZone() == NULL ){  // Not outdoors
 
 			ManagedReference<SceneObject*> parent = droid->getParent().get();
-			if( parent == nullptr || !parent->isCellObject() ){ // Not indoors either
+			if( parent == NULL || !parent->isCellObject() ){ // Not indoors either
 				droid->removePendingTask("droid_harvest");
 				return;
 			}
@@ -95,13 +95,13 @@ public:
 			}
 			// end re-do
 			Reference<CreatureObject*> target = droid->getZoneServer()->getObject(droidTarget, true).castTo<CreatureObject*>();
-			if (target == nullptr) {
+			if (target == NULL) {
 				reschedule(1000);
 				return;
 			}
 
 			Creature* cr = cast<Creature*>(target.get());
-			if (cr == nullptr) {
+			if (cr == NULL) {
 				reschedule(1000);
 				return;
 			}
@@ -202,7 +202,7 @@ public:
 
 			Zone* zone = cr->getZone();
 
-			if (zone != nullptr) {
+			if (zone != NULL) {
 				ManagedReference<CreatureManager*> manager = zone->getCreatureManager();
 				manager->droidHarvest(cr, droid, type,bonus);
 			}

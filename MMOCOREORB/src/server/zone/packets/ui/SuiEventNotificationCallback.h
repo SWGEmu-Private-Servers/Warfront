@@ -42,7 +42,7 @@ public:
 	void run() {
 		ManagedReference<CreatureObject*> playerCreature = client->getPlayer();
 
-		if (playerCreature == nullptr)
+		if (playerCreature == NULL)
 			return;
 
 		server->getSuiManager()->handleSuiEventNotification(pageId, playerCreature, eventIndex, &arguments);

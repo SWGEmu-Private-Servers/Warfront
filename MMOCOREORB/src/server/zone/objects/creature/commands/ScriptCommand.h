@@ -76,14 +76,14 @@ public:
 
 			ManagedReference<SceneObject*> obj = server->getZoneServer()->getObject(objID);
 
-			if (obj == nullptr) {
+			if (obj == NULL) {
 				creature->sendSystemMessage("Invalid object.");
 				return INVALIDPARAMETERS;
 			}
 
 			ManagedReference<PlayerObject*> ghost = creature->getPlayerObject();
 
-			if (ghost == nullptr)
+			if (ghost == NULL)
 				return GENERALERROR;
 
 			Vector<Reference<ScreenPlayTask*> > eventList = DirectorManager::instance()->getObjectEvents(obj);
@@ -98,7 +98,7 @@ public:
 			for (int i = 0; i < eventList.size(); i++) {
 				Reference<ScreenPlayTask*> task = eventList.get(i);
 
-				if (task == nullptr)
+				if (task == NULL)
 					continue;
 
 				String buffer = task->getScreenPlay() + ":" + task->getTaskKey();
@@ -107,9 +107,9 @@ public:
 				if (args != "")
 					buffer += " (Args: " + args + ")";
 
-				AtomicTime nextExecutionTime;
+				Time nextExecutionTime;
 				Core::getTaskManager()->getNextExecutionTime(task, nextExecutionTime);
-				int64 miliDiff = nextExecutionTime.miliDifference();
+				uint64 miliDiff = nextExecutionTime.miliDifference();
 
 				buffer += ", Execution (server time): " + nextExecutionTime.getFormattedTime() + " (" + getTimeString(-miliDiff) + " from now)";
 

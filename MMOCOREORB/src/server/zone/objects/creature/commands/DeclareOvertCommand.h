@@ -5,6 +5,12 @@
 #ifndef DECLAREOVERTCOMMAND_H_
 #define DECLAREOVERTCOMMAND_H_
 
+#include "server/zone/objects/scene/SceneObject.h"
+#include "server/zone/objects/tangible/terminal/characterbuilder/CharacterBuilderTerminal.h"
+//#include "server/zone/objects/player/sui/callbacks/BountyHuntSuiCallback.h"
+#include "server/zone/objects/player/sui/inputbox/SuiInputBox.h"
+#include "server/zone/packets/player/PlayMusicMessage.h"
+
 class DeclareOvertCommand : public QueueCommand {
 public:
 
@@ -20,6 +26,23 @@ public:
 
 		if (!checkInvalidLocomotions(creature))
 			return INVALIDLOCOMOTION;
+
+		if(creature->hasSkill("force_rank_dark_novice") || creature->hasSkill("force_rank_light_novice")){
+ 			creature->sendSystemMessage("Jedi in the FRS may not use this command.");
+ 			return GENERALERROR;
+		}
+		
+ 		PlayerObject* targetGhost = creature->getPlayerObject();
+ 		Zone* zone = creature->getZone();
+ 		
+ 		if (targetGhost == NULL)
+ 			return GENERALERROR;
+  
+ 		if(creature->getFactionStatus() == FactionStatus::ONLEAVE || creature->getFactionStatus() == FactionStatus::COVERT){
+ 			creature->setFactionStatus(FactionStatus::OVERT);
+		}
+ 
+ 		
 
 		return SUCCESS;
 	}

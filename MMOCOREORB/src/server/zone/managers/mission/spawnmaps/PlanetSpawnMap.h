@@ -33,7 +33,7 @@ protected:
 	 * @param position the position to search from.
 	 * @return closest city number or -1 if none is found.
 	 */
-	int getClosestCityNumber(const Vector3* position) const {
+	int getClosestCityNumber(const Vector3* position) {
 		int city = -1;
 		float minSquaredDistance = 100000.0 * 100000.0;
 		for (int i = 0; i < citySpawnMaps.size(); i++) {
@@ -98,26 +98,26 @@ public:
 	 * Get the planet name.
 	 * @return planet name.
 	 */
-	inline const String& getPlanetName() const {
+	inline String getPlanetName() {
 		return planetName;
 	}
 
 	/**
 	 * Finds the city closest to the supplied position on the planet.
 	 * @param position the position to search from.
-	 * @return closest city or nullptr if no city is available on the planet.
+	 * @return closest city or NULL if no city is available on the planet.
 	 */
-	CitySpawnMap* getClosestCity(const Vector3* position) const {
+	CitySpawnMap* getClosestCity(const Vector3* position) {
 		int cityNumber = getClosestCityNumber(position);
 
 		if (cityNumber >= 0) {
 			return citySpawnMaps.get(cityNumber);
 		} else {
-			return nullptr;
+			return NULL;
 		}
 	}
 
-	const CitySpawnMap* getRandomCityNotCloseTo(const Vector3* position) const {
+	CitySpawnMap* getRandomCityNotCloseTo(const Vector3* position) {
 		if (citySpawnMaps.size() == 1) {
 			//Only one city, return it.
 			return citySpawnMaps.get(0);
@@ -135,7 +135,7 @@ public:
 			return citySpawnMaps.get(randomCityNumber);
 		} else {
 			//No cities.
-			return nullptr;
+			return NULL;
 		}
 	}
 
@@ -147,12 +147,12 @@ public:
 	 * other spawn points.
 	 * @return the added npc spawn point or the nearest existing spawn point if the supplied spawn point is to close.
 	 */
-	NpcSpawnPoint* addToClosestCity(NpcSpawnPoint* npc, bool checkDistanceToOtherSpawnPoints) {
+	NpcSpawnPoint* addToClosestCity(Reference<NpcSpawnPoint* > npc, bool checkDistanceToOtherSpawnPoints) {
 		int closestCityNumber = getClosestCityNumber(npc->getPosition());
 
 		if (closestCityNumber >= 0) {
 			NpcSpawnPoint* closestNpc = citySpawnMaps.get(closestCityNumber)->getNearestNpcSpawnPoint(npc->getPosition());
-			if (!checkDistanceToOtherSpawnPoints || closestNpc == nullptr || (closestNpc->getPosition()->distanceTo(*npc->getPosition()) > 5.0f)) {
+			if (!checkDistanceToOtherSpawnPoints || closestNpc == NULL || (closestNpc->getPosition()->distanceTo(*npc->getPosition()) > 5.0f)) {
 				citySpawnMaps.get(closestCityNumber)->addNpc(npc);
 				return npc;
 			} else {
@@ -160,21 +160,21 @@ public:
 			}
 		}
 
-		return nullptr;
+		return NULL;
 	}
 
 	/**
 	 * Finds a spawn point on a certain location.
 	 * @param position the position to search.
-	 * @return the spawn point on the position or nullptr if none exist.
+	 * @return the spawn point on the position or NULL if none exist.
 	 */
-	NpcSpawnPoint* findSpawnAt(const Vector3* position) const {
+	NpcSpawnPoint* findSpawnAt(Vector3* position) {
 		int closestCityNumber = getClosestCityNumber(position);
 		if (closestCityNumber >= 0) {
 			return citySpawnMaps.get(closestCityNumber)->findSpawnAt(position);
 		}
 
-		return nullptr;
+		return NULL;
 	}
 
 	/**

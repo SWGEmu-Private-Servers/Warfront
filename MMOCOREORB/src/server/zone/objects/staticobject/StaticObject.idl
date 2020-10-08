@@ -8,7 +8,6 @@ import server.zone.objects.scene.SceneObject;
 include templates.SharedObjectTemplate;
 import server.zone.CloseObjectsVector;
 
-@json
 class StaticObject extends SceneObject {
 	public StaticObject() {
 		Logger.setLoggingName("StaticObject");
@@ -30,9 +29,9 @@ class StaticObject extends SceneObject {
 	@dirty
 	public native void sendBaselinesTo(SceneObject player);
 
-	@dirty
-	@local
-	public native abstract StaticObject asStaticObject();
+    @dirty
+    @local
+    public native abstract StaticObject asStaticObject();
 
 	@dirty
 	public boolean isStaticObjectClass() {

@@ -30,14 +30,14 @@ public:
 
 		ManagedReference<PlayerObject*> ghost = creature->getPlayerObject();
 
-		if(ghost == nullptr)
+		if(ghost == NULL)
 			return GENERALERROR;
 
 		StringTokenizer ids(arguments.toString());
 
 		Zone* zone = creature->getZone();
 
-		if (zone == nullptr)
+		if (zone == NULL)
 			return GENERALERROR;
 
 		int incr = 0;
@@ -57,10 +57,10 @@ public:
 
 			ManagedReference<SceneObject*> object = zone->getZoneServer()->getObject(objid);
 
-			if (object != nullptr) {
+			if (object != NULL) {
 				ManagedReference<SceneObject*> parent = object->getParent().get();
 
-				if (parent != nullptr && parent->isCreatureObject() &&
+				if (parent != NULL && parent->isCreatureObject() &&
 					!ghost->isPrivileged() && !object->isASubChildOf(creature)) {
 
 					sendEmptyAttributes(creature, objid);
@@ -74,8 +74,8 @@ public:
 				sendEmptyAttributes(creature, objid);
 			}
 
-			if (++incr > 999) {
-				creature->error("GetAttributesBatchCommand: Objects attribute limit exceeded: arguments: " + arguments.toString());
+			if ((incr++) > 200) {
+				creature->info(creature->getFirstName()+"Objects attribute limit exceeded!");
 
 				return GENERALERROR;
 			}

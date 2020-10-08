@@ -17,7 +17,7 @@ public:
 	static int executeCommand(CreatureObject* creature, uint64 target, const UnicodeString& arguments) {
 		PlayerObject* ghost = creature->getPlayerObject();
 
-		if (ghost == nullptr)
+		if (ghost == NULL)
 			return 1;
 
 		ZoneServer* zserv = creature->getZoneServer();
@@ -47,7 +47,7 @@ public:
 	}
 
 	static void sendSyntax(CreatureObject* player) {
-		if (player != nullptr)
+		if (player != NULL)
 			player->sendSystemMessage("Syntax: /server info");
 	}
 };

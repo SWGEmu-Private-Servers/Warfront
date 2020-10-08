@@ -22,12 +22,12 @@ public:
 	void run() {
 		ManagedReference<ActiveArea*> strongArea = area.get();
 
-		if (strongArea == nullptr)
+		if (strongArea == NULL)
 			return;
 
 		ZoneServer* zoneServer = strongArea->getZoneServer();
 
-		if (zoneServer == nullptr || zoneServer->isServerShuttingDown())
+		if (zoneServer == NULL || zoneServer->isServerShuttingDown())
 			return;
 
 		Locker locker(strongArea);

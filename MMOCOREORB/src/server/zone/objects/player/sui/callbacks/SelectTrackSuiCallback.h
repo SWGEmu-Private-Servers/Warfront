@@ -32,17 +32,17 @@ public:
 		SuiListBox* listBox = cast<SuiListBox*>( suiBox);
 		ManagedReference<SceneObject*> object = suiBox->getUsingObject().get();
 
-		if (object == nullptr) {
+		if (object == NULL) {
 			return;
 		}
 
 		DroidObject* droid = cast<DroidObject*>(object.get());
-		if (droid == nullptr){
+		if (droid == NULL){
 			return;
 		}
 		Locker crosslock(droid,player);
 		auto module = droid->getModule("playback_module").castTo<DroidPlaybackModuleDataComponent*>();
-		if(module == nullptr) {
+		if(module == NULL) {
 			return;
 		}
 

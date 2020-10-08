@@ -29,8 +29,8 @@ public:
 		Vector3 object1Position = object1->getPosition();
 		Vector3 object2Position = object2->getPosition();
 
-		if (object2Cell != nullptr) {
-			if (object1Cell == nullptr)
+		if (object2Cell != NULL) {
+			if (object1Cell == NULL)
 				object1Position = PathFinderManager::transformToModelSpace(object1Position, object2Cell->getParent().get());
 		} else {
 			object1Position = object1->getWorldPosition();
@@ -56,9 +56,9 @@ public:
 		newPosition->setY(object1Position.getY() + (distanceFromObject1 * (dy / distance)));
 		newPosition->setCell(object2Cell);
 
-		if (object2Cell == nullptr) {
+		if (object2Cell == NULL) {
 			Zone* zone = object1->getZone();
-			if (zone != nullptr) {
+			if (zone != NULL) {
 				IntersectionResults intersections;
 				CollisionManager::getWorldFloorCollisions(newPosition->getX(), newPosition->getY(), zone, &intersections, (CloseObjectsVector*) object1->getCloseObjects());
 				newPosition->setZ(zone->getPlanetManager()->findClosestWorldFloor(newPosition->getX(), newPosition->getY(), object1->getWorldPositionZ(), 0, &intersections, (CloseObjectsVector*) object1->getCloseObjects()));
@@ -72,7 +72,7 @@ public:
 	}
 
 	void drag(CreatureObject* player, CreatureObject* targetPlayer, float maxRange, float maxMovement, bool needsConsent, bool canDragLiveTarget) const {
-		if (targetPlayer == nullptr) {
+		if (targetPlayer == NULL) {
 			return;
 		}
 
@@ -111,7 +111,7 @@ public:
 			bool isGroupedWith = false;
 			ManagedReference<GroupObject*> group = player->getGroup();
 
-			if (group != nullptr && group->hasMember(targetPlayer))
+			if (group != NULL && group->hasMember(targetPlayer))
 				isGroupedWith = true;
 
 			if (!hasConsentFrom && !isGroupedWith) {
@@ -152,7 +152,7 @@ public:
 		ManagedReference<CellObject*> cell = newPosition.getCell();
 		uint64 parentID = 0;
 
-		if (cell != nullptr) {
+		if (cell != NULL) {
 			parentID = cell->getObjectID();
 			targetPlayer->updateZoneWithParent(cell, false);
 		} else {
@@ -182,7 +182,7 @@ public:
 
 		ManagedReference<SceneObject*> object = server->getZoneServer()->getObject(target);
 
-		if (object == nullptr || !object->isPlayerCreature() || object == creature) {
+		if (object == NULL || !object->isPlayerCreature() || object == creature) {
 			creature->sendSystemMessage("@healing_response:healing_response_a5"); //"You must first have a valid target to drag before you can perform this command."
 			return GENERALERROR;
 		}
@@ -192,20 +192,15 @@ public:
 
 		Locker clocker(targetPlayer, creature);
 
-		if (creature->getZone() == nullptr)
+		if (creature->getZone() == NULL)
 			return GENERALERROR;
 
-		if (targetPlayer->getZone() == nullptr)
+		if (targetPlayer->getZone() == NULL)
 			return GENERALERROR;
 
 		//Determine if the player has the proper skill.
 		if (!player->hasSkill("science_medic_injury_speed_02")) {
 			player->sendSystemMessage("@healing_response:healing_response_a9"); //"You lack the ability to drag incapacitated players!"
-			return GENERALERROR;
-		}
-
-		if (checkForArenaDuel(targetPlayer)) {
-			creature->sendSystemMessage("@jedi_spam:no_help_target"); // You are not permitted to help that target.
 			return GENERALERROR;
 		}
 
@@ -222,13 +217,13 @@ public:
 			return GENERALERROR;
 		}
 
-		if (targetPlayer->getLocalZone() == nullptr) {
+		if (targetPlayer->getLocalZone() == NULL) {
 			player->sendSystemMessage("@error_message:corpse_drag_inside"); //You cannot drag a corpse within a building. Go outside to have your corpse ejected.
 			return GENERALERROR;
 		}
 
-		if (creature->getLocalZone() == nullptr) {
-			if (targetPlayer->getLocalZone() != nullptr) {
+		if (creature->getLocalZone() == NULL) {
+			if (targetPlayer->getLocalZone() != NULL) {
 				player->sendSystemMessage("@error_message:corpse_drag_into"); //You cannot drag a corpse into a structure.
 				return GENERALERROR;
 			} else
@@ -238,8 +233,8 @@ public:
 
 		Reference<CellObject*> targetCell = creature->getParent().get().castTo<CellObject*>();
 
-		if (targetCell != nullptr) {
-			auto perms = targetCell->getContainerPermissions();
+		if (targetCell != NULL) {
+			ContainerPermissions* perms = targetCell->getContainerPermissions();
 
 			if (!perms->hasInheritPermissionsFromParent()) {
 				if (!targetCell->checkContainerPermission(targetPlayer, ContainerPermissions::WALKIN)) {

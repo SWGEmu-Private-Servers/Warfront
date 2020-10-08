@@ -23,6 +23,11 @@ public:
 		if (!checkInvalidLocomotions(creature))
 			return INVALIDLOCOMOTION;
 
+		if (creature->isInvisible()) {
+			return GENERALERROR;
+
+		}
+
 		if (!creature->isPlayerCreature())
 			return GENERALERROR;
 
@@ -55,7 +60,7 @@ public:
 	}
 
 	bool doRally(CreatureObject* leader, GroupObject* group) const {
-		if (leader == nullptr || group == nullptr)
+		if (leader == NULL || group == NULL)
 			return false;
 
 		int duration = 30;
@@ -66,7 +71,10 @@ public:
 		for (int i = 0; i < group->getGroupSize(); i++) {
 			ManagedReference<CreatureObject*> member = group->getGroupMember(i);
 
-			if (member == nullptr)
+			if (member == NULL)
+				continue;
+
+			if(member->getDistanceTo(leader) > 100)
 				continue;
 
 			if (!isValidGroupAbilityTarget(leader, member, true))
@@ -83,7 +91,7 @@ public:
 
 			ManagedReference<WeaponObject*> weapon = member->getWeapon();
 
-			if (weapon != nullptr) {
+			if (weapon != NULL) {
 				if (!weapon->getCreatureAccuracyModifiers()->isEmpty()) {
 					String skillCRC = weapon->getCreatureAccuracyModifiers()->get(0);
 
@@ -108,11 +116,11 @@ public:
 	}
 
 	void sendRallyCombatSpam(CreatureObject* leader, GroupObject* group, bool success) const {
-		if (leader == nullptr || group == nullptr)
+		if (leader == NULL || group == NULL)
 			return;
 
 		Zone* zone = leader->getZone();
-		if (zone == nullptr)
+		if (zone == NULL)
 			return;
 
 		String stringName = combatSpam;
@@ -131,17 +139,17 @@ public:
 		//Send to group members if they are on the same planet.
 		for (int i = 0; i < group->getGroupSize(); i++) {
 			ManagedReference<CreatureObject*> member = group->getGroupMember(i);
-			if (member == nullptr || !member->isPlayerCreature() || member->getZone() != leader->getZone())
+			if (member == NULL || !member->isPlayerCreature() || member->getZone() != leader->getZone())
 				continue;
 
-			CombatSpam* spam = new CombatSpam(leader, leader->getWeapon(), member, nullptr, 0, "cbt_spam", stringName, color);
+			CombatSpam* spam = new CombatSpam(leader, leader->getWeapon(), member, NULL, 0, "cbt_spam", stringName, color);
 			member->sendMessage(spam);
 		}
 
 		//Send to players near the leader and not in group.
 		CloseObjectsVector* vec = (CloseObjectsVector*) leader->getCloseObjects();
 		SortedVector<QuadTreeEntry*> closeObjects;
-		if (vec != nullptr) {
+		if (vec != NULL) {
 			closeObjects.removeAll(vec->size(), 10);
 			vec->safeCopyReceiversTo(closeObjects, CloseObjectsVector::PLAYERTYPE);
 		} else {
@@ -153,12 +161,12 @@ public:
 
 		for (int i = 0; i < closeObjects.size(); ++i) {
 			SceneObject* object = cast<SceneObject*>( closeObjects.get(i));
-			if (object == nullptr || !object->isPlayerCreature() || !checkDistance(leader, object, 70) || group->hasMember(object->getObjectID()))
+			if (object == NULL || !object->isPlayerCreature() || !checkDistance(leader, object, 70) || group->hasMember(object->getObjectID()))
 				continue;
 
 			CreatureObject* receiver = cast<CreatureObject*>( object); //in range player who isn't in group.
 
-			CombatSpam* spam = new CombatSpam(leader, receiver, receiver, nullptr, 0, "cbt_spam", stringName, color);
+			CombatSpam* spam = new CombatSpam(leader, receiver, receiver, NULL, 0, "cbt_spam", stringName, color);
 			receiver->sendMessage(spam);
 		}
 	}

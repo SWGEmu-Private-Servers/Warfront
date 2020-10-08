@@ -28,7 +28,7 @@ void IntangibleObjectImplementation::sendBaselinesTo(SceneObject* player) {
 	if (isTheaterObject()) {
 		TheaterObject* theater = cast<TheaterObject*>(_this.getReferenceUnsafeStaticCast());
 
-		if (theater != nullptr && theater->shouldFlattenTheater()) {
+		if (theater != NULL && theater->shouldFlattenTheater()) {
 			BaseMessage* ift = new IsFlattenedTheaterMessage(getObjectID(), true);
 			player->sendMessage(ift);
 		}
@@ -45,12 +45,12 @@ void IntangibleObjectImplementation::updateStatus(int newStatus, bool notifyClie
 		return;
 
 	ManagedReference<SceneObject*> strongParent = getParent().get();
-	if (strongParent == nullptr)
+	if (strongParent == NULL)
 		return;
 
 	ManagedReference<SceneObject*> player = strongParent->getParent().get();
 
-	if (player == nullptr)
+	if (player == NULL)
 		return;
 
 	IntangibleObjectDeltaMessage3* delta = new IntangibleObjectDeltaMessage3(_this.getReferenceUnsafeStaticCast());

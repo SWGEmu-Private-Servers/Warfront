@@ -15,7 +15,7 @@
 void CityVotingMenuComponent::fillObjectMenuResponse(SceneObject* sceneObject, ObjectMenuResponse* menuResponse, CreatureObject* player) const {
 	ManagedReference<CityRegion*> city = sceneObject->getCityRegion().get();
 
-	if (city == nullptr || (!city->isCitizen(player->getObjectID()) && !player->getPlayerObject()->isPrivileged()))
+	if (city == NULL || (!city->isCitizen(player->getObjectID()) && !player->getPlayerObject()->isPrivileged()))
 			return;
 
 	Locker _lock(city);
@@ -37,7 +37,7 @@ void CityVotingMenuComponent::fillObjectMenuResponse(SceneObject* sceneObject, O
 int CityVotingMenuComponent::handleObjectMenuSelect(SceneObject* sceneObject, CreatureObject* player, byte selectID) const {
 	ManagedReference<CityRegion*> city = sceneObject->getCityRegion().get();
 
-	if (city == nullptr)
+	if (city == NULL)
 		return 0;
 
 	sceneObject->unlock();

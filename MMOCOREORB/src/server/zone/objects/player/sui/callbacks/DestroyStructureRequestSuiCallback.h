@@ -21,7 +21,7 @@ public:
 
 		ManagedReference<DestroyStructureSession*> session = player->getActiveSession(SessionFacadeType::DESTROYSTRUCTURE).castTo<DestroyStructureSession*>();
 
-		if (session == nullptr)
+		if (session == NULL)
 			return;
 
 		if (cancelPressed) {

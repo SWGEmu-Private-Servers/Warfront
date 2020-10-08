@@ -15,9 +15,7 @@ StatusServer::StatusServer(ConfigManager* conf, ZoneServer* server)
 
 	statusInterval = configManager->getStatusInterval();
 
-#ifndef PLATFORM_WIN
 	signal(SIGPIPE, SIG_IGN);
-#endif
 	
 	setLogging(false);
 }
@@ -59,7 +57,7 @@ ServiceClient* StatusServer::createConnection(Socket* sock, SocketAddress& addr)
 
 	Thread::sleep(100);
 
-	return nullptr;
+	return NULL;
 }
 
 Packet* StatusServer::getStatusXMLPacket() {
@@ -93,7 +91,7 @@ Packet* StatusServer::getStatusXMLPacket() {
 }
 
 bool StatusServer::testZone() {
-	if (zoneServer == nullptr)
+	if (zoneServer == NULL)
 		return false;
 
 	if (timestamp.miliDifference() < (statusInterval * 1000)) {

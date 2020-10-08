@@ -8,8 +8,6 @@
 #ifndef PERLINNOISE_H_
 #define PERLINNOISE_H_
 
-#include "system/platform.h"
-
 /* coherent noise function over 1, 2 or 3 dimensions */
 /* (copyright Ken Perlin) */
 
@@ -63,15 +61,18 @@ public:
 		rand = r;
 	}
 
-	float noise1(double arg) const {
+	float noise1(double arg)
+	{
 		int bx0, bx1, b00, b10, b01, b11, negx;
 		double rx0, rx1;
 		float *q;
 		double t, sx, u, v, vec[1];
 
 		vec[0] = arg;
-
-		E3_ASSERT(!start);
+		if (start) {
+			start = 0;
+			init();
+		}
 
 		setup(0, bx0,bx1, rx0,rx1,negx);
 
@@ -84,14 +85,17 @@ public:
 	}
 
 
-	float noise2(double vec[2]) const {
+	float noise2(double vec[2]) {
 		int bx0, bx1, by0, by1, b00, b10, b01, b11, negx, negy;
 		double rx0, rx1, ry0, ry1;
-		const float *q;
+		float *q;
 		double t, sx, sy, a, b, u, v;
 		int i, j;
 
-		E3_ASSERT(!start);
+		if (start) {
+			start = 0;
+			init();
+		}
 
 		setup(0, bx0,bx1, rx0,rx1,negx);
 
@@ -186,8 +190,6 @@ public:
 			/*for (j = 0 ; j < 3 ; j++)
 				g3[B + i][j] = g3[i][j];*/
 		}
-
-		start = 0;
 	}
 
 };

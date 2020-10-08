@@ -15,11 +15,11 @@ class DirectorSharedMemory : public Object {
 	HashTable<String, String> stringTable;
 
 public:
-	uint64 get(const String& k) const {
+	uint64 get(const String& k) {
 		return hashTable.get(k);
 	}
 
-	const String& getString(const String& k) const {
+	String getString(const String& k) {
 		return stringTable.get(k);
 	}
 

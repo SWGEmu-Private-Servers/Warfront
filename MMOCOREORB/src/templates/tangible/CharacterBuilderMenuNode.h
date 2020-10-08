@@ -22,13 +22,13 @@ class CharacterBuilderMenuNode : public Object {
 public:
 	CharacterBuilderMenuNode(const String& name) {
 		displayName = name;
-		parentNode = nullptr;
+		parentNode = NULL;
 		templateCRC = 0;
 		childNodes.setInsertPlan(SortedVector<CharacterBuilderMenuNode*>::NO_DUPLICATE);
 	}
 
 	CharacterBuilderMenuNode(const String& name, const String& tplPath) {
-		parentNode = nullptr;
+		parentNode = NULL;
 		displayName = name;
 		templatePath = tplPath;
 		templateCRC = tplPath.hashCode();
@@ -82,44 +82,33 @@ public:
 		return parentNode.get().get();
 	}
 
-	inline const CharacterBuilderMenuNode* getParentNode() const {
-		return parentNode.get().get();
+	inline bool hasParentNode() {
+		return parentNode.get() != NULL;
 	}
 
-	inline bool hasParentNode() const {
-		return parentNode.get() != nullptr;
-	}
-
-	inline bool hasChildNodes() const {
+	inline bool hasChildNodes() {
 		return childNodes.size() > 0;
 	}
 
-	inline const String& getDisplayName() const {
+	inline String& getDisplayName() {
 		return displayName;
 	}
 
-	inline const String& getTemplatePath() const {
+	inline String& getTemplatePath() {
 		return templatePath;
 	}
 
-	inline uint32 getTemplateCRC() const {
+	inline uint32 getTemplateCRC() {
 		return templateCRC;
 	}
 
-	inline int getChildNodeSize() const {
+	inline int getChildNodeSize() {
 		return childNodes.size();
-	}
-
-	inline const CharacterBuilderMenuNode* getChildNodeAt(int index) const {
-		if (childNodes.size() < index + 1 || index < 0)
-			return nullptr;
-
-		return childNodes.get(index);
 	}
 
 	inline CharacterBuilderMenuNode* getChildNodeAt(int index) {
 		if (childNodes.size() < index + 1 || index < 0)
-			return nullptr;
+			return NULL;
 
 		return childNodes.get(index);
 	}

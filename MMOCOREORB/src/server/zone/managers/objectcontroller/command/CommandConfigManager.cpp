@@ -37,6 +37,19 @@
 #include "server/zone/objects/creature/commands/effect/DotEffect.h"
 #include "server/zone/objects/creature/commands/effect/CommandEffect.h"
 
+#include "server/zone/objects/creature/commands/RegrantSkillsCommand.h"
+#include "server/zone/objects/creature/commands/SetPvPCommand.h"
+#include "server/zone/objects/creature/commands/EscapeCommand.h"
+#include "server/zone/objects/creature/commands/BhShieldCommand.h"
+#include "server/zone/objects/creature/commands/OrbitalStrikeCommand.h"
+#include "server/zone/objects/creature/commands/PistolWhipCommand.h"
+#include "server/zone/objects/creature/commands/PoisonGasCloudCommand.h"
+#include "server/zone/objects/creature/commands/VenomDartCommand.h"
+#include "server/zone/objects/creature/commands/DirtyTrickCommand.h"
+#include "server/zone/objects/creature/commands/StandFastCommand.h"
+#include "server/zone/objects/creature/commands/RemoteDetonatorCommand.h"
+#include "server/zone/objects/creature/commands/StasisFieldCommand.h"
+
 #include "server/zone/objects/creature/commands/pet/PetAttackCommand.h"
 #include "server/zone/objects/creature/commands/pet/PetEmoteCommand.h"
 #include "server/zone/objects/creature/commands/pet/PetFeedCommand.h"
@@ -66,8 +79,8 @@
 #include "templates/datatables/DataTableRow.h"
 #include "CommandList.h"
 
-CommandList* CommandConfigManager::slashCommands = nullptr;
-ZoneProcessServer* CommandConfigManager::server = nullptr;
+CommandList* CommandConfigManager::slashCommands = NULL;
+ZoneProcessServer* CommandConfigManager::server = NULL;
 int CommandConfigManager::ERROR_CODE = 0;
 
 CommandConfigManager::CommandConfigManager(ZoneProcessServer* serv) {
@@ -84,8 +97,8 @@ CommandConfigManager::CommandConfigManager(ZoneProcessServer* serv) {
 }
 
 CommandConfigManager::~CommandConfigManager() {
-	server = nullptr;
-	slashCommands = nullptr;
+	server = NULL;
+	slashCommands = NULL;
 
 	ERROR_CODE = 0;
 }
@@ -95,7 +108,7 @@ void CommandConfigManager::loadCommandData(const String& filename) {
 
 	IffStream* metatable = TemplateManager::instance()->openIffFile(filename);
 
-	if (metatable == nullptr) {
+	if (metatable == NULL) {
 		error("Could not load command table " + filename + ".");
 		return;
 	}
@@ -113,7 +126,7 @@ void CommandConfigManager::loadCommandData(const String& filename) {
 
 		IffStream* iffStream = TemplateManager::instance()->openIffFile(tableName);
 
-		if (iffStream == nullptr) {
+		if (iffStream == NULL) {
 			error("Could not load commands from " + tableName + ".");
 			return;
 		} else
@@ -144,7 +157,7 @@ void CommandConfigManager::loadCommandData(const String& filename) {
 			row->getValue(CommandConfigManager::COMMANDNAME, name);
 			slashCommand = createCommand(name.trim().toLowerCase());
 
-			if (slashCommand == nullptr) {
+			if (slashCommand == NULL) {
 				error("Could not create command " + name);
 				continue;
 			}
@@ -300,16 +313,16 @@ void CommandConfigManager::loadCommandData(const String& filename) {
 }
 
 QueueCommand* CommandConfigManager::createCommand(const String& name) {
-	QueueCommand* command = nullptr;
+	QueueCommand* command = NULL;
 
 	command = commandFactory.createCommand(name, name, server);
 
-	if (command == nullptr)
+	if (command == NULL)
 		return command;
 
 	slashCommands->put(command);
 
-	debug() << "created command " << name;
+	info("created command " + name);
 
 	return command;
 }
@@ -323,7 +336,7 @@ void CommandConfigManager::registerSpecialCommands(CommandList* sCommands) {
 	// Meanwhile the client sends this to the server as part of the /logout command sequence
 	QueueCommand* slashCommand = createCommand(String("logout").toLowerCase());
 
-	if (slashCommand == nullptr) {
+	if (slashCommand == NULL) {
 		error("Could not create command /logout");
 	}
 
@@ -367,9 +380,9 @@ void CommandConfigManager::registerSpecialCommands(CommandList* sCommands) {
 
 void CommandConfigManager::registerFunctions() {
 	//lua generic
-	registerFunction("RunSlashCommandsFile", runSlashCommandsFile);
-	registerFunction("AddCommand", addCommand);
-	registerFunction("hashCode", hashCode);
+	lua_register(getLuaState(), "RunSlashCommandsFile", runSlashCommandsFile);
+	lua_register(getLuaState(), "AddCommand", addCommand);
+	lua_register(getLuaState(), "hashCode", hashCode);
 }
 
 void CommandConfigManager::registerGlobals() {
@@ -508,11 +521,11 @@ void CommandConfigManager::registerGlobals() {
 	setGlobalInt("COLD_DAMAGE", SharedWeaponObjectTemplate::COLD);
 	setGlobalInt("ACID_DAMAGE", SharedWeaponObjectTemplate::ACID);
 	setGlobalInt("ELECTRICITY_DAMAGE", SharedWeaponObjectTemplate::ELECTRICITY);
-
+    
 	// JediQueueCommand buff types
 	setGlobalInt("BASE_BUFF", JediQueueCommand::BASE_BUFF);
 	setGlobalInt("SINGLE_USE_BUFF", JediQueueCommand::SINGLE_USE_BUFF);
-
+    
 	// force heal targets
 	setGlobalInt("FORCE_HEAL_TARGET_SELF", ForceHealQueueCommand::TARGET_SELF);
 	setGlobalInt("FORCE_HEAL_TARGET_OTHER", ForceHealQueueCommand::TARGET_OTHER);
@@ -736,7 +749,7 @@ void CommandConfigManager::parseVariableData(String varName, LuaObject &command,
 			ForceHealQueueCommand* healCommand = cast<ForceHealQueueCommand*>(jediCommand);
 			if (varName == "healAmount")
 				healCommand->setHealAmount(Lua::getIntParameter(L));
-			else if (varName == "healWoundAmount")
+			else if (varName == "healWoundAmount") 
 				healCommand->setHealWoundAmount(Lua::getIntParameter(L));
 			else if (varName == "attributesToHeal")
 				healCommand->setAttributesToHeal(Lua::getUnsignedIntParameter(L));
@@ -814,7 +827,7 @@ int CommandConfigManager::addCommand(lua_State* L) {
 	// get object from map, then overwrite/fill in variables
 	String name = slashcommand.getStringField("name");
 	QueueCommand* command = slashCommands->getSlashCommand(name);
-	if (command == nullptr)
+	if (command == NULL)
 		return 0;
 
 	parseOptions(slashcommand, command);
@@ -850,4 +863,18 @@ void CommandConfigManager::registerCommands() {
 	commandFactory.registerCommand<PetPatrolCommand>(String("petPatrol").toLowerCase());
 	commandFactory.registerCommand<PetClearPatrolPointsCommand>(String("petClearPatrolPoints").toLowerCase());
 	commandFactory.registerCommand<PetGetPatrolPointCommand>(String("petGetPatrolPoint").toLowerCase());
+	commandFactory.registerCommand<RegrantSkillsCommand>(String("regrantSkills").toLowerCase());
+
+//Warfront commands
+	commandFactory.registerCommand<SetPvPCommand>(String("SetPvP").toLowerCase());
+	commandFactory.registerCommand<VenomDartCommand>(String("venomDart").toLowerCase());
+	commandFactory.registerCommand<EscapeCommand>(String("escape").toLowerCase());
+	commandFactory.registerCommand<BhShieldCommand>(String("bhshield").toLowerCase());
+	commandFactory.registerCommand<OrbitalStrikeCommand>(String("orbitalStrike").toLowerCase());
+	commandFactory.registerCommand<PistolWhipCommand>(String("pistolwhip").toLowerCase());
+	commandFactory.registerCommand<PoisonGasCloudCommand>(String("poisongascloud").toLowerCase());
+	commandFactory.registerCommand<DirtyTrickCommand>(String("dirtyTrick").toLowerCase());
+	commandFactory.registerCommand<StandFastCommand>(String("standfast").toLowerCase());
+	commandFactory.registerCommand<RemoteDetonatorCommand>(String("remotedetonator").toLowerCase());
+	commandFactory.registerCommand<StasisFieldCommand>(String("stasisField").toLowerCase());
 }

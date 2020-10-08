@@ -26,7 +26,7 @@ public:
 
 	void run() {
 
-		if (terminal == nullptr || gcwManager == nullptr  )
+		if (terminal == NULL || gcwManager == NULL  )
 			return;
 
 		gcwManager->completeSecuritySlice(creature, terminal);

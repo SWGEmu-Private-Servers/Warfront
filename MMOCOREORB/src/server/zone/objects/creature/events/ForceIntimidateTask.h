@@ -26,11 +26,11 @@ public:
 
 			TangibleObject* tar = targets->get(index);
 
-			if(tar == nullptr)
+			if(tar == NULL)
 				continue;
 
 			CreatureObject* tarCreo = tar->asCreatureObject();
-			if(tarCreo != nullptr && tarCreo != sourceCreo) {
+			if(tarCreo != NULL && tarCreo != sourceCreo) {
 
 				sourceCreo->doCombatAnimation(tarCreo, STRING_HASHCODE("force_intimidate_chain"), 0x01, data.getTrails());
 				sourceCreo = tarCreo;

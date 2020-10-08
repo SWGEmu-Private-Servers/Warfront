@@ -26,7 +26,7 @@ public:
 
 		ManagedReference<SurveyTool*> surveyTool = cast<SurveyTool*>(suiBox->getUsingObject().get().get());
 
-		if(surveyTool == nullptr)
+		if(surveyTool == NULL)
 			return;
 
 		Locker _lock(surveyTool);

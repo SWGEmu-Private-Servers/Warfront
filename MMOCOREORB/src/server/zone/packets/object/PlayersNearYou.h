@@ -23,7 +23,7 @@ public:
 
 		uint32 playerBitmask = 0;
 
-		if (ghost != nullptr)
+		if (ghost != NULL)
 			playerBitmask = ghost->getCharacterBitmask();
 
 		insertInt(1);
@@ -40,13 +40,13 @@ public:
 
 		Zone* zone = player->getZone();
 
-		if (zone != nullptr) {
+		if (zone != NULL) {
 			zoneName = zone->getZoneName();
 
 			PlanetManager* planetManager = zone->getPlanetManager();
 			CityRegion* cityRegion = planetManager->getRegionAt(player->getWorldPositionX(), player->getWorldPositionY());
 
-			if (cityRegion != nullptr)
+			if (cityRegion != NULL)
 				regionName = cityRegion->getRegionName();
 		}
 
@@ -64,7 +64,7 @@ public:
 
 		String title = "";
 
-		if (ghost != nullptr)
+		if (ghost != NULL)
 			title = ghost->getTitle();
 
 		insertAscii(title); // Profession Title

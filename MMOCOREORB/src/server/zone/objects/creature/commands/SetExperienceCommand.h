@@ -31,11 +31,11 @@ public:
 			ManagedReference<SceneObject* > object =
 					server->getZoneServer()->getObject(target);
 
-			ManagedReference<CreatureObject*> player = nullptr;
+			ManagedReference<CreatureObject*> player = NULL;
 
 			StringTokenizer args(arguments.toString());
 
-			if (object == nullptr || !object->isPlayerCreature()) {
+			if (object == NULL || !object->isPlayerCreature()) {
 
 				String firstName;
 
@@ -49,7 +49,7 @@ public:
 				player = cast<CreatureObject*>(object.get());
 			}
 
-			if (player == nullptr) {
+			if (player == NULL) {
 				creature->sendSystemMessage("invalid arguments for setExperience command. usage: setExperience <firstName> <experienceType> <amount>");
 				return GENERALERROR;
 			}

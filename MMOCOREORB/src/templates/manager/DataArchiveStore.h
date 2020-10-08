@@ -17,21 +17,21 @@
 
 class TreeArchive;
 
-class DataArchiveStore : public Singleton<DataArchiveStore>, public Logger,
-		public ReadWriteLock, public Object {
+class DataArchiveStore : public Singleton<DataArchiveStore>, public Logger, public ReadWriteLock, public Object {
 	TreeArchive* treeDirectory;
 
 public:
 	DataArchiveStore();
+
 	~DataArchiveStore();
 
-	byte* getData(const String& path, int& size) const;
+	byte* getData(const String& path, int& size);
 
 	int loadTres(const String& path, const Vector<String>& treFilesToLoad);
 
-	IffStream* openIffFile(const String& fileName) const;
+	IffStream* openIffFile(const String& fileName);
 
-	const TreeArchive* getTreeArchive() const {
+	TreeArchive* getTreeArchive() {
 		return treeDirectory;
 	}
 

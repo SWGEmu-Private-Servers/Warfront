@@ -32,14 +32,14 @@ WorldCoordinates::WorldCoordinates(SceneObject* obj) : Object() {
 
 	ManagedReference<CellObject*> parent = obj->getParent().get().castTo<CellObject*>();
 
-	if (parent != nullptr && obj != parent)
+	if (parent != NULL && obj != parent)
 		cell = parent;
 }
 
 WorldCoordinates::WorldCoordinates(const Vector3& position, CellObject* parent) : Object() {
 	point = position;
 
-	if (parent != nullptr)
+	if (parent != NULL)
 		cell = parent;
 }
 
@@ -59,12 +59,12 @@ bool WorldCoordinates::parseFromBinaryStream(ObjectInputStream* stream) {
 }
 
 Vector3 WorldCoordinates::getWorldPosition() const {
-	if (cell == nullptr)
+	if (cell == NULL)
 		return point;
 
 	SceneObject* root = cell->getRootParent();
 
-	if (root == nullptr)
+	if (root == NULL)
 		return point;
 
 	float length = Math::sqrt(point.getX() * point.getX() + point.getY() * point.getY());

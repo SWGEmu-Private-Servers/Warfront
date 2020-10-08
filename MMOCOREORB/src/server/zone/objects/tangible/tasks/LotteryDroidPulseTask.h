@@ -23,7 +23,7 @@ public:
 	void run() {
 		ManagedReference<LotteryDroid*> strongRef = droid.get();
 
-		if (strongRef == nullptr)
+		if (strongRef == NULL)
 			return;
 
 		Locker locker(strongRef);
@@ -38,12 +38,12 @@ public:
 		} else if (gameStatus == LotteryDroid::GAMEENDED) {
 			EventPerkDataComponent* gameData = cast<EventPerkDataComponent*>(strongRef->getDataObjectComponent()->get());
 
-			if (gameData == nullptr)
+			if (gameData == NULL)
 				return;
 
 			EventPerkDeed* deed = gameData->getDeed();
 
-			if (deed == nullptr)
+			if (deed == NULL)
 				return;
 
 			deed->activateRemoveEvent(true);

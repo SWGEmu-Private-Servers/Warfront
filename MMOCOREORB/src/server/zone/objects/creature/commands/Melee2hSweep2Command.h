@@ -22,6 +22,30 @@ public:
 		if (!checkInvalidLocomotions(creature))
 			return INVALIDLOCOMOTION;
 
+		if (creature->isInvisible())
+			return GENERALERROR;
+
+		ManagedReference<WeaponObject*> weapon = creature->getWeapon();
+
+		if (!weapon->isTwoHandMeleeWeapon()) {
+			return INVALIDWEAPON;
+		}
+		if (weapon->isJediOneHandedWeapon()) {
+			creature->setPosture(CreaturePosture::KNOCKEDDOWN);
+			creature->setDizziedState(360);
+			creature->sendSystemMessage("Quit cheating.");
+		}
+		if (weapon->isJediTwoHandedWeapon()) {
+			creature->setPosture(CreaturePosture::KNOCKEDDOWN);
+			creature->setDizziedState(360);
+			creature->sendSystemMessage("Quit cheating.");
+		}
+		if (weapon->isJediPolearmWeapon()) {
+			creature->setPosture(CreaturePosture::KNOCKEDDOWN);
+			creature->setDizziedState(360);
+			creature->sendSystemMessage("Quit cheating.");
+		}
+
 		return doCombatAction(creature, target);
 	}
 

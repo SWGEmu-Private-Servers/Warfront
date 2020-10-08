@@ -28,12 +28,12 @@ public:
 
 		PlayerObject* ghost = creature->getPlayerObject();
 
-		if (ghost == nullptr)
+		if (ghost == NULL)
 			return GENERALERROR;
 
 		ManagedReference<SceneObject*> object = server->getZoneServer()->getObject(target);
 
-		if (object == nullptr || !object->isCreatureObject()) {
+		if (object == NULL || (!object->isPlayerCreature() && !object->isPet())) {
 			creature->sendSystemMessage("@healing_response:healing_response_b6"); //You cannot diagnose that.
 			return GENERALERROR;
 		}
@@ -49,12 +49,7 @@ public:
 			return TOOFAR;
 		}
 
-		if (creatureTarget->isDroidSpecies() || creatureTarget->isWalkerSpecies() || creatureTarget->isVehicleObject()) {
-			creature->sendSystemMessage("@healing_response:healing_response_b6"); //You cannot diagnose that.
-			return GENERALERROR;
-		}
-
-		if ((creatureTarget->isImperial() || creatureTarget->isRebel()) && !creatureTarget->isHealableBy(creature)) {
+		if (!creatureTarget->isHealableBy(creature)) {
 			creature->sendSystemMessage("@healing:pvp_no_help"); //It would be unwise to help such a patient.
 			return GENERALERROR;
 		}

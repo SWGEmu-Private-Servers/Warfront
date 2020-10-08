@@ -8,8 +8,6 @@
 #ifndef FILTERPROCEDURALRULE_H_
 #define FILTERPROCEDURALRULE_H_
 
-#include "../InformationHeader.h"
-
 class TerrainGenerator;
 
 class FilterRectangle {
@@ -19,14 +17,11 @@ public:
 
 class FilterProceduralRule {
 protected:
-	InformationHeader informationHeader;
-
 	int featheringType; // Feathering type? Leftover?
 	float featheringAmount;
 	int filterType;
 
 	int internalType;
-	const uint32 formType;
 
 public:
 	const static int HEIGHTTYPE = 0x100;
@@ -39,8 +34,7 @@ public:
 	const static int SHADER = 4;
 	const static int BITMAP = 5;
 
-	FilterProceduralRule(int type, uint32 formType) : featheringType(0),
-		featheringAmount(0), filterType(0), internalType(type), formType(formType) {
+	FilterProceduralRule(int type) : featheringType(0), featheringAmount(0), filterType(0), internalType(type) {
 	}
 
 	virtual ~FilterProceduralRule() {
@@ -51,36 +45,23 @@ public:
 		return 0;
 	}
 
-	void readObject(engine::util::IffStream* iffStream) {
-		if (iffStream->openForm(formType) == nullptr)
-			throw Exception("Incorrect form type " + String::valueOf(formType));
-
-		parseFromIffStream(iffStream);
-
-		iffStream->closeForm(formType);
+	virtual bool isEnabled() {
+		return false;
 	}
 
-	virtual void parseFromIffStream(engine::util::IffStream* iffStream) {
-
-	}
-
-	inline bool isEnabled() const {
-		return informationHeader.isEnabled();
-	}
-
-	inline int getFeatheringType() const {
+	inline int getFeatheringType() {
 		return featheringType;
 	}
 
-	inline int getFilterType() const {
+	inline int getFilterType() {
 		return filterType;
 	}
 
-	inline int getInternalType() const {
+	inline int getInternalType() {
 		return internalType;
 	}
 
-	inline bool isType(int type) const {
+	inline bool isType(int type) {
 		return internalType == type;
 	}
 

@@ -4,7 +4,6 @@
 
 #include "server/zone/objects/scene/components/AttributeListComponent.h"
 #include "server/zone/objects/tangible/TangibleObject.h"
-#include "server/zone/objects/creature/CreatureObject.h"
 #include "server/zone/objects/tangible/components/HeroRingDataComponent.h"
 
 class HeroRingAttributeListComponent: public AttributeListComponent {
@@ -22,7 +21,7 @@ public:
 
 		HeroRingDataComponent* data = cast<HeroRingDataComponent*>(tano->getDataObjectComponent()->get());
 
-		if (data == nullptr || !data->isHeroRingData())
+		if (data == NULL || !data->isHeroRingData())
 			return;
 
 		int charges = data->getCharges();
@@ -31,12 +30,12 @@ public:
 		alm->insertAttribute("charges", charges);
 
 		if (!creature->checkCooldownRecovery("mark_of_hero")) {
-			const Time* timeRemaining = creature->getCooldownTime("mark_of_hero");
+			Time* timeRemaining = creature->getCooldownTime("mark_of_hero");
 			alm->insertAttribute("time_remaining", getCooldownString(timeRemaining->miliDifference() * -1));
 		}
 	}
 
-	static String getCooldownString(uint32 delta) {
+	String getCooldownString(uint32 delta) const {
 
 		int seconds = delta / 1000;
 

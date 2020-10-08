@@ -11,6 +11,7 @@
 #include "templates/datatables/DataTableRow.h"
 
 class PlanetMapCategory : public Object {
+
 	String name;
 	int nameCRC;
 	int index;
@@ -65,7 +66,7 @@ public:
 		return name.compareTo(pmc.name);
 	}
 
-	void parseFromDataTableRow(const DataTableRow* row) {
+	void parseFromDataTableRow(DataTableRow* row) {
 		try {
 			row->getValue(0, name);
 			nameCRC = name.hashCode();
@@ -76,41 +77,41 @@ public:
 			row->getValue(5, faction);
 			row->getValue(6, factionVisibleOnly);
 
-		} catch (const Exception& ex) {
+		} catch (Exception& ex) {
 			System::out << "Error parsing PlanetMapCategory: " + ex.getMessage() << endl;
 		}
 
 	}
 
-	inline const String& getName() const {
+	inline String& getName() {
 		return name;
 	}
 
-	inline int getCrc() const {
+	inline int getCrc() {
 		return nameCRC;
 	}
 
-	inline int getIndex() const {
+	inline int getIndex() {
 		return index;
 	}
 
-	inline bool isCategory() const {
+	inline bool isCategory() {
 		return category;
 	}
 
-	inline bool isSubCategory() const {
+	inline bool isSubCategory() {
 		return subCategory;
 	}
 
-	inline bool canBeActive() const {
+	inline bool canBeActive() {
 		return activatable;
 	}
 
-	inline const String& getFaction() const {
+	inline String& getFaction() {
 		return faction;
 	}
 
-	inline bool isFactionVisibleOnly() const {
+	inline bool isFactionVisibleOnly() {
 		return factionVisibleOnly;
 	}
 

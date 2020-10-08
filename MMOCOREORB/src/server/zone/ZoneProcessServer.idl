@@ -60,7 +60,7 @@ class ZoneProcessServer extends ManagedService {
 		return vendorManager;
 	}
 
-	@read
+	@dirty
 	public ZoneServer getZoneServer() {
 		return zoneServer;
 	}

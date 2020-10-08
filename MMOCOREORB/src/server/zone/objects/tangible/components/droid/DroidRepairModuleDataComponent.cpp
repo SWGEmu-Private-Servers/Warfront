@@ -6,8 +6,6 @@
 #include "server/zone/ZoneServer.h"
 #include "server/zone/packets/object/ObjectMenuResponse.h"
 #include "server/zone/managers/creature/PetManager.h"
-#include "server/zone/objects/creature/ai/DroidObject.h"
-#include "server/zone/objects/intangible/PetControlDevice.h"
 
 DroidRepairModuleDataComponent::DroidRepairModuleDataComponent() {
 	setLoggingName("DroidRepairModule");
@@ -15,7 +13,7 @@ DroidRepairModuleDataComponent::DroidRepairModuleDataComponent() {
 DroidRepairModuleDataComponent::~DroidRepairModuleDataComponent() {
 
 }
-String DroidRepairModuleDataComponent::getModuleName() const {
+String DroidRepairModuleDataComponent::getModuleName() {
 	return String("repair_module");
 }
 void DroidRepairModuleDataComponent::initializeTransientMembers() {
@@ -32,7 +30,7 @@ void DroidRepairModuleDataComponent::fillObjectMenuResponse(SceneObject* droidOb
 
 	// Add to Program subradial from PetMenuComponent
 	ManagedReference<DroidObject*> droid = getDroidObject();
-	if (droid == nullptr)
+	if (droid == NULL)
 		return;
 	// converse droid can not have their repair command changed. droids without a personality chip are considered base and get all normal radials
 	if (droid->getOptionsBitmask() & OptionBitmask::CONVERSE)
@@ -46,7 +44,7 @@ int DroidRepairModuleDataComponent::handleObjectMenuSelect(CreatureObject* playe
 	if( selectedID == REPAIR_MODULE_ACTIVATE ){
 
 		PetManager* petManager = player->getZoneServer()->getPetManager();
-		if( petManager == nullptr )
+		if( petManager == NULL )
 			return 0;
 
 		petManager->enqueuePetCommand(player, getDroidObject(), String("petRepair").toLowerCase().hashCode(), "");
@@ -55,7 +53,7 @@ int DroidRepairModuleDataComponent::handleObjectMenuSelect(CreatureObject* playe
 	// Handle command training
 	else if( selectedID == REPAIR_MODULE_TRAIN ){
 
-		if( controller == nullptr )
+		if( controller == NULL )
 			return 0;
 
 		Locker controllerLocker(controller);
@@ -69,15 +67,15 @@ int DroidRepairModuleDataComponent::handleObjectMenuSelect(CreatureObject* playe
 void DroidRepairModuleDataComponent::handlePetCommand(String cmd, CreatureObject* speaker){
 
 	ManagedReference<DroidObject*> droid = getDroidObject();
-	if( droid == nullptr )
+	if( droid == NULL )
 		return;
 
 	ManagedReference<PetControlDevice*> pcd = droid->getControlDevice().get().castTo<PetControlDevice*>();
-	if( pcd == nullptr )
+	if( pcd == NULL )
 		return;
 
 	PetManager* petManager = droid->getZoneServer()->getPetManager();
-	if( petManager == nullptr )
+	if( petManager == NULL )
 		return;
 
 	// Owner-only command
@@ -93,6 +91,6 @@ int DroidRepairModuleDataComponent::getBatteryDrain() {
 	return 0;  // No constant drain, but each activation will use power
 }
 
-String DroidRepairModuleDataComponent::toString() const {
+String DroidRepairModuleDataComponent::toString(){
 	return BaseDroidModuleComponent::toString();
 }

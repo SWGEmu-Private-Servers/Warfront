@@ -14,10 +14,10 @@
 
 void MinefieldMenuComponent::fillObjectMenuResponse(SceneObject* sceneObject, ObjectMenuResponse* menuResponse, CreatureObject* player) const {
 
-	if(!sceneObject->isMinefield() || sceneObject->getZoneServer() == nullptr || sceneObject->getZone() == nullptr)
+	if(!sceneObject->isMinefield() || sceneObject->getZoneServer() == NULL || sceneObject->getZone() == NULL)
 		return;
 
-	if ( player  == nullptr || player->isDead() || player->isIncapacitated())
+	if ( player  == NULL || player->isDead() || player->isIncapacitated())
 		return;
 
 
@@ -26,7 +26,7 @@ void MinefieldMenuComponent::fillObjectMenuResponse(SceneObject* sceneObject, Ob
 
 	ManagedReference<InstallationObject*> installation = cast<InstallationObject*>(sceneObject);
 
-	if(installation == nullptr)
+	if(installation == NULL)
 		return;
 
 	uint64 ownerid = installation->getOwnerObjectID();
@@ -35,7 +35,7 @@ void MinefieldMenuComponent::fillObjectMenuResponse(SceneObject* sceneObject, Ob
 
 	ManagedReference<SceneObject*> ownerObject = server->getObject(ownerid);
 
-	if(ownerObject == nullptr)
+	if(ownerObject == NULL)
 		return;
 
 	if(player->getFaction() != installation->getFaction())
@@ -54,11 +54,11 @@ void MinefieldMenuComponent::fillObjectMenuResponse(SceneObject* sceneObject, Ob
 int MinefieldMenuComponent::handleObjectMenuSelect(SceneObject* sceneObject, CreatureObject* player, byte selectedID) const {
 
 	Zone* zne = player->getZone();
-	if(zne == nullptr)
+	if(zne == NULL)
 		return 1;
 
 	ManagedReference<InstallationObject*> installation = cast<InstallationObject*>(sceneObject);
-	if(installation == nullptr)
+	if(installation == NULL)
 		return 1;
 	if ( selectedID == 37) {
 		if(installation->checkContainerPermission(player,ContainerPermissions::OPEN)){

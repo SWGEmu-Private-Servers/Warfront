@@ -23,17 +23,11 @@ public:
 
 	}
 
-	void writeJSON(nlohmann::json& j) const {
-		DataObjectComponent::writeJSON(j);
-
-		SERIALIZE_JSON_MEMBER(sides);
-	}
-
 	void setSides(byte count) {
 		sides = count;
 	}
 
-	byte getSides() const {
+	byte getSides() {
 		return sides;
 	}
 

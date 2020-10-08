@@ -6,7 +6,6 @@
 #define CREDITSCOMMAND_H_
 
 #include "server/zone/objects/scene/SceneObject.h"
-#include "server/zone/objects/transaction/TransactionLog.h"
 
 class CreditsCommand : public QueueCommand {
 public:
@@ -29,11 +28,11 @@ public:
 			ManagedReference<SceneObject* > object =
 					server->getZoneServer()->getObject(target);
 
-			ManagedReference<CreatureObject*> player = nullptr;
+			ManagedReference<CreatureObject*> player = NULL;
 
 			StringTokenizer args(arguments.toString());
 
-			if(object == nullptr || !object->isPlayerCreature()) {
+			if(object == NULL || !object->isPlayerCreature()) {
 
 				String firstName;
 				if(args.hasMoreTokens()) {
@@ -45,7 +44,7 @@ public:
 				player = cast<CreatureObject*>( object.get());
 			}
 
-			if (player == nullptr) {
+			if (player == NULL) {
 				creature->sendSystemMessage("invalid arguments for credits command:  /credits <firstname> <add/subtract> <amount> <bank/cash>");
 				return GENERALERROR;
 			}
@@ -66,13 +65,11 @@ public:
 			if (action == "add") {
 
 				if (location.toLowerCase() == "cash") {
-					TransactionLog trx(TrxCode::CUSTOMERSERVICE, player, amount, true);
 					player->addCashCredits(amount);
 					success = true;
 				}
 
 				if (location.toLowerCase() == "bank") {
-					TransactionLog trx(TrxCode::CUSTOMERSERVICE, player, amount, false);
 					player->addBankCredits(amount);
 					success = true;
 				}
@@ -80,25 +77,19 @@ public:
 			} else if (action == "subtract") {
 
 				if (location.toLowerCase() == "cash") {
-					if (player->verifyCashCredits(amount)) {
-						TransactionLog trx(player, TrxCode::CUSTOMERSERVICE, amount, true);
+					if (player->verifyCashCredits(amount))
 						player->subtractCashCredits(amount);
-					} else {
-						TransactionLog trx(player, TrxCode::CUSTOMERSERVICE, player->getCashCredits(), true);
-						player->clearCashCredits();
-					}
+					else
+						player->setCashCredits(0, true);
 
 					success = true;
 				}
 
 				if (location.toLowerCase() == "bank") {
-					if (player->verifyBankCredits(amount)) {
-						TransactionLog trx(player, TrxCode::CUSTOMERSERVICE, amount, false);
+					if (player->verifyBankCredits(amount))
 						player->subtractBankCredits(amount);
-					} else {
-						TransactionLog trx(player, TrxCode::CUSTOMERSERVICE, player->getBankCredits(), false);
-						player->clearBankCredits();
-					}
+					else
+						player->setBankCredits(0, true);
 
 					success = true;
 				}

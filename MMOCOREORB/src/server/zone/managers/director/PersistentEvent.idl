@@ -8,30 +8,25 @@ import engine.core.ManagedObject;
 include server.zone.objects.scene.SceneObject;
 import server.zone.managers.director.ScreenPlayTask;
 
-@json
 class PersistentEvent extends ManagedObject {
 	protected int timeStamp;
-	protected unsigned long miliDiff;
 	protected unsigned long curTime;
 	protected string key;
 	protected string play;
 	protected string args;
 	protected string eventName;
 	protected boolean eventExecuted;
-
+	
 	@weakReference
-	transient protected ScreenPlayTask screenplayTask;
+	protected ScreenPlayTask screenplayTask;
 
 	@weakReference
 	protected SceneObject obj;
 
 	public PersistentEvent() {
 		eventExecuted = false;
-		timeStamp = 0;
-		miliDiff = 0;
-		curTime = 0;
 	}
-
+	
 	@local
 	public void setScreenplayTask(ScreenPlayTask task) {
 		screenplayTask = task;
@@ -45,8 +40,8 @@ class PersistentEvent extends ManagedObject {
 	}
 
 	@read
-	public unsigned long getMiliDiff() {
-		return miliDiff;
+	public int getTimeStamp() {
+		return timeStamp;
 	}
 
 	@read
@@ -88,8 +83,8 @@ class PersistentEvent extends ManagedObject {
 		curTime = time;
 	}
 
-	public void setMiliDiff(unsigned long mdiff) {
-		miliDiff = mdiff;
+	public void setTimeStamp(int stamp) {
+		timeStamp = stamp;
 	}
 
 	public void setKey(final string k) {

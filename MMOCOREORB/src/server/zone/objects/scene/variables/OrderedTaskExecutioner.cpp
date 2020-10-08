@@ -13,14 +13,14 @@
 using namespace server::zone::objects::scene::variables;
 using namespace server::zone::objects::scene;
 
-OrderedTaskExecutioner::OrderedTaskExecutioner(SceneObject* sceneObject) : sceneObject(sceneObject) {
+OrderedTaskExecutioner::OrderedTaskExecutioner(SceneObject* sceneObject) : sceneObject(sceneObject), taskName(nullptr) {
 
 }
 
 void OrderedTaskExecutioner::run() {
 	Reference<SceneObject*> strongReference = sceneObject.get();
 
-	if (strongReference == nullptr)
+	if (strongReference == NULL)
 		return;
 
 	//no lock on getPendingTasks() is safe due to using the container lock
@@ -29,7 +29,7 @@ void OrderedTaskExecutioner::run() {
 
 	Reference<Task*> task = pendingTasks->getNextOrderedTask();
 
-	if (task != nullptr) {
+	if (task != NULL) {
 		try {
 			task->run();
 		} catch (Exception& exc) {
@@ -41,15 +41,15 @@ void OrderedTaskExecutioner::run() {
 			strongReference->error("uncaught exception in OrderedTaskExecutioner::run");
 		}
 
-		taskName = task->getTaskName();
-
 		pendingTasks->runMoreOrderedTasks(strongReference);
+
+		taskName = task->getTaskName();
 	}
 }
 
 const char* OrderedTaskExecutioner::getTaskName() {
-	if (!taskName.isEmpty()) {
-		return taskName.toCharArray();
+	if (taskName) {
+		return taskName;
 	} else {
 		return Task::getTaskName();
 	}

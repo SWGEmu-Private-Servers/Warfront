@@ -27,7 +27,7 @@ void DeliverMissionObjectiveImplementation::activate() {
 	if (!activateWithResult()) {
 		//Send error message to player.
 		ManagedReference<CreatureObject*> owner = getPlayerOwner();
-		if (owner == nullptr) {
+		if (owner == NULL) {
 			return;
 		}
 
@@ -50,32 +50,32 @@ bool DeliverMissionObjectiveImplementation::activateWithResult() {
 	ManagedReference<CreatureObject*> owner = getPlayerOwner();
 	ManagedReference<MissionObject* > mission = this->mission.get();
 
-	if (owner == nullptr || mission == nullptr) {
+	if (owner == NULL || mission == NULL) {
 		return false;
 	}
 	Zone* zone = owner->getZone();
-	if (zone == nullptr) {
+	if (zone == NULL) {
 		return false;
 	}
 
 	CreatureManager* creatureManager = zone->getCreatureManager();
 
 	PlanetManager* planetManager = zone->getPlanetManager();
-	if (planetManager == nullptr) {
+	if (planetManager == NULL) {
 		return false;
 	}
 	TerrainManager* terrainManager = planetManager->getTerrainManager();
-	if (terrainManager == nullptr) {
+	if (terrainManager == NULL) {
 		return false;
 	}
 
 	ZoneServer* zoneServer = owner->getZoneServer();
-	if (zoneServer == nullptr) {
+	if (zoneServer == NULL) {
 		return false;
 	}
 
 	MissionManager* missionManager = zoneServer->getMissionManager();
-	if (missionManager == nullptr) {
+	if (missionManager == NULL) {
 		return false;
 	}
 
@@ -98,23 +98,23 @@ bool DeliverMissionObjectiveImplementation::activateWithResult() {
 	//Target NPC
 	//Find a free spawn point.
 	NpcSpawnPoint* targetSpawnPoint = missionManager->getFreeNpcSpawnPoint(mission->getStartPlanetCRC(), mission->getStartPositionX(), mission->getStartPositionY(), spawnType);
-	if (targetSpawnPoint == nullptr) {
+	if (targetSpawnPoint == NULL) {
 		return false;
 	}
-	const Vector3* targetPosition = targetSpawnPoint->getPosition();
-	if (targetPosition == nullptr) {
+	Vector3* targetPosition = targetSpawnPoint->getPosition();
+	if (targetPosition == NULL) {
 		return false;
 	}
 
 	//Destination NPC.
 	//Find a free spawn point.
 	int retries = 10;
-	NpcSpawnPoint* destinationSpawnPoint = nullptr;
-	while (retries > 0 && (destinationSpawnPoint == nullptr || destinationSpawnPoint == targetSpawnPoint)) {
+	NpcSpawnPoint* destinationSpawnPoint = NULL;
+	while (retries > 0 && (destinationSpawnPoint == NULL || destinationSpawnPoint == targetSpawnPoint)) {
 		destinationSpawnPoint = missionManager->getFreeNpcSpawnPoint(mission->getEndPlanet().hashCode(), mission->getEndPositionX(), mission->getEndPositionY(), spawnType);
 		retries--;
 	}
-	if (destinationSpawnPoint == nullptr || destinationSpawnPoint == targetSpawnPoint) {
+	if (destinationSpawnPoint == NULL || destinationSpawnPoint == targetSpawnPoint) {
 		return false;
 	}
 
@@ -158,17 +158,17 @@ void DeliverMissionObjectiveImplementation::despawnNpcs() {
 	MissionManager* missionManager = zoneServer->getMissionManager();
 
 	ManagedReference<AiAgent*> targetNpc = targetSpawn;
-	if (targetNpc != nullptr)
+	if (targetNpc != NULL)
 		missionManager->freeMissionNpc(targetNpc);
 
 	ManagedReference<AiAgent*> destinationNpc = destinationSpawn;
-	if (destinationNpc != nullptr)
+	if (destinationNpc != NULL)
 		missionManager->freeMissionNpc(destinationNpc);
 }
 
 void DeliverMissionObjectiveImplementation::updateMissionStatus(CreatureObject* player) {
 	ManagedReference<MissionObject* > mission = this->mission.get();
-	if(mission == nullptr)
+	if(mission == NULL)
 		return;
 
 	StringBuffer itemEntry;
@@ -181,10 +181,10 @@ void DeliverMissionObjectiveImplementation::updateMissionStatus(CreatureObject* 
 
 	if (objectiveStatus == 0) {
 		itemEntry << "l";
-		item = nullptr;
+		item = NULL;
 		//TODO: create correct item.
 		item = (player->getZoneServer()->createObject(STRING_HASHCODE("object/tangible/mission/mission_datadisk.iff"), 2)).castTo<TangibleObject*>();
-		if (item == nullptr) {
+		if (item == NULL) {
 			abort();
 			return;
 		}
@@ -209,7 +209,7 @@ void DeliverMissionObjectiveImplementation::updateMissionStatus(CreatureObject* 
 
 	} else if (objectiveStatus == 1) {
 		// check for item, then remove item
-		if (item == nullptr || !inventory->hasObjectInContainer(item->getObjectID())) {
+		if (item == NULL || !inventory->hasObjectInContainer(item->getObjectID())) {
 			return;
 		}
 
@@ -227,7 +227,7 @@ void DeliverMissionObjectiveImplementation::updateMissionStatus(CreatureObject* 
 bool DeliverMissionObjectiveImplementation::updateMissionTarget(CreatureObject* player) {
 	//Now update the waypoint to the new target
 	ManagedReference<MissionObject* > mission = this->mission.get();
-	if(mission == nullptr)
+	if(mission == NULL)
 		return false;
 	WaypointObject* waypoint = mission->getWaypointToMission();
 

@@ -11,7 +11,6 @@
 #include "server/zone/objects/player/sui/SuiCallback.h"
 #include "server/zone/objects/scene/SceneObject.h"
 #include "server/zone/Zone.h"
-#include "server/zone/managers/city/CityManager.h"
 
 class InstallMissionTerminalSuiCallback : public SuiCallback {
 public:
@@ -28,12 +27,12 @@ public:
 		if (args->size() < 1)
 			return;
 
-		if (player->getParent() != nullptr)
+		if (player->getParent() != NULL)
 			return;
 
 		ManagedReference<CityRegion*> city = player->getCityRegion().get();
 		CityManager* cityManager = player->getZoneServer()->getCityManager();
-		if (city == nullptr || cityManager == nullptr)
+		if (city == NULL || cityManager == NULL)
 			return;
 
 		if (!city->isMayor(player->getObjectID()))
@@ -46,11 +45,11 @@ public:
 
 		Zone* zone = player->getZone();
 
-		if (zone == nullptr)
+		if (zone == NULL)
 			return;
 
 		PlayerObject* ghost = player->getPlayerObject();
-		if (ghost == nullptr)
+		if (ghost == NULL)
 			return;
 
 		if (!ghost->hasAbility("installmissionterminal"))
@@ -101,7 +100,7 @@ public:
 			}
 
 			StructureObject* cityHall = city->getCityHall();
-			if (cityHall == nullptr)
+			if (cityHall == NULL)
 				return;
 
 			ManagedReference<SceneObject*> sceneObject = ObjectManager::instance()->createObject(terminalTemplatePath.hashCode(), 1, "sceneobjects");

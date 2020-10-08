@@ -18,7 +18,7 @@ void LightsaberObjectMenuComponent::fillObjectMenuResponse(SceneObject* sceneObj
 
 	ManagedReference<WeaponObject*> weapon = cast<WeaponObject*>(sceneObject);
 
-	if(weapon == nullptr)
+	if(weapon == NULL)
 		return;
 
 	TangibleObjectMenuComponent::fillObjectMenuResponse(sceneObject, menuResponse, player);
@@ -41,14 +41,14 @@ int LightsaberObjectMenuComponent::handleObjectMenuSelect(SceneObject* sceneObje
 
 	ManagedReference<WeaponObject*> weapon = cast<WeaponObject*>(sceneObject);
 
-	if (weapon == nullptr)
+	if (weapon == NULL)
 		return 1;
 
 	// Handle opening sabers
 	if (selectedID == 89) {
 
 		ManagedReference<SceneObject*> parent = weapon->getParent().get();
-		if (parent != nullptr && parent->isPlayerCreature()){
+		if (parent != NULL && parent->isPlayerCreature()){
 			player->sendSystemMessage("@jedi_spam:saber_not_while_equpped");
 			return 0;
 		}

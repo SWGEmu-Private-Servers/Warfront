@@ -12,18 +12,18 @@
 #include "templates/TemplateReference.h"
 
 class TemplateCRCMap : public HashTable<uint32, TemplateReference<SharedObjectTemplate*> > {
-	int hash(const uint32& k) const override {
+	int hash(const uint32& k) const {
 		return k;
 	}
 
 public:
 	TemplateCRCMap() : HashTable<uint32, TemplateReference<SharedObjectTemplate*> >(16000) {
-		setNullValue(nullptr);
+		setNullValue(NULL);
 	}
 };
 
 class ClientTemplateCRCMap : public HashTable<uint32, String> {
-	int hash(const uint32& k) const override {
+	int hash(const uint32& k) const {
 		return k;
 	}
 

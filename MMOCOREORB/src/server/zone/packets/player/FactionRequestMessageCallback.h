@@ -24,7 +24,7 @@ public:
 	void run() {
 		ManagedReference<CreatureObject*> object = client->getPlayer();
 
-		if (object == nullptr)
+		if (object == NULL)
 			return;
 
 		Locker _locker(object);

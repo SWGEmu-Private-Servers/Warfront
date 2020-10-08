@@ -10,16 +10,19 @@ public:
 
 	ForceAbsorb2Command(const String& name, ZoneProcessServer* server) : JediQueueCommand(name, server) {
 		buffCRC = BuffCRC::JEDI_FORCE_ABSORB_2;
+
 		overrideableCRCs.add(BuffCRC::JEDI_FORCE_ABSORB_1);
+		overrideableCRCs.add(BuffCRC::JEDI_FORCE_ABSORB_2);
+
 		singleUseEventTypes.add(ObserverEventType::FORCEABSORB);
 		skillMods.put("force_absorb", 1);
 	}
 
-	int doQueueCommand(CreatureObject* creature, const uint64& target, const UnicodeString& arguments) const override {
+	int doQueueCommand(CreatureObject* creature, const uint64& target, const UnicodeString& arguments) const {
 		return doJediSelfBuffCommand(creature);
 	}
 
-	void handleBuff(SceneObject* creature, ManagedObject* object, int64 param) const override {
+	void handleBuff(SceneObject* creature, ManagedObject* object, int64 param) {
 		ManagedReference<CreatureObject*> player = creature->asCreatureObject();
 
 		if (player == nullptr)

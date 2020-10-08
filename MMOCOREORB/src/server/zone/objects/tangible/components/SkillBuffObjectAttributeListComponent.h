@@ -22,8 +22,8 @@ public:
 	 */
 	void fillAttributeList(AttributeListMessage* alm, CreatureObject* creature, SceneObject* object) const {
 
-		Reference<SkillBuffTemplate*> skillBuff = cast<SkillBuffTemplate*>(object->getObjectTemplate());
-		if (skillBuff == nullptr) {
+		ManagedReference<SkillBuffTemplate*> skillBuff = cast<SkillBuffTemplate*>(object->getObjectTemplate());
+		if (skillBuff == NULL) {
 			error("No SkillBuffTemplate for: " + String::valueOf(object->getServerObjectCRC()));
 			return;
 		}

@@ -29,15 +29,9 @@ public:
 
 	}
 
-	void writeJSON(nlohmann::json& j) const {
-		DataObjectComponent::writeJSON(j);
-
-		SERIALIZE_JSON_MEMBER(uid);
-	}
-
 	void initializeTransientMembers() {
 		ManagedReference<SceneObject*> strongParent = parent.get();
-		if(strongParent != nullptr && strongParent->getZoneServer() != nullptr) {
+		if(strongParent != NULL && strongParent->getZoneServer() != NULL) {
 			auctionMan = strongParent->getZoneServer()->getAuctionManager();
 			if(uid.isEmpty())
 				updateUID();
@@ -48,7 +42,7 @@ public:
 		ManagedReference<SceneObject*> strongParent = parent.get();
 		ManagedReference<AuctionManager*> auctionManager = auctionMan.get();
 
-		if(auctionManager == nullptr || strongParent == nullptr || strongParent->getZone() == nullptr)
+		if(auctionManager == NULL || strongParent == NULL || strongParent->getZone() == NULL)
 			return;
 
 		String olduid = uid;
@@ -57,7 +51,7 @@ public:
 
 		String region = "@planet_n:" + strongParent->getZone()->getZoneName();
 		ManagedReference<CityRegion*> cityRegion = strongParent->getCityRegion().get();
-		if(cityRegion != nullptr)
+		if(cityRegion != NULL)
 			region = cityRegion->getRegionName();
 
 		uid += region + "." + strongParent->getDisplayedName() + ".";

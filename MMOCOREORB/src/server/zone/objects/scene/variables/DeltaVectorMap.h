@@ -9,8 +9,6 @@
 #define DELTAVECTORMAP_H_
 
 #include "engine/engine.h"
-#include "engine/util/json_utils.h"
-
 #include "server/zone/packets/DeltaMessage.h"
 
 template <class K, class V> class DeltaVectorMap : public Serializable {
@@ -48,15 +46,10 @@ public:
 		addSerializableVariable("updateCounter", &updateCounter);
 	}
 
-	friend void to_json(nlohmann::json& j, const DeltaVectorMap<K, V>& map) {
-		j["vectorMap"] = map.vectorMap;
-		j["updateCounter"] = map.updateCounter;
-	}
-
-	virtual int set(const K& key, const V& value, DeltaMessage* message = nullptr, int updates = 1) {
+	virtual int set(const K& key, const V& value, DeltaMessage* message = NULL, int updates = 1) {
 		int pos = vectorMap.put(key, value);
 
-		if (message != nullptr) {
+		if (message != NULL) {
 			if (updates != 0)
 				message->startList(updates, updateCounter += updates);
 
@@ -71,7 +64,7 @@ public:
 		return pos;
 	}
 
-	virtual bool drop(const K& key, DeltaMessage* message = nullptr, int updates = 1) {
+	virtual bool drop(const K& key, DeltaMessage* message = NULL, int updates = 1) {
 		if (!vectorMap.contains(key))
 			return false;
 
@@ -79,7 +72,7 @@ public:
 
 		vectorMap.drop(key);
 
-		if (message != nullptr) {
+		if (message != NULL) {
 			if (updates != 0)
 				message->startList(updates, updateCounter += updates);
 
@@ -94,18 +87,17 @@ public:
 		return true;
 	}
 
-	virtual void insertToMessage(BaseMessage* msg) const {
+	virtual void insertToMessage(BaseMessage* msg) {
 		msg->insertInt(size());
 		msg->insertInt(getUpdateCounter());
 
 		for (int i = 0; i < size(); ++i) {
-			const K& key = getKeyAt(i);
-			const V& value = getValueAt(i);
+			K& key = getKeyAt(i);
+			V& value = getValueAt(i);
 
 			msg->insertByte(0);
-
-			TypeInfo<K>::toBinaryStream(const_cast<K*>(&key), msg);
-			TypeInfo<V>::toBinaryStream(const_cast<V*>(&value), msg);
+			TypeInfo<K>::toBinaryStream(&key, msg);
+			TypeInfo<V>::toBinaryStream(&value, msg);
 		}
 	}
 
@@ -117,31 +109,19 @@ public:
 		return vectorMap.elementAt(index).getKey();
 	}
 
-	inline const V& getValueAt(int index) const {
-		return vectorMap.elementAt(index).getValue();
-	}
-
-	inline const K& getKeyAt(int index) const {
-		return vectorMap.elementAt(index).getKey();
-	}
-
 	inline V& get(const K& key) {
 		return vectorMap.get(key);
 	}
 
-	inline const V& get(const K& key) const {
-		return vectorMap.get(key);
-	}
-
-	inline bool contains(const K& key) const {
+	inline bool contains(const K& key) {
 		return vectorMap.contains(key);
 	}
 
-	inline int size() const {
+	inline int size() {
 		return vectorMap.size();
 	}
 
-	inline uint32 getUpdateCounter() const {
+	inline uint32 getUpdateCounter() {
 		return updateCounter;
 	}
 

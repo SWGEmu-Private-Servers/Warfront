@@ -23,13 +23,24 @@ public:
 		if (!checkInvalidLocomotions(creature))
 			return INVALIDLOCOMOTION;
 
+		if (creature->isInvisible()) {
+			return GENERALERROR;
+
+		}
+
 		if (isWearingArmor(creature)) {
 			return NOJEDIARMOR;
 		}
 
+		ManagedReference<WeaponObject*> weapon = creature->getWeapon();
+
+		if (!weapon->isJediWeapon()) {
+			return INVALIDWEAPON;
+		}
+
 		ManagedReference<SceneObject*> targetObject = server->getZoneServer()->getObject(target);
 
-		if (targetObject == nullptr || !targetObject->isCreatureObject()) {
+		if (targetObject == NULL || !targetObject->isCreatureObject()) {
 			return INVALIDTARGET;
 		}
 

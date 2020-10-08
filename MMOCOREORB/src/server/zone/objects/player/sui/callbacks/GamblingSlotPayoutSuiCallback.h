@@ -18,7 +18,7 @@ public:
 	}
 
 	void run(CreatureObject* player, SuiBox* suiBox, uint32 eventIndex, Vector<UnicodeString>* args) {
-		if (!suiBox->isListBox() || player == nullptr)
+		if (!suiBox->isListBox() || player == NULL)
 			return;
 
 		player->sendMessage(suiBox->generateCloseMessage());

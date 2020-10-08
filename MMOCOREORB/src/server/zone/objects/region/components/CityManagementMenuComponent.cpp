@@ -19,13 +19,13 @@
 void CityManagementMenuComponent::fillObjectMenuResponse(SceneObject* sceneObject, ObjectMenuResponse* menuResponse, CreatureObject* player) const {
 	ManagedReference<CityRegion*> city = sceneObject->getCityRegion().get();
 
-	if (city == nullptr) {
+	if (city == NULL) {
 		sceneObject->error("city region null in CityManagementMenuComponent::fillObjectMenuResponse");
 		return;
 	}
 
 	PlayerObject* ghost = player->getPlayerObject();
-	if (ghost == nullptr) {
+	if (ghost == NULL) {
 		return;
 	}
 
@@ -85,11 +85,11 @@ void CityManagementMenuComponent::fillObjectMenuResponse(SceneObject* sceneObjec
 int CityManagementMenuComponent::handleObjectMenuSelect(SceneObject* sceneObject, CreatureObject* player, byte selectID) const {
 	ManagedReference<CityRegion*> city = sceneObject->getCityRegion().get();
 
-	if (city == nullptr)
+	if (city == NULL)
 		return 1;
 
 	PlayerObject* ghost = player->getPlayerObject();
-	if (ghost == nullptr) {
+	if (ghost == NULL) {
 		return 1;
 	}
 

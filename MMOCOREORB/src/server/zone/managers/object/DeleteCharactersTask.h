@@ -25,7 +25,7 @@ public:
 	void run() {
 		ZoneServer* server = ServerCore::getZoneServer();
 
-		if (server == nullptr)
+		if (server == NULL)
 			return;
 
 		info("Running delete characters task.", true);
@@ -42,14 +42,14 @@ public:
 
 				ManagedReference<CreatureObject*> obj = server->getObject(oid).castTo<CreatureObject*>();
 
-				if (obj == nullptr || !obj->isPlayerCreature())
+				if (obj == NULL || !obj->isPlayerCreature())
 					continue;
 
 				Locker _lock(obj.get());
 
 				ManagedReference<ZoneClientSession*> client = obj->getClient();
 
-				if (client != nullptr)
+				if (client != NULL)
 					client->disconnect();
 
 				obj->destroyObjectFromWorld(false); //Don't need to send destroy to the player - they are being disconnected.
@@ -63,7 +63,7 @@ public:
 	void updateDeletedCharacters() {
 		ZoneServer* server = ServerCore::getZoneServer();
 
-		if (server == nullptr)
+		if (server == NULL)
 			return;
 
 		int galaxyid = server->getGalaxyID();

@@ -18,7 +18,7 @@ namespace events {
 
 class DroidMerchantBarkerTask : public Task, public Logger {
 
-	Reference<DroidMerchantModuleDataComponent*> module;
+	ManagedReference<DroidMerchantModuleDataComponent*> module;
 
 public:
 	DroidMerchantBarkerTask(DroidMerchantModuleDataComponent* module) : Task() {
@@ -27,13 +27,13 @@ public:
 
 	void run() {
 
-		if (module == nullptr) {
+		if (module == NULL) {
 			return;
 		}
 
 		ManagedReference<DroidObject*> droid = module->getDroidObject();
 
-		if (droid == nullptr) {
+		if (droid == NULL) {
 			return;
 		}
 
@@ -42,10 +42,10 @@ public:
 		droid->removePendingTask("barking");
 
 		// Check if droid is spawned
-		if (droid->getLocalZone() == nullptr) {  // Not outdoors
+		if (droid->getLocalZone() == NULL) {  // Not outdoors
 			ManagedReference<SceneObject*> parent = droid->getParent().get();
 
-			if (parent == nullptr || !parent.get()->isCellObject()) { // Not indoors either
+			if (parent == NULL || !parent.get()->isCellObject()) { // Not indoors either
 				module->deactivate();
 				return;
 			}
@@ -74,7 +74,7 @@ public:
 		}
 
 		Zone* zone = droid->getZone();
-		if (zone == nullptr) {
+		if (zone == NULL) {
 			return;
 		}
 
@@ -83,7 +83,7 @@ public:
 		// Get nearby people and bark
 		CloseObjectsVector* vec = (CloseObjectsVector*) droid->getCloseObjects();
 		SortedVector<QuadTreeEntry*> closeEntryObjects(200, 50);
-		if (vec != nullptr) {
+		if (vec != NULL) {
 			vec->safeCopyReceiversTo(closeEntryObjects, CloseObjectsVector::PLAYERTYPE);
 		} else {
 #ifdef COV_DEBUG

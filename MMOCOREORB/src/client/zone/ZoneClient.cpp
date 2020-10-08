@@ -13,25 +13,25 @@ ZoneClient::ZoneClient(int port) {
 	client->setLogging(true);
 	client->setLoggingName("ZoneClient");
 
-	player = nullptr;
+	player = NULL;
 
 	key = 0;
 	accountID = 0;
 
-	zone = nullptr;
+	zone = NULL;
 
 	basePacketHandler = new BasePacketHandler("ZoneClient", this);
-	zonePacketHandler = nullptr;
+	zonePacketHandler = NULL;
 }
 
 ZoneClient::~ZoneClient() {
-	if (player != nullptr)
+	if (player != NULL)
 		delete player;
 
-	player = nullptr;
+	player = NULL;
 
 	delete basePacketHandler,
-	basePacketHandler = nullptr;
+	basePacketHandler = NULL;
 }
 
 void ZoneClient::handleMessage(ServiceClient* client, Packet* message) {

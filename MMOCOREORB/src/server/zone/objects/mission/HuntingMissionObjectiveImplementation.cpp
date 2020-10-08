@@ -43,7 +43,7 @@ void HuntingMissionObjectiveImplementation::abort() {
 
 		ManagedReference<CreatureObject*> player = getPlayerOwner();
 
-		if (player != nullptr) {
+		if (player != NULL) {
 			Locker locker(player);
 
 			player->dropObserver(ObserverEventType::KILLEDCREATURE, observer);
@@ -60,12 +60,12 @@ void HuntingMissionObjectiveImplementation::complete() {
 
 int HuntingMissionObjectiveImplementation::notifyObserverEvent(MissionObserver* observer, uint32 eventType, Observable* observable, ManagedObject* arg1, int64 arg2) {
 	ManagedReference<MissionObject* > mission = this->mission.get();
-	if (mission == nullptr)
+	if (mission == NULL)
 		return 1;
 
 	ManagedReference<CreatureObject*> player = getPlayerOwner();
 
-	if (player == nullptr)
+	if (player == NULL)
 		return 1;
 
 	if (eventType == ObserverEventType::KILLEDCREATURE) {
@@ -75,15 +75,15 @@ int HuntingMissionObjectiveImplementation::notifyObserverEvent(MissionObserver* 
 		CreatureObject* creature = cast<CreatureObject*>(arg1);
 		AiAgent* agent = cast<AiAgent*>(creature);
 
-		if (agent == nullptr)
+		if (agent == NULL)
 			return 0;
 
 		if (!agent->isInRange(player, 128.0f))
 			return 0;
 
-		const CreatureTemplate* creatureTemplate = agent->getCreatureTemplate();
+		CreatureTemplate* creatureTemplate = agent->getCreatureTemplate();
 
-		if (creatureTemplate == nullptr)
+		if (creatureTemplate == NULL)
 			return 0;
 
 		String temp1 = mission->getTemplateString1();
@@ -113,7 +113,7 @@ Vector3 HuntingMissionObjectiveImplementation::getEndPosition() {
 
 	Vector3 missionEndPoint;
 
-	if(mission == nullptr)
+	if(mission == NULL)
 		return missionEndPoint;
 
 	missionEndPoint.setX(mission->getStartPositionX());

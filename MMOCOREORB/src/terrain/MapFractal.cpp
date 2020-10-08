@@ -12,8 +12,8 @@ double MapFractal::log05 = log(0.5);
 using namespace trn::ptat;
 
 MapFractal::MapFractal() {
-	noise = nullptr;
-	rand = nullptr;
+	noise = NULL;
+	rand = NULL;
 
 	bias = 0;
 	biasValue = 0.5;
@@ -366,5 +366,8 @@ void MapFractal::setSeed(int seed) {
 	rand->setSeed(seed);
 
 	noise = new PerlinNoise(rand);
-	noise->init();
+	double coord[2];
+	coord[0] = 0, coord[1] = 0;
+
+	noise->noise2(coord); //initialize
 }

@@ -7,6 +7,12 @@
 
 #include "server/zone/objects/scene/SceneObject.h"
 #include "server/zone/objects/building/BuildingObject.h"
+#include "server/zone/packets/object/DataTransform.h"
+#include "server/zone/packets/object/DataTransformWithParent.h"
+#include "templates/appearance/PortalLayout.h"
+#include "templates/appearance/FloorMesh.h"
+#include "templates/appearance/MeshAppearanceTemplate.h"
+#include "server/zone/objects/tangible/components/vendor/VendorDataComponent.h"
 
 class MoveFurnitureCommand : public QueueCommand {
 public:
@@ -30,12 +36,12 @@ public:
 
 		ManagedReference<PlayerObject*> ghost = creature->getPlayerObject();
 
-		if (ghost == nullptr)
+		if (ghost == NULL)
 			return GENERALERROR;
 
 		ManagedReference<SceneObject*> obj = server->getZoneServer()->getObject(target);
 
-		if (obj == nullptr || !obj->isTangibleObject() || obj->isPlayerCreature() || obj->isPet()) {
+		if (obj == NULL || !obj->isTangibleObject() || obj->isPlayerCreature() || obj->isPet()) {
 			creature->sendSystemMessage("@player_structure:move_what"); //What do you want to move?
 			return GENERALERROR;
 		}
@@ -43,7 +49,7 @@ public:
 		ManagedReference<SceneObject*> rootParent = obj->getRootParent();
 		ManagedReference<SceneObject*> creatureParent = creature->getRootParent();
 
-		if (creatureParent == nullptr || !creatureParent->isBuildingObject()) {
+		if (creatureParent == NULL || !creatureParent->isBuildingObject()) {
 			creature->sendSystemMessage("@player_structure:must_be_in_building"); //You must be in a building to do that.
 			return GENERALERROR;
 		}
@@ -55,7 +61,7 @@ public:
 
 		BuildingObject* buildingObject = cast<BuildingObject*>( creatureParent.get());
 
-		if (buildingObject == nullptr || rootParent != buildingObject || buildingObject->containsChildObject(obj)) {
+		if (buildingObject == NULL || rootParent != buildingObject || buildingObject->containsChildObject(obj)) {
 			creature->sendSystemMessage("@player_structure:move_what"); //What do you want to move?
 			return GENERALERROR;
 		}
@@ -132,7 +138,7 @@ public:
 		obj->incrementMovementCounter();
 
 		ManagedReference<SceneObject*> objParent = obj->getParent().get();
-		if (objParent != nullptr)
+		if (objParent != NULL)
 			obj->teleport(x, z, y, objParent->getObjectID());
 		else
 			obj->teleport(x, z, y);

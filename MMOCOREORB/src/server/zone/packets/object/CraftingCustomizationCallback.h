@@ -62,12 +62,12 @@ public:
 	void run() {
 		ManagedReference<CreatureObject*> player = client->getPlayer();
 
-		if (player == nullptr)
+		if (player == NULL)
 			return;
 
 		Reference<CraftingSession*> session = player->getActiveSession(SessionFacadeType::CRAFTING).castTo<CraftingSession*>();
 
-		if (session == nullptr) {
+		if (session == NULL) {
 			warning("Trying to customize when no session exists");
 			return;
 		}

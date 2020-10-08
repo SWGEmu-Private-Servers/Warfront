@@ -13,6 +13,7 @@
 
 template<int formType>
 class ProceduralRule : public TemplateVariable<formType> {
+
 protected:
 	InformationHeader informationHeader;
 
@@ -21,7 +22,7 @@ public:
 
 	}
 
-	inline bool isEnabled() const {
+	inline bool isEnabled() {
 		return informationHeader.isEnabled();
 	}
 

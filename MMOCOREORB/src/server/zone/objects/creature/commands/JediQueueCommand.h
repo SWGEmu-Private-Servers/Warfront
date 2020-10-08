@@ -44,7 +44,7 @@ protected:
 
 public:
 	enum { BASE_BUFF, SINGLE_USE_BUFF };
-
+    
 	JediQueueCommand(const String& name, ZoneProcessServer* server) : QueueCommand(name, server) {
 		forceCost = 0;
 		duration = 0;
@@ -64,14 +64,17 @@ public:
 		frsDarkForcePowerModifier = 0;
 	}
 
+
+
 	int doQueueCommand(CreatureObject* creature, const uint64& target, const UnicodeString& arguments) const {
 		return SUCCESS;
 	}
 
-	bool isJediQueueCommand() const {
+	bool isJediQueueCommand() {
 		return true;
 	}
 
+    
 	int doJediSelfBuffCommand(CreatureObject* creature) const {
 		// first and foremost, we need to toggle this buff off if we already have it
 		if (creature->hasBuff(buffCRC)) {
@@ -86,20 +89,21 @@ public:
 			return res;
 
         return doBuff(creature);
-	}
 
+	}
+    
 	int doBuff(CreatureObject* creature) const {
 		ManagedReference<Buff*> buff = createJediSelfBuff(creature);
-
+        
 		// Return if buff is NOT valid.
 		if (buff == nullptr)
 			return GENERALERROR;
-
+        
 		Locker locker(buff);
-
+        
 		// Add buff.
 		creature->addBuff(buff);
-
+        
 		// Force Cost.
 		doForceCost(creature);
 
@@ -107,6 +111,7 @@ public:
 		if (!clientEffect.isEmpty()) {
 			creature->playEffect(clientEffect, "");
 		}
+        
 
 		// Return.
 		return SUCCESS;
@@ -130,8 +135,23 @@ public:
 		if (res != SUCCESS)
 			return res;
 
-		if (isWearingArmor(creature))
+		//Test if Jedi is wearing Armor
+		if (creature->hasSkill("force_title_jedi_rank_02")){	
+			if (isWearingArmor(creature)){
 			return NOJEDIARMOR;
+		
+			}
+		}
+		
+		ManagedReference<WeaponObject*> weapon = creature->getWeapon();
+		
+		if (creature->hasSkill("force_title_jedi_rank_02")){
+		if (!weapon->isJediWeapon()) {
+			creature->sendSystemMessage("You must have a Lightsaber equipped to use this ability");
+			return INVALIDWEAPON;
+	
+			}
+		}	
 
 		for (int i=0; i < blockingCRCs.size(); ++i) {
 			if (creature->hasBuff(blockingCRCs.get(i))) {
@@ -144,6 +164,7 @@ public:
 	}
 
 	ManagedReference<Buff*> createJediSelfBuff(CreatureObject* creature) const {
+
 		for (int i=0; i < overrideableCRCs.size(); ++i) {
 			int buff = overrideableCRCs.get(i);
 			if (creature->hasBuff(buff)) {
@@ -153,10 +174,11 @@ public:
 
 		// Create buff object.
 		ManagedReference<Buff*> buff = nullptr;
-
+        
 		if(buffClass == BASE_BUFF || singleUseEventTypes.size() == 0) {
 			buff = new Buff(creature, buffCRC, duration, BuffType::JEDI);
 		} else if(buffClass == SINGLE_USE_BUFF) {;
+
 			SingleUseBuff* suBuff = new SingleUseBuff(creature, buffCRC, duration, BuffType::JEDI, getNameCRC());
 
 			buff = suBuff;
@@ -288,8 +310,12 @@ public:
 	void doForceCost(CreatureObject* creature) const {
 		// Force Cost.
 		ManagedReference<PlayerObject*> playerObject = creature->getPlayerObject();
+				creature->getPlayerObject();
 		playerObject->setForcePower(playerObject->getForcePower() - getFrsModifiedForceCost(creature));
+
 		VisibilityManager::instance()->increaseVisibility(creature, visMod);
+		//Jedi Attackable
+		playerObject->updateLastJediAttackableTimestamp();
 	}
 
 	void setForceCost(int fc) {
@@ -311,7 +337,7 @@ public:
 	void setSpeedMod(float sm) {
 		speedMod = sm;
 	}
-
+    
 	void setBuffClass(int bt) {
 		buffClass = bt;
 	}

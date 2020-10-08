@@ -19,12 +19,12 @@ int DynamicSpawnObserverImplementation::notifyObserverEvent(unsigned int eventTy
 	Reference<AiAgent*> ai = cast<AiAgent*>(arg1);
 	Reference<SceneObject*> spawn = cast<SceneObject*>(observable);
 
-	if (ai == nullptr || spawn == nullptr)
+	if (ai == NULL || spawn == NULL)
 		return 0;
 
 	if (ai->getRespawnCounter() > 1) {
 		spawnedCreatures.removeElement(ai.get());
-		ai->setHomeObject(nullptr);
+		ai->setHomeObject(NULL);
 		ai->resetRespawnCounter();
 
 		if (spawnedCreatures.isEmpty()) {
@@ -40,7 +40,7 @@ int DynamicSpawnObserverImplementation::notifyObserverEvent(unsigned int eventTy
 
 	Zone* zone = spawn->getZone();
 
-	if (zone == nullptr)
+	if (zone == NULL)
 		return 0;
 
 	int level = ai->getLevel();
@@ -57,14 +57,14 @@ int DynamicSpawnObserverImplementation::notifyObserverEvent(unsigned int eventTy
 }
 
 void DynamicSpawnObserverImplementation::spawnInitialMobiles(SceneObject* building) {
-	if (building->getZone() == nullptr)
+	if (building->getZone() == NULL)
 		return;
 
 	int spawnLimitAdjustment = (difficulty - 2) / 2;
 
 	int totalNumberToSpawn = (lairTemplate->getSpawnLimit() / 3) + spawnLimitAdjustment;
 	VectorMap<String, int> objectsToSpawn; // String mobileTemplate, int number to spawn
-	const Vector<String>* mobiles = lairTemplate->getWeightedMobiles();
+	Vector<String>* mobiles = lairTemplate->getWeightedMobiles();
 	uint32 lairTemplateCRC = getLairTemplateName().hashCode();
 
 	if (totalNumberToSpawn < 1)
@@ -90,7 +90,7 @@ void DynamicSpawnObserverImplementation::spawnInitialMobiles(SceneObject* buildi
 
 		CreatureTemplate* creatureTemplate = CreatureTemplateManager::instance()->getTemplate(templateToSpawn);
 
-		if (creatureTemplate == nullptr)
+		if (creatureTemplate == NULL)
 			continue;
 
 		float tamingChance = creatureTemplate->getTame();
@@ -103,17 +103,17 @@ void DynamicSpawnObserverImplementation::spawnInitialMobiles(SceneObject* buildi
 			float y = building->getPositionY() + (size - System::random(size * 20) / 10.0f);
 			float z = building->getZone()->getHeight(x, y);
 
-			ManagedReference<CreatureObject*> creo = nullptr;
+			ManagedReference<CreatureObject*> creo = NULL;
 
 			if (creatureManager->checkSpawnAsBaby(tamingChance, babiesSpawned, 500)) {
 				creo = creatureManager->spawnCreatureAsBaby(templateToSpawn.hashCode(), x, z, y);
 				babiesSpawned++;
 			}
 
-			if (creo == nullptr)
+			if (creo == NULL)
 				creo = creatureManager->spawnCreatureWithAi(templateToSpawn.hashCode(), x, z, y);
 
-			if (creo == nullptr)
+			if (creo == NULL)
 				continue;
 
 			if (!creo->isAiAgent()) {

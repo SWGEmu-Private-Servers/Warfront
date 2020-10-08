@@ -29,7 +29,7 @@ public:
 
 		ManagedReference<GuildManager*> guildManager = server->getGuildManager();
 
-		if (guildManager == nullptr)
+		if (guildManager == NULL)
 			return;
 
 		guildManager->sendTransferAckTo(player, newOwnerName, suiBox->getUsingObject().get());

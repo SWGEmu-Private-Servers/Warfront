@@ -36,12 +36,12 @@ public:
 
 		ManagedReference<Zone*> zone = structureObject->getZone();
 
-		if (zone == nullptr)
+		if (zone == NULL)
 			return;
 
 		ZoneServer* zoneServer = structureObject->getZoneServer();
 
-		if (zoneServer != nullptr && zoneServer->isServerLoading()) {
+		if (zoneServer != NULL && zoneServer->isServerLoading()) {
 			schedule(1000);
 
 			return;
@@ -64,7 +64,7 @@ public:
 			for (uint32 i = 1; i <= buildingObject->getTotalCellNumber(); ++i) {
 				ManagedReference<CellObject*> cellObject = buildingObject->getCell(i);
 
-				if (cellObject == nullptr)
+				if (cellObject == NULL)
 					continue;
 
 				int childObjects = cellObject->getContainerObjectsSize();
@@ -108,10 +108,10 @@ public:
 		ManagedReference<SceneObject*> owner = zone->getZoneServer()->getObject(
 				structureObject->getOwnerObjectID());
 
-		if (owner != nullptr) {
+		if (owner != NULL) {
 			ManagedReference<SceneObject*> ghost = owner->getSlottedObject("ghost");
 
-			if (ghost != nullptr && ghost->isPlayerObject()) {
+			if (ghost != NULL && ghost->isPlayerObject()) {
 				PlayerObject* playerObject = cast<PlayerObject*>(ghost.get());
 				playerObject->removeOwnedStructure(structureObject);
 
@@ -122,9 +122,9 @@ public:
 			}
 		}
 
+		structureObject->destroyObjectFromDatabase(true);
 		structureObject->destroyObjectFromWorld(true);
 		structureObject->notifyObservers(ObserverEventType::OBJECTDESTRUCTION, structureObject, 0);
-		structureObject->destroyObjectFromDatabase(true);
 	}
 };
 

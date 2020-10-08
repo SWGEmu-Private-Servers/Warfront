@@ -30,19 +30,19 @@ public:
 		ManagedReference<CreatureObject* > targetCreature =
 				server->getZoneServer()->getObject(target).castTo<CreatureObject*>();
 
-		if(targetCreature == nullptr || !targetCreature->isInCombat())
+		if(targetCreature == NULL || !targetCreature->isInCombat())
 			return INVALIDTARGET;
 
 		Locker clocker(targetCreature, creature);
 
-		if(targetCreature->getMainDefender() == nullptr)
+		if(targetCreature->getMainDefender() == NULL)
 			return INVALIDTARGET;
 
 		uint64 rescuedPlayerId = targetCreature->getMainDefender()->getObjectID();
 		ManagedReference<CreatureObject* > rescuedPlayer =
 				server->getZoneServer()->getObject(rescuedPlayerId).castTo<CreatureObject*>();
 
-		if(rescuedPlayer == nullptr)
+		if(rescuedPlayer == NULL)
 			return INVALIDTARGET;
 
 		if(rescuedPlayer->getGroup() != creature->getGroup())
@@ -59,12 +59,12 @@ public:
 		if(chanceRoll > 30) {
 			ThreatMap* threatMap = targetCreature->getThreatMap();
 			if(threatMap->setThreatState(creature, ThreatStates::TAUNTED, 5000, 5000)) {
-				CombatManager::instance()->broadcastCombatSpam(creature, rescuedPlayer, nullptr, 0, "cbt_spam", "rescue_success", 0);
+				CombatManager::instance()->broadcastCombatSpam(creature, rescuedPlayer, NULL, 0, "cbt_spam", "rescue_success", 0);
 				return SUCCESS;
 			}
 		}
 
-		CombatManager::instance()->broadcastCombatSpam(creature, rescuedPlayer, nullptr, 0, "cbt_spam", "rescue_fail", 0);
+		CombatManager::instance()->broadcastCombatSpam(creature, rescuedPlayer, NULL, 0, "cbt_spam", "rescue_fail", 0);
 
 		return SUCCESS;
 	}

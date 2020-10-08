@@ -25,16 +25,16 @@ public:
 
 		ManagedReference<SceneObject*> targetObject = server->getZoneServer()->getObject(target);
           
-		if (targetObject == nullptr || !targetObject->isCreatureObject() || targetObject == creature)
+		if (targetObject == NULL || !targetObject->isCreatureObject() || targetObject == creature)
 			return INVALIDTARGET;
 
 		CreatureObject *targetCreo = targetObject->asCreatureObject();
-		uint64 targetID = targetCreo->getTargetID();
+		unsigned long targetID = targetCreo->getTargetID();
           
 		if(targetID == 0)
 			return INVALIDTARGET;
 
-		creature->setTargetID(targetID, false); // This should allow people to use heals and buffs on an assisted target
+		creature->setTargetID(targetID, true); // This should allow people to use heals and buffs on an assisted target
 
 		creature->enqueueCommand(STRING_HASHCODE("attack"), 1, targetID, ""); // Should we limit the amount of times this can be enqueued?
 

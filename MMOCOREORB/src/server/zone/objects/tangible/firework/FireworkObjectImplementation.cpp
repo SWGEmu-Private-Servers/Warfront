@@ -26,7 +26,7 @@ void FireworkObjectImplementation::loadTemplateData(SharedObjectTemplate* templa
 
 	FireworkObjectTemplate* templ = cast<FireworkObjectTemplate*>(templateData);
 
-	if (templ == nullptr)
+	if (templ == NULL)
 		return;
 
 	fireworkObject = templ->getFireworkObject();
@@ -39,17 +39,17 @@ void FireworkObjectImplementation::loadTemplateData(SharedObjectTemplate* templa
 void FireworkObjectImplementation::destroyObjectFromDatabase(bool destroyContainedObjects) {
 	ManagedReference<FireworkObject*> firework = _this.getReferenceUnsafeStaticCast();
 
-	if (firework != nullptr && firework->isFireworkObject()) {
+	if (firework != NULL && firework->isFireworkObject()) {
 
 		DataObjectComponent* data = firework->getDataObjectComponent()->get();
 
-		if(data != nullptr && data->isFireworkShowData()) {
+		if(data != NULL && data->isFireworkShowData()) {
 			FireworkShowDataComponent* fireworkShowData = cast<FireworkShowDataComponent*>(data);
 			if (fireworkShowData->getTotalFireworkCount() > 0) {
 				for (int i=0; i< fireworkShowData->getTotalFireworkCount(); i++) {
 					ManagedReference<FireworkObject*> firework = fireworkShowData->getFirework(0);
 					fireworkShowData->removeFirework(0);
-					if (firework != nullptr)
+					if (firework != NULL)
 						firework->destroyObjectFromDatabase(false);
 				}
 			}
@@ -66,18 +66,18 @@ void FireworkObjectImplementation::fillAttributeList(AttributeListMessage* alm, 
 
 	ManagedReference<FireworkObject*> firework = _this.getReferenceUnsafeStaticCast();
 
-	if (firework == nullptr)
+	if (firework == NULL)
 		return;
 
 	DataObjectComponent* data = firework->getDataObjectComponent()->get();
 
-	if (data == nullptr || !data->isFireworkShowData()) {
+	if (data == NULL || !data->isFireworkShowData()) {
 		String effect = "@firework_n:" + fireworkObject.subString(fireworkObject.lastIndexOf("/") + 1, fireworkObject.lastIndexOf("."));
 		alm->insertAttribute("@obj_attr_n:pattern", effect);
 	} else {
 		FireworkShowDataComponent* fireworkShowData = cast<FireworkShowDataComponent*>(data);
 
-		if (fireworkShowData == nullptr)
+		if (fireworkShowData == NULL)
 			return;
 
 		alm->insertAttribute("examine_hoppersize", firework->getCapacity());
@@ -88,7 +88,7 @@ void FireworkObjectImplementation::fillAttributeList(AttributeListMessage* alm, 
 
 		for (int i = 0; i < totalFireworks; i++) {
 			ManagedReference<FireworkObject*> firework = fireworkShowData->getFirework(i);
-			if (firework == nullptr)
+			if (firework == NULL)
 				continue;
 			String fireworkObj = firework->getFireworkObjectPath();
 			String effect = "@firework_n:" + fireworkObj.subString(fireworkObj.lastIndexOf("/") + 1, fireworkObj.lastIndexOf("."));
@@ -103,15 +103,15 @@ void FireworkObjectImplementation::updateCraftingValues(CraftingValues* values, 
 
 	ManagedReference<FireworkObject*> firework = _this.getReferenceUnsafeStaticCast();
 
-	if (firework == nullptr)
+	if (firework == NULL)
 		return;
 
 	DataObjectComponent* data = firework->getDataObjectComponent()->get();
 
-	if (data != nullptr && data->isFireworkShowData()) {
+	if (data != NULL && data->isFireworkShowData()) {
 		FireworkShowDataComponent* fireworkShowData = cast<FireworkShowDataComponent*>(data);
 
-		if (fireworkShowData == nullptr)
+		if (fireworkShowData == NULL)
 			return;
 
 		capacity = values->getCurrentValue("charges");
@@ -125,15 +125,15 @@ int FireworkObjectImplementation::getDisplayedUseCount() {
 
 	ManagedReference<FireworkObject*> firework = _this.getReferenceUnsafeStaticCast();
 
-	if (firework == nullptr)
+	if (firework == NULL)
 		return 0;
 
 	DataObjectComponent* data = firework->getDataObjectComponent()->get();
 
-	if (data != nullptr && data->isFireworkShowData()) {
+	if (data != NULL && data->isFireworkShowData()) {
 		FireworkShowDataComponent* fireworkShowData = cast<FireworkShowDataComponent*>(data);
 
-		if (fireworkShowData == nullptr)
+		if (fireworkShowData == NULL)
 			return 0;
 
 		return fireworkShowData->getTotalFireworkCount();
@@ -143,7 +143,7 @@ int FireworkObjectImplementation::getDisplayedUseCount() {
 }
 
 void FireworkObjectImplementation::launch(CreatureObject* player, int removeDelay) {
-	if (player == nullptr)
+	if (player == NULL)
 		return;
 
 	if(getDelay() == 0) {
@@ -158,7 +158,7 @@ void FireworkObjectImplementation::launch(CreatureObject* player, int removeDela
 void FireworkObjectImplementation::completeLaunch(CreatureObject* player, int removeDelay) {
 	ManagedReference<StaticObject*> launcherObject = (getZoneServer()->createObject(fireworkObject.hashCode(), 0)).castTo<StaticObject*>();
 
-	if (launcherObject == nullptr)
+	if (launcherObject == NULL)
 		return;
 
 	player->setPosture(CreaturePosture::CROUCHED);
@@ -197,17 +197,17 @@ void FireworkObjectImplementation::completeLaunch(CreatureObject* player, int re
 }
 
 void FireworkObjectImplementation::beginShowLaunch(CreatureObject* player) {
-	if (player == nullptr || player->getParent() != nullptr)
+	if (player == NULL || player->getParent() != NULL)
 		return;
 
 	ManagedReference<FireworkObject*> fireworkShow = _this.getReferenceUnsafeStaticCast();
 
-	if (fireworkShow == nullptr)
+	if (fireworkShow == NULL)
 		return;
 
 	DataObjectComponent* data = fireworkShow->getDataObjectComponent()->get();
 
-	if(data == nullptr || !data->isFireworkShowData())
+	if(data == NULL || !data->isFireworkShowData())
 		return;
 
 	FireworkShowDataComponent* fireworkShowData = cast<FireworkShowDataComponent*>(data);
@@ -217,7 +217,7 @@ void FireworkObjectImplementation::beginShowLaunch(CreatureObject* player) {
 
 	ManagedReference<StaticObject*> showLauncherObject = (getZoneServer()->createObject(fireworkObject.hashCode(), 0)).castTo<StaticObject*>();
 
-	if (showLauncherObject == nullptr)
+	if (showLauncherObject == NULL)
 		return;
 
 	player->setPosture(CreaturePosture::CROUCHED);

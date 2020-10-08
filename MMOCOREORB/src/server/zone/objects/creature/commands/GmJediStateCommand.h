@@ -25,7 +25,7 @@ public:
 
 		ManagedReference<SceneObject*> object = server->getZoneServer()->getObject(target);
 
-		if (object == nullptr || !object->isCreatureObject())
+		if (object == NULL || !object->isCreatureObject())
 			return INVALIDTARGET;
 
 		CreatureObject* targetCreature = cast<CreatureObject*>( object.get());
@@ -33,7 +33,7 @@ public:
 		Locker clocker(targetCreature, creature);
 
 		ManagedReference<PlayerObject*> targetGhost = targetCreature->getPlayerObject();
-		if(targetGhost == nullptr)
+		if(targetGhost == NULL)
 			return INVALIDTARGET;
 
 		StringTokenizer args(arguments.toString());

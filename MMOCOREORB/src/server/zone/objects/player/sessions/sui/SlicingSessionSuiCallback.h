@@ -29,10 +29,10 @@ public:
 		ManagedReference<Facade*> facade = player->getActiveSession(SessionFacadeType::SLICING);
 		ManagedReference<SlicingSession*> session = dynamic_cast<SlicingSession*>(facade.get());
 
-		if (session == nullptr) {
+		if (session == NULL) {
 			ManagedReference<TangibleObject*> obj = cast<TangibleObject*>( suiBox->getUsingObject().get().get());
 
-			if (obj != nullptr) {
+			if (obj != NULL) {
 				Locker crosslock(obj, player);
 				obj->dropActiveSession(SessionFacadeType::SLICING);
 			}

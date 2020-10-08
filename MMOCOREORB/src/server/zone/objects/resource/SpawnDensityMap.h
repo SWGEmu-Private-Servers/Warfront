@@ -12,8 +12,6 @@
 #define SPAWNDENSITYMAP_H_
 
 #include "engine/engine.h"
-#include "engine/util/json_utils.h"
-
 #include "simplexnoise/SimplexNoise.h"
 
 /*
@@ -37,7 +35,7 @@ public:
 		MEDIUMDENSITY = 2,
 		LOWDENSITY    = 3
 	};
-
+		
 
 public:
 	SpawnDensityMap() : Object(), Serializable() {
@@ -72,18 +70,6 @@ public:
 
 	}
 
-	friend void to_json(nlohmann::json& j, const SpawnDensityMap& m) {
-		j["seed"] = m.seed;
-		j["modifier"] = m.modifier;
-		j["density"] = m.density;
-		j["totalUnits"] = m.totalUnits;
-		j["unitsHarvested"] = m.unitsHarvested;
-		j["minX"] = m.minX;
-		j["maxX"] = m.maxX;
-		j["minY"] = m.minY;
-		j["maxY"] = m.maxY;
-	}
-
 	SpawnDensityMap& operator=(const SpawnDensityMap& map) {
 		if (this == &map)
 			return *this;
@@ -103,7 +89,7 @@ public:
 	}
 
 
-	float getDensityAt(float x, float y) const {
+	float getDensityAt(float x, float y) {
 		x -= minX;
 		y = maxY - y;
 		float value = SimplexNoise::noise(x * modifier, y * modifier, seed * modifier);
@@ -114,7 +100,7 @@ public:
 		return value * density;
 	}
 
-	void print() const {
+	void print() {
 		System::out << "Seed: " << seed << " Modifier: "
 				<< modifier << " Density: " << density << endl;
 	}
@@ -129,9 +115,9 @@ private:
 		seed = System::random(time(0));
 
 		if(ore)
-			modifier = .00015f;
+			modifier = .00015;
 		else
-			modifier = .0006f;
+			modifier = .0006;
 
 		switch(concentration) {
 		case 1:

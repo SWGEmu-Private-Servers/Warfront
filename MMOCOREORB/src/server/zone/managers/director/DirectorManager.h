@@ -49,8 +49,8 @@ namespace server {
  namespace zone {
   namespace managers {
    namespace director {
-   	class PersistentEvent;
-   	class ScreenPlayTask;
+   class PersistentEvent;
+   class ScreenPlayTask;
 
 	class DirectorManager : public Singleton<DirectorManager>, public Object, public Logger, public ReadWriteLock {
 		ThreadLocal<Lua*> localLua;
@@ -75,7 +75,10 @@ namespace server {
 
 	public:
 		DirectorManager();
-		~DirectorManager();
+
+		~DirectorManager() {
+			sharedMemory = NULL;
+		}
 
 		void loadPersistentEvents();
 		void loadPersistentStatus();
@@ -88,7 +91,7 @@ namespace server {
 		ConversationScreen* runScreenHandlers(const String& luaClass, ConversationTemplate* conversationTemplate, CreatureObject* conversingPlayer, CreatureObject* conversingNPC, int selectedOption, ConversationScreen* conversationScreen);
 
 		void setQuestStatus(const String& keyString, const String& valString);
-		String getQuestStatus(const String& keyString) const;
+		String getQuestStatus(const String& keyString);
 		void removeQuestStatus(const String& key);
 
 		String readStringSharedMemory(const String& key);
@@ -98,8 +101,8 @@ namespace server {
 		QuestVectorMap* createQuestVectorMap(const String& keyString);
 		void removeQuestVectorMap(const String& keyString);
 
-		Vector<Reference<ScreenPlayTask*> > getObjectEvents(SceneObject* obj) const;
-		String getStringSharedMemory(const String& key) const;
+		Vector<Reference<ScreenPlayTask*> > getObjectEvents(SceneObject* obj);
+		String getStringSharedMemory(const String& key);
 
 		virtual Lua* getLuaInstance();
 		int runScreenPlays();
@@ -129,6 +132,7 @@ namespace server {
 		static int createLoot(lua_State* L);
 		static int createLootSet(lua_State* L);
 		static int createLootFromCollection(lua_State* L);
+
 		static int getRandomNumber(lua_State* L);
 		static int spatialChat(lua_State* L);
 		static int spatialMoodChat(lua_State* L);
@@ -198,9 +202,10 @@ namespace server {
 		static int spawnTheaterObject(lua_State* L);
 		static int getSchematicItemName(lua_State* L);
 		static int getBadgeListByType(lua_State* L);
+		static int broadcastGalaxy(lua_State* L);
 
 	private:
-		static void setupLuaPackagePath(Lua* luaEngine);
+		void setupLuaPackagePath(Lua* luaEngine);
 		static void printTraceError(lua_State* L, const String& error);
 		void initializeLuaEngine(Lua* luaEngine);
 		int loadScreenPlays(Lua* luaEngine);

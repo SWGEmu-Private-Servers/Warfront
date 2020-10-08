@@ -17,12 +17,6 @@ public:
 
 	}
 
-	void writeJSON(nlohmann::json& j) const {
-		DataObjectComponent::writeJSON(j);
-
-		SERIALIZE_JSON_MEMBER(charges);
-	}
-
 	void setCharges(int num) {
 		charges = num;
 	}

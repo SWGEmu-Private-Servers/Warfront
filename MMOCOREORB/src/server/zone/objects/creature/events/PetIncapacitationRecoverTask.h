@@ -54,7 +54,7 @@ public:
 
 			CreatureObject* owner = pet->getLinkedCreature().get();
 
-			if (owner != nullptr) {
+			if (owner != NULL) {
 				pet->setFollowObject(owner);
 				pet->activateMovementEvent();
 			}
@@ -62,7 +62,7 @@ public:
 			if (autostore) {
 				PetControlDevice* device = pet->getControlDevice().get().castTo<PetControlDevice*>();
 
-				if (device != nullptr && owner != nullptr) {
+				if (device != NULL && owner != NULL) {
 					Locker clocker(owner, pet);
 					Locker locker(device);
 

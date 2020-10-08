@@ -13,6 +13,7 @@ public:
 
 		buffCRC = BuffCRC::JEDI_FORCE_SPEED_1;
 
+		blockingCRCs.add(BuffCRC::JEDI_FORCE_SPEED_1);
 		blockingCRCs.add(BuffCRC::JEDI_FORCE_SPEED_2);
 
 		skillMods.put("combat_haste", 15);

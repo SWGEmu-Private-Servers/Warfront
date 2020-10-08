@@ -22,15 +22,6 @@
 #include "ingredientslots/ResourceSlot.h"
 #include "ingredientslots/ComponentSlot.h"
 
-void ManufactureSchematicImplementation::destroyObjectFromDatabase(bool destroyContainedObjects) {
-	if (prototype != nullptr) {
-		prototype->destroyObjectFromDatabase(true);
-		prototype = nullptr;
-	}
-
-	SceneObjectImplementation::destroyObjectFromDatabase(destroyContainedObjects);
-}
-
 void ManufactureSchematicImplementation::fillAttributeList(AttributeListMessage* alm, CreatureObject* object) {
 
 	alm->insertAttribute("data_volume", dataSize);
@@ -41,7 +32,7 @@ void ManufactureSchematicImplementation::fillAttributeList(AttributeListMessage*
 
 			BlueprintEntry* entry = factoryBlueprint.getCompleteEntry(i);
 
-			if(entry == nullptr)
+			if(entry == NULL)
 				continue;
 
 			entry->insertSchematicAttribute(alm);
@@ -49,7 +40,7 @@ void ManufactureSchematicImplementation::fillAttributeList(AttributeListMessage*
 
 		alm->insertAttribute("manf_limit", manufactureLimit);
 
-		if (prototype != nullptr)
+		if (prototype != NULL)
 			prototype->fillAttributeList(alm, object);
 
 	} catch (Exception& e) {
@@ -62,7 +53,7 @@ void ManufactureSchematicImplementation::sendTo(SceneObject* player, bool doClos
 		return;
 
 	ManagedReference<SceneObject*> parent = getParent().get();
-	if (parent == nullptr)
+	if (parent == NULL)
 		return;
 
 	// Scene Create
@@ -88,14 +79,14 @@ void ManufactureSchematicImplementation::sendTo(SceneObject* player, bool doClos
 void ManufactureSchematicImplementation::sendBaselinesTo(SceneObject* player) {
 	ManagedReference<DraftSchematic* > draftSchematic = this->draftSchematic;
 
-	if (!player->isPlayerCreature() || draftSchematic == nullptr)
+	if (!player->isPlayerCreature() || draftSchematic == NULL)
 		return;
 
 	CreatureObject* playerCreature = cast<CreatureObject*>( player);
 
 	ManufactureSchematicObjectMessage3* msco3;
 
-	if(prototype != nullptr)
+	if(prototype != NULL)
 		msco3 = new ManufactureSchematicObjectMessage3(_this.getReferenceUnsafeStaticCast(), playerCreature->getFirstName());
 	 else
 		msco3 = new ManufactureSchematicObjectMessage3(getObjectID(), complexity, playerCreature->getFirstName());
@@ -125,11 +116,11 @@ void ManufactureSchematicImplementation::setDraftSchematic(DraftSchematic* schem
 
 void ManufactureSchematicImplementation::synchronizedUIListen(CreatureObject* player, int value) {
 
-	if (!player->isPlayerCreature() || draftSchematic == nullptr)
+	if (!player->isPlayerCreature() || draftSchematic == NULL)
 		return;
 
 	Reference<CraftingSession*> session = player->getActiveSession(SessionFacadeType::CRAFTING).castTo<CraftingSession*>();
-	if (session == nullptr || session->getSchematic().get() != _this.getReferenceUnsafeStaticCast()) {
+	if (session == NULL || session->getSchematic().get() != _this.getReferenceUnsafeStaticCast()) {
 		return;
 	}
 
@@ -270,17 +261,17 @@ void ManufactureSchematicImplementation::initializeIngredientSlots() {
 
 	Locker locker(_this.getReferenceUnsafeStaticCast());
 
-	if(draftSchematic == nullptr || initialized)
+	if(draftSchematic == NULL || initialized)
 		return;
 
 	ingredientSlots.removeAll();
-	ingredientNames.removeAll(nullptr);
-	ingredientTypes.removeAll(nullptr);
-	slotOIDs.removeAll(nullptr);
-	slotQuantities.removeAll(nullptr);
-	slotQualities.removeAll(nullptr);
-	slotClean.removeAll(nullptr);
-	slotIndexes.removeAll(nullptr);
+	ingredientNames.removeAll(NULL);
+	ingredientTypes.removeAll(NULL);
+	slotOIDs.removeAll(NULL);
+	slotQuantities.removeAll(NULL);
+	slotQualities.removeAll(NULL);
+	slotClean.removeAll(NULL);
+	slotIndexes.removeAll(NULL);
 	craftingValues->clearAll();
 
 	assembled = false;
@@ -292,7 +283,7 @@ void ManufactureSchematicImplementation::initializeIngredientSlots() {
 
 	for (int i = 0; i < draftSchematic->getDraftSlotCount(); ++i) {
 
-		Reference<IngredientSlot* > ingredientSlot = nullptr;
+		Reference<IngredientSlot* > ingredientSlot = NULL;
 		Reference<DraftSlot* > draftSlot = draftSchematic->getDraftSlot(i);
 		
 		ingredientNames.add(StringId(draftSlot->getStringIdFile(), draftSlot->getStringIdName()));
@@ -348,7 +339,7 @@ int ManufactureSchematicImplementation::addIngredientToSlot(CreatureObject* play
 
 	Reference<IngredientSlot*> ingredientSlot = ingredientSlots.get(slot);
 
-	if (ingredientSlot == nullptr)
+	if (ingredientSlot == NULL)
 		return IngredientSlot::INVALID;
 
 	bool wasEmpty = false;
@@ -412,7 +403,7 @@ int ManufactureSchematicImplementation::removeIngredientFromSlot(CreatureObject*
 
 	Reference<IngredientSlot*> ingredientSlot = ingredientSlots.get(slot);
 
-	if (ingredientSlot == nullptr)
+	if (ingredientSlot == NULL)
 		return IngredientSlot::INVALID;
 
 	if (!ingredientSlot->removeAll(player))
@@ -488,12 +479,12 @@ void ManufactureSchematicImplementation::cleanupIngredientSlots(CreatureObject* 
 	while (ingredientSlots.size() > 0) {
 		Reference<IngredientSlot*>  slot = ingredientSlots.remove(0);
 
-		if (slot != nullptr) {
+		if (slot != NULL) {
 
 			if(!assembled)
 				slot->returnToParents(player);
 
-			slot = nullptr;
+			slot = NULL;
 		}
 	}
 }
@@ -512,7 +503,7 @@ bool ManufactureSchematicImplementation::isReadyForAssembly() {
 		Reference<IngredientSlot* > slot = ingredientSlots.get(i);
 
 		// null slots shouldn't happen unless something bad happened
-		if (slot == nullptr)
+		if (slot == NULL)
 			return false;
 
 		if (slot->isOptional()) // Skip as it can be blank
@@ -547,8 +538,8 @@ void ManufactureSchematicImplementation::setAssembled() {
 	for (int i = 0; i < ingredientSlots.size(); ++i) {
 		Reference<IngredientSlot*> ingredientSlot = ingredientSlots.get(i);
 
-		if (ingredientSlot == nullptr) {
-			warning("nullptr ingredient in setAssembled");
+		if (ingredientSlot == NULL) {
+			warning("NULL ingredient in setAssembled");
 			continue;
 		}
 
@@ -564,7 +555,7 @@ void ManufactureSchematicImplementation::setPrototype(TangibleObject* tano) {
 	Locker locker(_this.getReferenceUnsafeStaticCast());
 
 	prototype = tano;
-	crafter = nullptr;
+	crafter = NULL;
 	dataSize = draftSchematic->getSize();
 
 	createFactoryBlueprint();
@@ -577,18 +568,18 @@ void ManufactureSchematicImplementation::createFactoryBlueprint() {
 	for (int i = 0; i < ingredientSlots.size(); ++i) {
 		Reference<IngredientSlot*> ingredientSlot = ingredientSlots.get(i);
 
-		if(ingredientSlot == nullptr) {
-			error("nullptr ingredient slot in createFactoryBlueprint: " + getDisplayedName());
+		if(ingredientSlot == NULL) {
+			error("NULL ingredient slot in createFactoryBlueprint: " + getDisplayedName());
 			continue;
 		}
 
 		if(ingredientSlot->isOptional()) {
 
-			if(ingredientSlot->getFactoryIngredient() == nullptr)
+			if(ingredientSlot->getFactoryIngredient() == NULL)
 				continue;
 
-		} else if (ingredientSlot->getFactoryIngredient() == nullptr) {
-			warning("nullptr ingredient in createFactoryBlueprint");
+		} else if (ingredientSlot->getFactoryIngredient() == NULL) {
+			warning("NULL ingredient in createFactoryBlueprint");
 			continue;
 		}
 
@@ -597,7 +588,7 @@ void ManufactureSchematicImplementation::createFactoryBlueprint() {
 }
 
 int ManufactureSchematicImplementation::getFactoryCrateSize() {
-	if (draftSchematic == nullptr)
+	if (draftSchematic == NULL)
 		return 0;
 
 	return draftSchematic->getFactoryCrateSize();
@@ -609,7 +600,7 @@ bool ManufactureSchematicImplementation::allowFactoryRun() {
 }
 
 int ManufactureSchematicImplementation::getLabratory() {
-	if(draftSchematic == nullptr)
+	if(draftSchematic == NULL)
 		return -1;
 
 	return draftSchematic->getLabratory();

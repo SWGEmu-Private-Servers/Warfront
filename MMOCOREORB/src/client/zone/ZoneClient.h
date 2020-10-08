@@ -47,7 +47,7 @@ public:
 	}
 
 	ServiceClient* createConnection(Socket* sock, SocketAddress& addr) {
-		return nullptr;
+		return NULL;
 	}
 
 	bool deleteConnection(ServiceClient* client) {

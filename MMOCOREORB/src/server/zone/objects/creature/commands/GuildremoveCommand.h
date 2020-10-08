@@ -35,33 +35,33 @@ public:
 			return GENERALERROR;
 		}
 
-		if(server == nullptr)
+		if(server == NULL)
 			return GENERALERROR;
 
 		ManagedReference<ZoneServer* > zserv = server->getZoneServer();
-		if( zserv == nullptr )
+		if( zserv == NULL )
 			return GENERALERROR;
 
-		ManagedReference<CreatureObject*> playerToKick = nullptr;
+		ManagedReference<CreatureObject*> playerToKick = NULL;
 		ManagedReference<SceneObject* > targetedObject = zserv->getObject(target);
 		ManagedReference<GuildObject*> guild = player->getGuildObject().get();
 		ManagedReference<GuildManager*> guildManager = zserv->getGuildManager();
 		ManagedReference<PlayerManager*> playerManager = zserv->getPlayerManager();
 
-		if( guild == nullptr || guildManager == nullptr || playerManager == nullptr)
+		if( guild == NULL || guildManager == NULL || playerManager == NULL)
 			return GENERALERROR;
 
 		String lowerNamedTarget = arguments.toString().toLowerCase();
 
 		if(!lowerNamedTarget.isEmpty()) {
 			playerToKick = playerManager->getPlayer(lowerNamedTarget);
-		} else if(targetedObject != nullptr && targetedObject->isPlayerCreature()) {
+		} else if(targetedObject != NULL && targetedObject->isPlayerCreature()) {
 			playerToKick = cast<CreatureObject*>( targetedObject.get());
 		} else {
 			playerToKick = player;
 		}
 
-		if(playerToKick == nullptr || !playerToKick->isInGuild() || !guild->hasMember(playerToKick->getObjectID())) {
+		if(playerToKick == NULL || !playerToKick->isInGuild() || !guild->hasMember(playerToKick->getObjectID())) {
 			player->sendSystemMessage("@guild:generic_fail_no_permission"); //You do not have permission to perform that operation.
 			return GENERALERROR;
 		}

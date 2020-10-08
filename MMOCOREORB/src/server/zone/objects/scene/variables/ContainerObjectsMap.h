@@ -9,7 +9,6 @@
 #define CONTAINEROBJECTSMAP_H_
 
 #include "engine/engine.h"
-#include "system/thread/atomic/AtomicTime.h"
 
 namespace server {
  namespace zone {
@@ -24,11 +23,11 @@ namespace server {
    		VectorMap<uint64, ManagedReference<SceneObject*> > containerObjects;
    		AtomicReference<VectorMap<uint64, uint64>*> oids;
 
-   		AtomicTime lastAccess;
+   		Time lastAccess;
 
    		ManagedWeakReference<SceneObject*> container;
 
-   		mutable ReadWriteLock* containerLock;
+   		ReadWriteLock* containerLock;
 
    		Reference<UnloadContainerTask*> unloadTask;
 
@@ -59,7 +58,7 @@ namespace server {
    		void removeAll();
    		void removeElementAt(int index);
 
-   		bool contains(uint64 oid) const;
+   		bool contains(uint64 oid);
    		int size();
 
    		ManagedReference<SceneObject*> get(int index);
@@ -78,42 +77,30 @@ namespace server {
    			operationMode = NORMAL_LOAD;
    		}
 
-   		bool hasDelayedLoadOperationMode() const {
+   		bool hasDelayedLoadOperationMode() {
    			return operationMode == DELAYED_LOAD;
    		}
 
-   		bool isLoaded(bool readLock = true) const {
+   		bool isLoaded(bool readLock = true) {
    			if (readLock) {
    				ReadLocker locker(containerLock);
 
-   				return operationMode == NORMAL_LOAD || oids == nullptr;
+   				return operationMode == NORMAL_LOAD || oids == NULL;
    			} else {
-   				return operationMode == NORMAL_LOAD || oids == nullptr;
+   				return operationMode == NORMAL_LOAD || oids == NULL;
    			}
    		}
 
-   		const AtomicTime* getLastAccess() const {
+   		Time* getLastAccess() {
    			return &lastAccess;
    		}
 
-   		ManagedWeakReference<SceneObject*> getContainer() const {
+   		ManagedWeakReference<SceneObject*> getContainer() {
    			return container;
    		}
 
    		void cancelUnloadTask();
-
-		VectorMap<uint64, uint64>* getOids() const {
-			return oids.get();
-		}
-
-		const VectorMap<uint64, ManagedReference<SceneObject*> >* getContainerObjects() const {
-			return &containerObjects;
-		}
-
-
    	};
-
-	void to_json(nlohmann::json& k, const server::zone::objects::scene::ContainerObjectsMap& map);
    }
   }
  }

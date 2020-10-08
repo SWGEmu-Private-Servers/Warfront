@@ -9,14 +9,14 @@
 const String DeliverMissionScreenHandler::STARTSCREENHANDLERID = "convoscreenstart";
 
 MissionObject* DeliverMissionScreenHandler::getRelevantMissionObject(CreatureObject* player, CreatureObject* npc) {
-	if (player == nullptr || npc == nullptr) {
-		return nullptr;
+	if (player == NULL || npc == NULL) {
+		return NULL;
 	}
 
 	SceneObject* datapad = player->getSlottedObject("datapad");
 
-	if (datapad == nullptr) {
-		return nullptr;
+	if (datapad == NULL) {
+		return NULL;
 	}
 
 	int datapadSize = datapad->getContainerObjectsSize();
@@ -25,10 +25,10 @@ MissionObject* DeliverMissionScreenHandler::getRelevantMissionObject(CreatureObj
 		if (datapad->getContainerObject(i)->isMissionObject()) {
 			Reference<MissionObject*> mission = datapad->getContainerObject(i).castTo<MissionObject*>();
 
-			if (mission != nullptr && (mission->getTypeCRC() == MissionTypes::DELIVER ||
+			if (mission != NULL && (mission->getTypeCRC() == MissionTypes::DELIVER ||
 					mission->getTypeCRC() == MissionTypes::CRAFTING)) {
 				DeliverMissionObjective* objective = cast<DeliverMissionObjective*>(mission->getMissionObjective());
-				if (objective != nullptr) {
+				if (objective != NULL) {
 					//Check if it is target or destination NPC
 					if (isTargetNpc(objective, npc) ||
 							isDestinationNpc(objective, npc)) {
@@ -40,13 +40,13 @@ MissionObject* DeliverMissionScreenHandler::getRelevantMissionObject(CreatureObj
 	}
 
 	//No relevant mission found.
-	return nullptr;
+	return NULL;
 }
 
 bool DeliverMissionScreenHandler::isTargetNpc(DeliverMissionObjective* objective, CreatureObject* npc) {
 	ManagedReference<AiAgent*> targetNpc = objective->getTargetSpawn();
 
-	if (targetNpc == nullptr) {
+	if (targetNpc == NULL) {
 		return false;
 	}
 
@@ -56,7 +56,7 @@ bool DeliverMissionScreenHandler::isTargetNpc(DeliverMissionObjective* objective
 bool DeliverMissionScreenHandler::isDestinationNpc(DeliverMissionObjective* objective, CreatureObject* npc) {
 	ManagedReference<AiAgent*> destinationNpc = objective->getDestinationSpawn();
 
-	if (destinationNpc == nullptr) {
+	if (destinationNpc == NULL) {
 		return false;
 	}
 
@@ -123,14 +123,14 @@ ConversationScreen* DeliverMissionScreenHandler::handleScreen(CreatureObject* co
 	//Get relevant mission object if it exists.
 	MissionObject* mission = getRelevantMissionObject(conversingPlayer, conversingNPC);
 
-	if (mission == nullptr) {
+	if (mission == NULL) {
 		//NPC is not related to any mission for this player.
 		int randomAnswer = System::random(4);
 		conversationScreen->setDialogText("@mission/mission_generic:deliver_incorrect_player_" + String::valueOf(randomAnswer));
 	} else {
 		//NPC is related to a mission for this player.
 		Reference<DeliverMissionObjective*> objective = cast<DeliverMissionObjective*>(mission->getMissionObjective());
-		if (objective != nullptr) {
+		if (objective != NULL) {
 			Locker locker(objective, conversingPlayer);
 
 			//Run mission logic.

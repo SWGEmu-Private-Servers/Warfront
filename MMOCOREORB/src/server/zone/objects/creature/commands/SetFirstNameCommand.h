@@ -23,39 +23,114 @@ public:
 		if (!checkInvalidLocomotions(creature))
 			return INVALIDLOCOMOTION;
 
-		auto zoneServer = server->getZoneServer();
+		ZoneServer* zoneServer = server->getZoneServer();
 
 		Reference<SceneObject*> targetObj = zoneServer->getObject(target);
 
-		if(targetObj == nullptr || !targetObj->isPlayerCreature()) {
+		if(targetObj == NULL || !targetObj->isPlayerCreature()) {
 			creature->sendSystemMessage("Invalid target. This command only works on players");
 			return INVALIDTARGET;
 		}
 
-		String newFirstName = arguments.toString();
-
-		if (newFirstName.isEmpty()) {
-			creature->sendSystemMessage("Usage: /setfirstname {NewFirstName}");
-			return INVALIDPARAMETERS;
-		}
-
 		Locker clocker(targetObj, creature);
 
-		Reference<CreatureObject*> targetCreature = targetObj.castTo<CreatureObject*>();
+		String newName = arguments.toString();
 
-		String oldFirstName = targetCreature->getFirstName();
+		CreatureObject* targetCreature = targetObj.castTo<CreatureObject*>();
 
-		String errmsg = targetCreature->setFirstName(newFirstName);
+		NameManager* nameManager = server->getNameManager();
 
-		if (!errmsg.isEmpty()) {
-			creature->sendSystemMessage(errmsg);
+		int result = nameManager->validateName(newName, targetCreature->getSpecies());
+
+		switch (result) {
+		case NameManagerResult::ACCEPTED:
+			break;
+		case NameManagerResult::DECLINED_EMPTY:
+			creature->sendSystemMessage("First names may not be empty.");
 			return INVALIDPARAMETERS;
+			break;
+		case NameManagerResult::DECLINED_RACE_INAPP:
+			creature->sendSystemMessage("That name is inappropriate for the player's species.");
+			return INVALIDPARAMETERS;
+			break;
+		case NameManagerResult::DECLINED_PROFANE:
+			creature->sendSystemMessage("That name is profane.");
+			return INVALIDPARAMETERS;
+			break;
+		case NameManagerResult::DECLINED_DEVELOPER:
+			creature->sendSystemMessage("That is a developer's name.");
+			return INVALIDPARAMETERS;
+			break;
+		case NameManagerResult::DECLINED_FICT_RESERVED:
+			creature->sendSystemMessage("That name is a reserved fictional name.");
+			return INVALIDPARAMETERS;
+			break;
+		case NameManagerResult::DECLINED_RESERVED:
+			creature->sendSystemMessage("That name is reserved.");
+			return INVALIDPARAMETERS;
+			break;
+		case NameManagerResult::DECLINED_SYNTAX:
+			creature->sendSystemMessage("That name contains invalid syntax.");
+			return INVALIDPARAMETERS;
+			break;
 		}
 
-		creature->sendSystemMessage("First name changed from '" + oldFirstName + "' to '" + newFirstName + "'");
+		PlayerManager* playerManager = zoneServer->getPlayerManager();
+
+		if (playerManager->existsName(newName)) {
+			creature->sendSystemMessage("That name is already in use");
+			return GENERALERROR;
+		}
+
+		String oldFirstName = targetCreature->getFirstName();
+		String oldLastName = targetCreature->getLastName();
+
+		String newFullName;
+		if (oldLastName.isEmpty()) {
+			newFullName = newName;
+		} else {
+			newFullName = newName + " " + oldLastName;
+		}
+
+		targetCreature->setCustomObjectName(newFullName, true);
+
+		ChatManager* chatManager = zoneServer->getChatManager();
+		chatManager->removePlayer(oldFirstName);
+		chatManager->addPlayer(targetCreature);
+
+		playerManager->removePlayer(oldFirstName);
+		playerManager->addPlayer(targetCreature);
+
+		// Remove the old name from other people's friends lists
+		PlayerObject* targetGhost = targetCreature->getPlayerObject();
+		targetGhost->removeAllReverseFriends(oldFirstName);
+
+		String creatureFirstName = targetCreature->getFirstName();
+		Database::escapeString(creatureFirstName);
+
+		int galaxyID = zoneServer->getGalaxyID();
+
+		StringBuffer charDirtyQuery;
+		charDirtyQuery
+				<< "UPDATE `characters_dirty` SET `firstname` = '"  << creatureFirstName
+				<< "' WHERE `character_oid` = '" << targetCreature->getObjectID()
+				<< "' AND `galaxy_id` = '" << galaxyID << "'";
+
+		ServerDatabase::instance()->executeStatement(charDirtyQuery);
+
+		StringBuffer charQuery;
+		charQuery
+				<< "UPDATE `characters` SET `firstname` = '"  << creatureFirstName
+				<< "' WHERE `character_oid` = '" << targetCreature->getObjectID()
+				<< "' AND `galaxy_id` = '" << galaxyID << "'";
+
+		ServerDatabase::instance()->executeStatement(charQuery);
+
+		creature->sendSystemMessage("First name changed from '" + oldFirstName + "' to '" + newName + "'");
 
 		return SUCCESS;
 	}
+
 };
 
-#endif // SETFIRSTNAMECOMMAND_H_
+#endif //SETFIRSTNAMECOMMAND_H_

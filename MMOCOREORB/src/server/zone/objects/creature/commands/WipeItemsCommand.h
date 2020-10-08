@@ -30,11 +30,11 @@ public:
 			ManagedReference<SceneObject* > object =
 					server->getZoneServer()->getObject(target);
 
-			ManagedReference<CreatureObject*> player = nullptr;
+			ManagedReference<CreatureObject*> player = NULL;
 
 			StringTokenizer args(arguments.toString());
 
-			if (object == nullptr || !object->isPlayerCreature())
+			if (object == NULL || !object->isPlayerCreature())
 			{
 				String firstName;
 
@@ -49,7 +49,7 @@ public:
 				player = cast<CreatureObject*>( object.get());
 			}
 
-			if (player == nullptr) {
+			if (player == NULL) {
 				creature->sendSystemMessage("Invalid arguments for /wipeItems. Usage: /wipeItems playerName");
 				return GENERALERROR;
 			}
@@ -58,7 +58,7 @@ public:
 
 			SceneObject* inventory = player->getSlottedObject("inventory");
 
-			if (inventory == nullptr)
+			if (inventory == NULL)
 				return GENERALERROR;
 
 			while (inventory->getContainerObjectsSize() > 0)

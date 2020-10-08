@@ -25,7 +25,7 @@ public:
 			return GENERALERROR;
 
 		ChatManager* chatManager = server->getChatManager();
-		if (chatManager == nullptr)
+		if (chatManager == NULL)
 			return GENERALERROR;
 
 		chatManager->handleSpatialChatInternalMessage(creature, arguments);

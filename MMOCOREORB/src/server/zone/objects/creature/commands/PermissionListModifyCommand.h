@@ -10,7 +10,6 @@
 #include "server/zone/ZoneServer.h"
 #include "server/zone/managers/player/PlayerManager.h"
 #include "server/zone/managers/guild/GuildManager.h"
-#include "server/zone/objects/transaction/TransactionLog.h"
 
 class PermissionListModifyCommand : public QueueCommand {
 public:
@@ -32,7 +31,7 @@ public:
 		uint64 targetid = creature->getTargetID();
 		ManagedReference<SceneObject*> obj = playerManager->getInRangeStructureWithAdminRights(creature, targetid);
 
-		if (obj == nullptr || !obj->isStructureObject()) {
+		if (obj == NULL || !obj->isStructureObject()) {
 			creature->sendSystemMessage("@player_structure:no_building"); //You must be in a building, be near an installation, or have one targeted to do that.
 			return INVALIDTARGET;
 		}
@@ -40,7 +39,7 @@ public:
 		StructureObject* structureObject = cast<StructureObject*>( obj.get());
 
 		String targetName, listName, action;
-		ManagedReference<SceneObject*> targetObject = nullptr;
+		ManagedReference<SceneObject*> targetObject = NULL;
 
 		ManagedReference<GuildManager*> guildManager = server->getZoneServer()->getGuildManager();
 
@@ -94,7 +93,7 @@ public:
 			targetObject = playerManager->getPlayer(targetName);
 		}
 
-		if (targetObject == nullptr || (!targetObject->isPlayerCreature() && !targetObject->isGuildObject())) {
+		if (targetObject == NULL || (!targetObject->isPlayerCreature() && !targetObject->isGuildObject())) {
 			return INVALIDPARAMETERS;
 		}
 
@@ -159,15 +158,6 @@ public:
 		StringIdChatParameter params;
 		params.setTO(targetName);
 
-		TransactionLog trx(creature, targetObject, structureObject, TrxCode::PERMISSIONLIST);
-
-		if (trx.isVerbose()) {
-			// Include extra details
-			trx.addState("commandCreature", creature->getObjectID());
-			trx.addState("commandArguments", arguments.toString());
-			trx.addRelatedObject(targetObject->getObjectID());
-		}
-
 		int returnCode = StructurePermissionList::LISTNOTFOUND;
 
 		if (action == "add")
@@ -177,22 +167,14 @@ public:
 		else
 			returnCode = structureObject->togglePermission(listName, targetID);
 
-		trx.addState("permissionAction", action);
-		trx.addState("permissionList", listName.toLowerCase());
-		trx.addState("permissionTarget", targetName);
-
 		switch (returnCode) {
 		case StructurePermissionList::GRANTED:
-			trx.addState("permissionResult", "granted");
 			params.setStringId("@player_structure:player_added"); //%NO added to the list.
 			break;
 		case StructurePermissionList::REVOKED:
-			trx.addState("permissionResult", "revoked");
 			params.setStringId("@player_structure:player_removed"); //%NO removed from the list.
 			break;
 		default:
-			trx.addState("permissionResult", "failed");
-			trx.abort() << "Permission change failed with code: " << returnCode;
 			return GENERALERROR;
 		}
 
@@ -202,7 +184,7 @@ public:
 			ManagedReference<CreatureObject*> targetPlayer = cast<CreatureObject*>(targetObject.get());
 
 			//Update the cell permissions in case the player is in the building currently.
-			if (targetPlayer != nullptr && structureObject->isBuildingObject()) {
+			if (targetPlayer != NULL && structureObject->isBuildingObject()) {
 				BuildingObject* buildingObject = cast<BuildingObject*>( structureObject);
 				buildingObject->updateCellPermissionsTo(targetPlayer);
 			}
@@ -210,14 +192,14 @@ public:
 			ManagedReference<GuildObject*> targetGuild = cast<GuildObject*>(targetObject.get());
 
 			//Update the cell permissions to guild members.
-			if (targetGuild != nullptr && structureObject->isBuildingObject()) {
+			if (targetGuild != NULL && structureObject->isBuildingObject()) {
 				ManagedReference<BuildingObject*> buildingObject = cast<BuildingObject*>( structureObject);
 
 				for (int i = 0; i < targetGuild->getTotalMembers(); ++i) {
 					uint64 memberID = targetGuild->getMember(i);
 					ManagedReference<CreatureObject*> guildMember = server->getZoneServer()->getObject(memberID).castTo<CreatureObject*>();
 
-					if (guildMember != nullptr)
+					if (guildMember != NULL)
 						buildingObject->updateCellPermissionsTo(guildMember);
 				}
 			}

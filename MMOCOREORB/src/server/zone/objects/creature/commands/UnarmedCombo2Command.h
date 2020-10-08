@@ -22,6 +22,9 @@ public:
 		if (!checkInvalidLocomotions(creature))
 			return INVALIDLOCOMOTION;
 
+		if (creature->isInvisible())
+			return GENERALERROR;
+
 		float healthmod = System::random(70) + 10;
 		float actionmod = System::random(70) + 10;
 		float mindmod = System::random(70) + 10;

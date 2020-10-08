@@ -50,7 +50,7 @@ public:
 
 	void readObject(LuaObject* templateData);
 
-	inline uint8 getLotSize() const {
+	inline uint8 getLotSize() {
 		return lotSize;
 	}
 
@@ -58,31 +58,31 @@ public:
 		return allowedZones.contains(zoneName);
 	}
 
-	inline bool isCivicStructure() const {
+	inline bool isCivicStructure() {
 		return (cityMaintenanceBase > 0);
 	}
 
-	inline bool isCommercialStructure() const {
+	inline bool isCommercialStructure() {
 		return (baseMaintenanceRate > 0 && cityRankRequired > 0);
 	}
 
-	inline bool isUniqueStructure() const {
+	inline bool isUniqueStructure() {
 		return uniqueStructure;
 	}
 
-	inline int getCityMaintenanceBase() const {
+	inline int getCityMaintenanceBase() {
 		return cityMaintenanceBase;
 	}
 
-	inline int getCityMaintenanceRate() const {
+	inline int getCityMaintenanceRate() {
 		return cityMaintenanceRate;
 	}
 
-	inline int getCityMaintenanceAtRank(int rank) const {
+	inline int getCityMaintenanceAtRank(int rank) {
 		return cityMaintenanceBase + cityMaintenanceRate * rank;
 	}
 
-	inline int getTotalAllowedZones() const {
+	inline int getTotalAllowedZones() {
 		return allowedZones.size();
 	}
 
@@ -90,23 +90,23 @@ public:
 		return allowedZones.get(i);
 	}
 
-	inline int getBaseMaintenanceRate() const {
+	inline int getBaseMaintenanceRate() {
 		return baseMaintenanceRate;
 	}
 
-	inline int getBasePowerRate() const {
+	inline int getBasePowerRate() {
 		return basePowerRate;
 	}
 
-	inline const String& getAbilityRequired() const {
+	inline String& getAbilityRequired() {
 		return abilityRequired;
 	}
 
-	inline uint8 getCityRankRequired() const {
+	inline uint8 getCityRankRequired() {
 		return cityRankRequired;
 	}
 
-	inline const String& getConstructionMarkerTemplate() const {
+	inline String& getConstructionMarkerTemplate() {
 		return constructionMarkerTemplate;
 	}
 

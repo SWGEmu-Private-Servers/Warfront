@@ -27,13 +27,13 @@ public:
 
 		ManagedReference<SceneObject*> parent = creature->getParent().get();
 
-		if (parent == nullptr || !parent->isMount()) {
+		if (parent == NULL || !parent->isMount()) {
 			creature->sendSystemMessage("@combat_effects:not_mounted"); // You cannot perform this command without a mount.
 			return GENERALERROR;
 		}
 
 		ManagedReference<CreatureObject*> mount = cast<CreatureObject*>(parent.get());
-		if (mount == nullptr)
+		if (mount == NULL)
 			return GENERALERROR;
 
 		Locker crossLocker(mount, creature);
@@ -52,15 +52,15 @@ public:
 
 		PetManager* petManager = server->getZoneServer()->getPetManager();
 		ManagedReference<PetControlDevice*> pcd = mount->getControlDevice().get().castTo<PetControlDevice*>();
-		if (petManager == nullptr || pcd == nullptr)
+		if (petManager == NULL || pcd == NULL)
 			return GENERALERROR;
 
 		SharedObjectTemplate* objectTemplate = pcd->getObjectTemplate();
-		if (objectTemplate == nullptr)
+		if (objectTemplate == NULL)
 			return GENERALERROR;
 
 		MountSpeedData* mountSpeedData = petManager->getMountSpeedData(objectTemplate->getAppearanceFilename());
-		if (mountSpeedData == nullptr)
+		if (mountSpeedData == NULL)
 			return GENERALERROR;
 
 		int duration = mountSpeedData->getGallopDuration();

@@ -34,17 +34,17 @@ public:
 
 				ManagedReference<Zone*> zone = player->getZone();
 
-				if (zone == nullptr)
+				if (zone == NULL)
 					return;
 
 				PlayerCreatureTemplate* playerTemplate = dynamic_cast<PlayerCreatureTemplate*>(player->getObjectTemplate());
 
-				if (playerTemplate == nullptr)
+				if (playerTemplate == NULL)
 					return;
 
 				ManagedReference<ImageDesignSession*> session = player->getActiveSession(SessionFacadeType::IMAGEDESIGN).castTo<ImageDesignSession*>();
 
-				if (session != nullptr) {
+				if (session != NULL) {
 					session->sessionTimeout();
 				}
 

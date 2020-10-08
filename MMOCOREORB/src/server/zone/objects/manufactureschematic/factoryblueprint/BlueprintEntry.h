@@ -80,8 +80,6 @@ public:
 
 	bool equals(BlueprintEntry* entry);
 
-	friend void to_json(nlohmann::json& j, const BlueprintEntry& p);
-
 	/// Inserts string for ManufactureSchematic attributes
 	void insertSchematicAttribute(AttributeListMessage* alm);
 

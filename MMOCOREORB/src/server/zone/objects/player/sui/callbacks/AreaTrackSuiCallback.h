@@ -39,7 +39,7 @@ public:
 			if(index < 0 || index > 2)
 				return;
 
-			if(server != nullptr) {
+			if(server != NULL) {
 				uint64 objectID = creature->getObjectID();
 				Emote* emsg = new Emote(objectID, objectID, 0, 72, true, false);
 				creature->broadcastMessage(emsg, true);

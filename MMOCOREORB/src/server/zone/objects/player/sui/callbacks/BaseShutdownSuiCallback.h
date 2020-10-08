@@ -14,27 +14,27 @@ public:
 	void run(CreatureObject* player, SuiBox* suiBox, uint32 eventIndex, Vector<UnicodeString>* args) {
 		bool cancelPressed = (eventIndex == 1);
 
-		if (!suiBox->isMessageBox() || cancelPressed || player == nullptr)
+		if (!suiBox->isMessageBox() || cancelPressed || player == NULL)
 			return;
 
 		ManagedReference<SceneObject*> obj = suiBox->getUsingObject().get();
 
-		if (obj == nullptr)
+		if (obj == NULL)
 			return;
 
 		ManagedReference<BuildingObject*> building = obj->getParentRecursively(SceneObjectType::FACTIONBUILDING).castTo<BuildingObject*>();
 
-		if (building == nullptr)
+		if (building == NULL)
 			return;
 
 		GCWManager* gcwMan = player->getZone()->getGCWManager();
 
-		if (gcwMan == nullptr)
+		if (gcwMan == NULL)
 			return;
 
 		if (!player->checkCooldownRecovery("declare_overt_cooldown")) {
 			StringIdChatParameter params("@faction/faction_hq/faction_hq_response:terminal_response41"); // You have recently joined Special Forces. Before issuing the shutdown command, you must wait %TO
-			const Time* cooldownTimer = player->getCooldownTime("declare_overt_cooldown");
+			Time* cooldownTimer = player->getCooldownTime("declare_overt_cooldown");
 			int minutes = ceil(cooldownTimer->miliDifference() / -60000.f);
 			params.setTO(String::valueOf(minutes) + " minutes.");
 			player->sendSystemMessage(params);

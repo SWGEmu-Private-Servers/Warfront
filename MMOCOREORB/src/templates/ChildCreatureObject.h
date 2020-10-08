@@ -8,13 +8,9 @@
 #ifndef CHILDCREATUREOBJECT_H_
 #define CHILDCREATUREOBJECT_H_
 
-#include "system/lang/Object.h"
-#include "engine/util/u3d/Vector3.h"
-#include "engine/lua/LuaObject.h"
-
 class ChildCreatureObject : public Object {
-	Vector3 position;
 
+	Vector3 position;
 	int cellid;
 	int containmentType;
 	String mobileName;
@@ -88,27 +84,27 @@ public:
 		heading = head;
 	}
 
-	inline const Vector3& getPosition() const {
+	inline Vector3& getPosition() {
 		return position;
 	}
 
-	inline int getCellId() const {
+	inline int getCellId() {
 		return cellid;
 	}
 
-	inline int getContainmentType() const {
+	inline int getContainmentType() {
 		return containmentType;
 	}
 
-	inline const String& getMobile() const {
+	inline String getMobile(){
 		return mobileName;
 	}
 
-	inline float getHeading() const {
+	inline float getHeading(){
 		return heading;
 	}
 
-	inline int getRespawnTimer() const {
+	inline int getRespawnTimer(){
 		return respawnTime;
 	}
 };

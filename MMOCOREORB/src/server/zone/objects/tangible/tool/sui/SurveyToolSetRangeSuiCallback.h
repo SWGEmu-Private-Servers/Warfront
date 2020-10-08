@@ -29,7 +29,7 @@ public:
 
 		ManagedReference<SurveyTool*> surveyTool = cast<SurveyTool*>(suiBox->getUsingObject().get().get());
 
-		if(surveyTool == nullptr)
+		if(surveyTool == NULL)
 			return;
 
 		int range = 64 * Integer::valueOf(args->get(0).toString()) + 64;

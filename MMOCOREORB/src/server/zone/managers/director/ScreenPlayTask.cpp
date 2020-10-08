@@ -4,7 +4,7 @@
 void ScreenPlayTask::run() {
 	ZoneServer* zoneServer = ServerCore::getZoneServer();
 
-	if (zoneServer == nullptr || zoneServer->isServerShuttingDown())
+	if (zoneServer == NULL || zoneServer->isServerShuttingDown())
 		return;
 
 	if (zoneServer->isServerLoading()) {
@@ -15,13 +15,11 @@ void ScreenPlayTask::run() {
 
 	ManagedReference<SceneObject*> obj = this->obj.get();
 
-	if (obj != nullptr) {
+	if (obj != NULL) {
 		Locker locker(obj);
 
 		DirectorManager::instance()->activateEvent(this);
 	} else {
 		DirectorManager::instance()->activateEvent(this);
 	}
-
-	setTaskName(String("ScreenPlayTask " + screenPlay + ":" + taskKey + ":" + args).toCharArray());
 }

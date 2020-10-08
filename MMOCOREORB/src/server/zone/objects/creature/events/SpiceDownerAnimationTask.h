@@ -27,7 +27,7 @@ public:
 
 	void run() {
 
-		if( player == nullptr )
+		if( player == NULL )
 			return;
 
 		Locker locker(player);

@@ -10,7 +10,6 @@
 
 #include "server/zone/objects/player/sui/SuiCallback.h"
 #include "server/zone/managers/vendor/VendorManager.h"
-#include "server/zone/objects/transaction/TransactionLog.h"
 
 class DestroyVendorSuiCallback : public SuiCallback {
 public:
@@ -29,24 +28,15 @@ public:
 
 		ManagedReference<SceneObject*> object = suiBox->getUsingObject().get();
 
-		if (object == nullptr || !object->isVendor())
+		if (object == NULL || !object->isVendor())
 			return;
 
 		TangibleObject* vendor = cast<TangibleObject*>(object.get());
 
-		if (vendor == nullptr)
+		if (vendor == NULL)
 			return;
 
 		Locker clocker(vendor, player);
-
-		TransactionLog trx(player, vendor, TrxCode::VENDORLIFECYCLE);
-
-		if (trx.isVerbose()) {
-			// Force a synchronous export because the object will be deleted before we can export it!
-			trx.addRelatedObject(object, true);
-			trx.setExportRelatedObjects(true);
-			trx.exportRelated();
-		}
 
 		VendorManager::instance()->destroyVendor(vendor);
 	}

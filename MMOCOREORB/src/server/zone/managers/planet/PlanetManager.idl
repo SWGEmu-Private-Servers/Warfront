@@ -10,7 +10,6 @@ import server.zone.ZoneProcessServer;
 import engine.log.Logger;
 import system.util.VectorMap;
 import system.util.SynchronizedVectorMap;
-import system.util.SynchronizedSortedVector;
 import server.zone.objects.region.CityRegion;
 import server.zone.managers.weather.WeatherManager;
 import server.zone.managers.gcw.GCWManager;
@@ -81,18 +80,12 @@ class PlanetManager extends ManagedService implements Logger {
 	@dereferenced
 	protected transient SynchronizedVectorMap<string, NavArea> navMeshAreas;
 
-	@dereferenced
-	protected transient SynchronizedSortedVector<unsigned long> spawnedEventObjects;
-
-	@dereferenced
-	protected transient SynchronizedSortedVector<unsigned long> spawnedEventStructures;
-
 	public PlanetManager(Zone planet, ZoneProcessServer srv) {
 		zone = planet;
 		server = srv;
-
+		
 		performanceLocations = new MissionTargetMap();
-
+		
 		Logger.setLoggingName("PlanetManager " + zone.getZoneName());
 		Logger.setLogging(false);
 		Logger.setGlobalLogging(true);
@@ -121,9 +114,6 @@ class PlanetManager extends ManagedService implements Logger {
 		travelFares.setNoDuplicateInsertPlan();
 
 		planetTravelPointList = new PlanetTravelPointList();
-
-		spawnedEventObjects.setNoDuplicateInsertPlan();
-		spawnedEventStructures.setNoDuplicateInsertPlan();
 	}
 
 	@local
@@ -175,7 +165,7 @@ class PlanetManager extends ManagedService implements Logger {
 	 */
 	@local
 	public native PlanetTravelPoint getNearestPlanetTravelPoint(SceneObject object, float range = 16000.0);
-
+	
 	@local
 	public native PlanetTravelPoint getRandomStarport();
 
@@ -187,10 +177,6 @@ class PlanetManager extends ManagedService implements Logger {
 	 */
 	@local
 	public native PlanetTravelPoint getNearestPlanetTravelPoint(@dereferenced final Vector3 position, float range = 16000.0);
-
-	@local
-	@dereferenced
-	public native Vector3 getRandomSpawnPoint();
 
 	public native boolean isSpawningPermittedAt(float x, float y, float margin = 0);
 
@@ -364,16 +350,4 @@ class PlanetManager extends ManagedService implements Logger {
 	public native void addPlayerCityTravelPoint(PlanetTravelPoint ptp);
 
 	public native void removePlayerCityTravelPoint(final string cityName);
-
-	public void addEventObject(unsigned long objectID) {
-		spawnedEventObjects.put(objectID);
-	}
-
-	public void addEventStructure(unsigned long objectID) {
-		spawnedEventStructures.put(objectID);
-	}
-
-	public native int destroyEventObject(unsigned long objectID);
-
-	public native int destroyAllEventObjects();
 }

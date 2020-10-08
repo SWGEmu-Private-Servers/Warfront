@@ -20,7 +20,7 @@ public:
 
 		ManagedReference<PlayerObject*> ghost = creature->getPlayerObject();
 
-		if (ghost == nullptr) {
+		if (ghost == NULL) {
 			return 0;
 		}
 

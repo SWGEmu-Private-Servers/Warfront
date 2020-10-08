@@ -27,11 +27,11 @@ public:
 
 		ManagedReference<PlayerObject*> adminGhost = creature->getPlayerObject();
 
-		if (adminGhost == nullptr)
+		if (adminGhost == NULL)
 			return GENERALERROR;
 
-		ManagedReference<CreatureObject*> targetCreature = nullptr;
-		ManagedReference<PlayerObject*> ghost = nullptr;
+		ManagedReference<CreatureObject*> targetCreature = NULL;
+		ManagedReference<PlayerObject*> ghost = NULL;
 		ManagedReference<PlayerManager*> playerManager = server->getPlayerManager();
 
 		StringTokenizer args(arguments.toString());
@@ -48,12 +48,12 @@ public:
 
 		}
 
-		if (targetCreature == nullptr || !targetCreature->isPlayerCreature())
+		if (targetCreature == NULL || !targetCreature->isPlayerCreature())
 			return INVALIDTARGET;
 
 		ghost = targetCreature->getPlayerObject();
 
-		if (ghost == nullptr) {
+		if (ghost == NULL) {
 			creature->sendSystemMessage("Player Ghost not found");
 			return SUCCESS;
 		}

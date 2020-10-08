@@ -26,12 +26,19 @@ public:
 	}
 
 	int doQueueCommand(CreatureObject* creature, const uint64& target, const UnicodeString& arguments) const {
-		int res = creature->hasBuff(buffCRC) ? NOSTACKJEDIBUFF : doJediSelfBuffCommand(creature);
-
-		if (res == NOSTACKJEDIBUFF) {
-			creature->sendSystemMessage("@jedi_spam:already_force_running"); // You are already force running.
+		// Return if Jedi is rooted
+				if (creature->isSnared()){
+			creature->sendSystemMessage("Cannot Force Run while ROOTED");
 			return GENERALERROR;
 		}
+			
+
+         	if (!creature->checkCooldownRecovery("forcerun3")) {
+                    creature->sendSystemMessage("You cannot Force Run yet.");
+                    return GENERALERROR;
+                }
+
+                int res = doJediSelfBuffCommand(creature);
 
 		if (res != SUCCESS) {
 			return res;
@@ -39,14 +46,14 @@ public:
 
 		// need to apply the damage reduction in a separate buff so that the multiplication and division applies right
 		Buff* buff = creature->getBuff(BuffCRC::JEDI_FORCE_RUN_3);
-		if (buff == nullptr)
+		if (buff == NULL)
 			return GENERALERROR;
 
 		ManagedReference<PrivateSkillMultiplierBuff*> multBuff = new PrivateSkillMultiplierBuff(creature, name.hashCode(), duration, BuffType::JEDI);
 
 		Locker locker(multBuff);
 
-		multBuff->setSkillModifier("private_damage_divisor", 20);
+		multBuff->setSkillModifier("private_damage_divisor", 30);
 
 		creature->addBuff(multBuff);
 

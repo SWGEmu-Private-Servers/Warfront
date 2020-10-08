@@ -14,7 +14,7 @@
 #define USE_CACHED_HEIGHT
 
 TerrainManager::TerrainManager() : Logger("TerrainManager") {
-	heightCache = nullptr;
+	heightCache = NULL;
 
 	min = max = 0;
 }
@@ -26,7 +26,7 @@ TerrainManager::~TerrainManager() {
 bool TerrainManager::initialize(const String& terrainFile) {
 	IffStream* iffStream = TemplateManager::instance()->openIffFile(terrainFile);
 
-	if (iffStream == nullptr)
+	if (iffStream == NULL)
 		return false;
 
 	if (iffStream->getNextFormType() == 'PTAT') {
@@ -39,7 +39,7 @@ bool TerrainManager::initialize(const String& terrainFile) {
 
 	delete iffStream;
 
-	if (heightCache != nullptr) {
+	if (heightCache != NULL) {
 		delete heightCache;
 	}
 
@@ -52,9 +52,9 @@ bool TerrainManager::initialize(const String& terrainFile) {
 }
 
 /**
- *	|----------------| x1,y1
- *	|----------------| <- stepping
- *	|----------------|
+ *  	|----------------| x1,y1
+ *  	|----------------| <- stepping
+ *	    |----------------|
  *  	|----------------|
  *x0,y0 |----------------|
  */
@@ -101,12 +101,12 @@ float TerrainManager::getHighestHeightDifference(float x0, float y0, float x1, f
 void TerrainManager::addTerrainModification(float x, float y, const String& terrainModificationFilename, uint64 objectid) {
 	ProceduralTerrainAppearance* ptat = dynamic_cast<ProceduralTerrainAppearance*>(terrainData.get());
 
-	if (ptat == nullptr)
+	if (ptat == NULL)
 		return;
 
 	IffStream* stream = TemplateManager::instance()->openIffFile(terrainModificationFilename);
 
-	if (stream == nullptr) {
+	if (stream == NULL) {
 		error("could not find custom terrain file: " + terrainModificationFilename);
 		return;
 	}
@@ -115,7 +115,7 @@ void TerrainManager::addTerrainModification(float x, float y, const String& terr
 	Locker locker(ptat->getGuard());
 
 	TerrainGenerator* generator = ptat->addTerrainModification(stream, x, y, objectid);
-	if (generator == nullptr) {
+	if (generator == NULL) {
 		error("could not add custom terrain file: " + terrainModificationFilename);
 
 		return;
@@ -138,12 +138,12 @@ void TerrainManager::clearCache(TerrainGenerator* generator) {
 void TerrainManager::removeTerrainModification(uint64 objectid) {
 	ProceduralTerrainAppearance* ptat = dynamic_cast<ProceduralTerrainAppearance*>(terrainData.get());
 
-	if (ptat == nullptr)
+	if (ptat == NULL)
 		return;
 
 	TerrainGenerator* generator = ptat->removeTerrainModification(objectid);
 
-	if (generator != nullptr) {
+	if (generator != NULL) {
 		clearCache(generator);
 
 		delete generator;
@@ -154,7 +154,7 @@ ProceduralTerrainAppearance* TerrainManager::getProceduralTerrainAppearance() {
 	return dynamic_cast<ProceduralTerrainAppearance*>(terrainData.get());
 }
 
-float TerrainManager::getUnCachedHeight(float x, float y) const {
+float TerrainManager::getUnCachedHeight(float x, float y) {
 	return terrainData->getHeight(x, y);
 }
 
@@ -164,8 +164,11 @@ float TerrainManager::getCachedHeight(float x, float y) {
 
 float TerrainManager::getHeight(float x, float y) {
 	if (x <= min || x >= max || y <= min || y >= max) {
-		warning() << "position  (" << x << ", " << y << ") out of planet/cache bounds: ["
+		StringBuffer message;
+		message << "position  (" << x << ", " << y << ") out of planet/cache bounds: ["
 				<< min << ", " << max << "]";
+
+		warning(message.toString());
 
 		StackTrace::printStackTrace();
 

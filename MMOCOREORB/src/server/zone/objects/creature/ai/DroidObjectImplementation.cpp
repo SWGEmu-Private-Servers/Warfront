@@ -6,7 +6,6 @@
 #include "server/zone/objects/intangible/PetControlDevice.h"
 #include "server/zone/packets/object/ObjectMenuResponse.h"
 #include "server/zone/packets/object/StartNpcConversation.h"
-#include "server/zone/managers/conversation/ConversationManager.h"
 #include "templates/customization/AssetCustomizationManagerTemplate.h"
 #include "server/zone/objects/tangible/tool/CraftingTool.h"
 #include "server/zone/objects/tangible/components/droid/BaseDroidModuleComponent.h"
@@ -27,7 +26,7 @@ void DroidObjectImplementation::fillAttributeList(AttributeListMessage* msg, Cre
 
 	ManagedReference<ControlDevice*> device = getControlDevice().get();
 
-	if (device != nullptr && device->isASubChildOf(object)) {
+	if (device != NULL && device->isASubChildOf(object)) {
 		float percentPower = ((float)power / (float)MAX_POWER) * 100.0;
 		msg->insertAttribute("@obj_attr_n:battery_power", String::valueOf((int)percentPower) + "%");
 
@@ -38,7 +37,7 @@ void DroidObjectImplementation::fillAttributeList(AttributeListMessage* msg, Cre
 		for (int i = 0; i < modules.size(); i++) {
 			auto& module = modules.get(i);
 
-			if (module != nullptr) {
+			if (module != NULL) {
 				module->fillAttributeList(msg, object);
 			}
 		}
@@ -56,7 +55,7 @@ int DroidObjectImplementation::handleObjectMenuSelect(CreatureObject* player, by
 		}
 	} else if (isMerchantBarker()) {
 		auto module = getModule("merchant_barker");
-		if (module != nullptr)
+		if (module != NULL)
 			module->handleObjectMenuSelect(player, selectedID, pcd);
 	}
 
@@ -68,7 +67,7 @@ void DroidObjectImplementation::fillObjectMenuResponse(ObjectMenuResponse* menuR
 
 	if (isMerchantBarker() && getLinkedCreature().get() != player) {
 		auto module = getModule("merchant_barker");
-		if (module != nullptr)
+		if (module != NULL)
 			module->fillObjectMenuResponse(_this.getReferenceUnsafeStaticCast(), menuResponse, player);
 		return;
 	}
@@ -95,7 +94,7 @@ void DroidObjectImplementation::notifyInsertToZone(Zone* zone) {
 	SceneObjectImplementation::notifyInsertToZone(zone);
 
 	ManagedReference<CreatureObject* > linkedCreature = getLinkedCreature().get();
-	if (linkedCreature == nullptr)
+	if (linkedCreature == NULL)
 		return;
 
 	// Decay customized paint (if any)
@@ -129,12 +128,12 @@ void DroidObjectImplementation::notifyInsertToZone(Zone* zone) {
 int DroidObjectImplementation::rechargeFromBattery(CreatureObject* player) {
 	// Find droid battery in player inventory
 	ManagedReference<SceneObject*> inventory = player->getSlottedObject("inventory");
-	if (inventory == nullptr) {
+	if (inventory == NULL) {
 		player->sendSystemMessage("Player inventory not found");
 		return 0;
 	}
 
-	ManagedReference<SceneObject*> batterySceno = nullptr;
+	ManagedReference<SceneObject*> batterySceno = NULL;
 	for (int i = 0; i < inventory->getContainerObjectsSize(); ++i) {
 		ManagedReference<SceneObject*> sceno = inventory->getContainerObject(i);
 		if (sceno->getObjectTemplate()->getFullTemplateString() == "object/tangible/droid_battery/battery.iff") {
@@ -143,14 +142,14 @@ int DroidObjectImplementation::rechargeFromBattery(CreatureObject* player) {
 	}
 
 	// Battery not found
-	if (batterySceno == nullptr) {
+	if (batterySceno == NULL) {
 		showFlyText("npc_reaction/flytext","nobattery", 204, 0, 0); // "You don't have a power storage device."
 		return 0;
 	}
 
 	// Battery found
 	ManagedReference<TangibleObject*> batteryTano = cast<TangibleObject*>(batterySceno.get());
-	if (batteryTano == nullptr) {
+	if (batteryTano == NULL) {
 		player->sendSystemMessage("Error with droid battery object");
 		return 0;
 	}
@@ -213,23 +212,23 @@ bool DroidObjectImplementation::isPowerDroid() {
 void DroidObjectImplementation::initDroidModules() {
 	modules.removeAll();
 	ManagedReference<SceneObject*> container = getSlottedObject("crafted_components");
-	if (container != nullptr && container->getContainerObjectsSize() > 0) {
+	if (container != NULL && container->getContainerObjectsSize() > 0) {
 		SceneObject* satchel = container->getContainerObject(0);
 
-		if (satchel != nullptr && satchel->getContainerObjectsSize() > 0) {
+		if (satchel != NULL && satchel->getContainerObjectsSize() > 0) {
 			for (int i = 0; i < satchel->getContainerObjectsSize(); ++i) {
 				ManagedReference<SceneObject*> sceno = satchel->getContainerObject(i);
-				if (sceno == nullptr) {
+				if (sceno == NULL) {
 					continue;
 				}
 
 				DataObjectComponentReference* data = sceno->getDataObjectComponent();
-				if (data == nullptr || data->get() == nullptr || !data->get()->isDroidModuleData()) {
+				if (data == NULL || data->get() == NULL || !data->get()->isDroidModuleData()) {
 					continue;
 				}
 
 				BaseDroidModuleComponent* module = cast<BaseDroidModuleComponent*>(data->get());
-				if (module != nullptr) {
+				if (module != NULL) {
 					modules.emplace(module);
 				}
 			}
@@ -241,14 +240,14 @@ void DroidObjectImplementation::initDroidWeapons() {
 	//Set weapon stats
 	WeaponObject* weapon = getSlottedObject("default_weapon").castTo<WeaponObject*>();
 
-	if (weapon != nullptr) {
+	if (weapon != NULL) {
 		Locker locker(weapon);
 		weapon->setMinDamage(getDamageMin());
 		weapon->setMaxDamage(getDamageMax());
 		weapon->setAttackSpeed(getAttackSpeed());
 	}
 
-	if (readyWeapon != nullptr) {
+	if (readyWeapon != NULL) {
 		Locker locker(readyWeapon);
 		readyWeapon->setMinDamage(getDamageMin());
 		readyWeapon->setMaxDamage(getDamageMax());
@@ -260,13 +259,13 @@ CraftingStation* DroidObjectImplementation::getCraftingStation(int type) {
 	for (int i = 0; i < modules.size(); i++) {
 		auto& module = modules.get(i);
 
-		if (module != nullptr && module->actsAsCraftingStation()) {
+		if (module != NULL && module->actsAsCraftingStation()) {
 			DroidCraftingModuleDataComponent* craftingModule = dynamic_cast<DroidCraftingModuleDataComponent*>(module.get());
 
-			if (craftingModule != nullptr) {
+			if (craftingModule != NULL) {
 				CraftingStation* craftingStation = craftingModule->getCraftingStation();
 
-				if (craftingStation != nullptr) {
+				if (craftingStation != NULL) {
 					// case here to check each type
 					if (craftingModule->validCraftingType(type) || (type == CraftingTool::JEDI && craftingModule->isWeaponDroidGeneric())) {
 						return craftingStation;
@@ -276,14 +275,14 @@ CraftingStation* DroidObjectImplementation::getCraftingStation(int type) {
 		}
 	}
 
-	return nullptr;
+	return NULL;
 }
 
-String DroidObjectImplementation::getPersonalityBase() const {
+String DroidObjectImplementation::getPersonalityBase() {
 	for (int i = 0; i < modules.size(); i++) {
 		auto module = modules.get(i).castTo<DroidPersonalityModuleDataComponent*>();
 
-		if (module != nullptr) {
+		if (module != NULL) {
 			return module->getPersonalityBase();
 		}
 	}
@@ -335,7 +334,7 @@ Reference<BaseDroidModuleComponent*> DroidObjectImplementation::getModule(const 
 		}
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 bool DroidObjectImplementation::isAdvancedModel() {
@@ -423,7 +422,7 @@ bool DroidObjectImplementation::assignStructure(StructureObject* structure) {
 		if (module->getModuleName() == "maintenance_module") {
 			DroidMaintenanceModuleDataComponent* maintModule = dynamic_cast<DroidMaintenanceModuleDataComponent*>(module.get());
 
-			if (maintModule != nullptr) {
+			if (maintModule != NULL) {
 				return maintModule->assignStructure(structure->getObjectID());
 			}
 		}
@@ -439,7 +438,7 @@ bool DroidObjectImplementation::isStructureAssigned(StructureObject* structure) 
 		if (module->getModuleName() == "maintenance_module") {
 			DroidMaintenanceModuleDataComponent* maintModule = dynamic_cast<DroidMaintenanceModuleDataComponent*>(module.get());
 
-			if (maintModule != nullptr) {
+			if (maintModule != NULL) {
 				return maintModule->isAssignedTo(structure->getObjectID());
 			}
 		}
@@ -456,12 +455,12 @@ bool DroidObjectImplementation::sendConversationStartTo(SceneObject* player) {
 		return false;
 
 	auto m = getModule("personality_chip");
-	if (m == nullptr) {
+	if (m == NULL) {
 		return false;
 	}
 
 	DroidPersonalityModuleDataComponent* personality = dynamic_cast<DroidPersonalityModuleDataComponent*>(m.get());
-	if (personality == nullptr) {
+	if (personality == NULL) {
 		return false;
 	}
 
@@ -483,7 +482,7 @@ bool DroidObjectImplementation::sendConversationStartTo(SceneObject* player) {
 	SortedVector<ManagedReference<Observer*> > observers = getObservers(ObserverEventType::STARTCONVERSATION);
 
 	for (int i = 0;  i < observers.size(); ++i) {
-		if (dynamic_cast<ConversationObserver*>(observers.get(i).get()) != nullptr) {
+		if (dynamic_cast<ConversationObserver*>(observers.get(i).get()) != NULL) {
 			return true;
 		}
 	}
@@ -491,7 +490,7 @@ bool DroidObjectImplementation::sendConversationStartTo(SceneObject* player) {
 	//Create conversation observer.
 	ConversationObserver* conversationObserver = ConversationManager::instance()->getConversationObserver(personality->getPersonalityConversationTemplate());
 
-	if (conversationObserver != nullptr) {
+	if (conversationObserver != NULL) {
 		//Register observers.
 		registerObserver(ObserverEventType::CONVERSE, conversationObserver);
 		registerObserver(ObserverEventType::STARTCONVERSATION, conversationObserver);
@@ -509,7 +508,7 @@ String DroidObjectImplementation::getPersonalityStf() {
 	for (int i = 0; i < modules.size(); i++) {
 		auto module = modules.get(i).castTo<DroidPersonalityModuleDataComponent*>();
 
-		if (module != nullptr) {
+		if (module != NULL) {
 			return module->getPersonalityStf();
 		}
 	}

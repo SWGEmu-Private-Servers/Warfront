@@ -49,7 +49,7 @@ public:
 		iffStream->closeForm('ARGD');
 	}
 
-	void clone(Vector< Vector<String> >& copyVec) const {
+	void clone(Vector< Vector<String> >& copyVec) {
 		arrangementSlots.clone(copyVec);
 	}
 

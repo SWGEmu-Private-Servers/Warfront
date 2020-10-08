@@ -11,7 +11,7 @@
 #include "server/zone/objects/tangible/weapon/WeaponObject.h"
 
 void ThrowGrenadeMenuComponent::fillObjectMenuResponse(SceneObject* sceneObject, ObjectMenuResponse* menuResponse, CreatureObject* player) const {
-		if (sceneObject == nullptr || !sceneObject->isTangibleObject() || player == nullptr)
+		if (sceneObject == NULL || !sceneObject->isTangibleObject() || player == NULL)
 		return;
 
 	WeaponObjectMenuComponent::fillObjectMenuResponse(sceneObject, menuResponse, player);
@@ -26,7 +26,7 @@ int ThrowGrenadeMenuComponent::handleObjectMenuSelect(SceneObject* sceneObject, 
 	}
 
 	ManagedReference<WeaponObject*> weapon = cast<WeaponObject*>(sceneObject);
-	if(weapon == nullptr)
+	if(weapon == NULL)
 		return 1;
 
 	if(selectedID == 20) {

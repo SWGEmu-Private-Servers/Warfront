@@ -193,7 +193,7 @@ public:
 	}
 
 	virtual SceneObject* getFactoryIngredient() {
-		return nullptr;
+		return NULL;
 	}
 
 

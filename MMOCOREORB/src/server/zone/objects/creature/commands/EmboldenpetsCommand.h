@@ -35,7 +35,7 @@ public:
 			return INVALIDSTATE;
 
 		ManagedReference<PlayerObject*> ghost = player->getPlayerObject();
-		if( ghost == nullptr )
+		if( ghost == NULL )
 			return GENERALERROR;
 
 		// Check player mind
@@ -49,11 +49,11 @@ public:
 		for (int i = 0; i < ghost->getActivePetsSize(); ++i) {
 
 			ManagedReference<AiAgent*> pet = ghost->getActivePet(i);
-			if(pet == nullptr)
+			if(pet == NULL)
 				continue;
 
 			ManagedReference<PetControlDevice*> controlDevice = pet->getControlDevice().get().castTo<PetControlDevice*>();
-			if( controlDevice == nullptr )
+			if( controlDevice == NULL )
 				continue;
 
 			// Creatures only
@@ -76,7 +76,7 @@ public:
 				}
 
 				// Check cooldown
-				if( pet->getCooldownTimerMap() == nullptr || !pet->getCooldownTimerMap()->isPast("emboldenPetsCooldown") )
+				if( pet->getCooldownTimerMap() == NULL || !pet->getCooldownTimerMap()->isPast("emboldenPetsCooldown") )
 					continue;
 
 				// Build 15% Health, Action, Mind buff

@@ -21,27 +21,27 @@ public:
 	void run(CreatureObject* player, SuiBox* suiBox, uint32 eventIndex, Vector<UnicodeString>* args) {
 		bool cancelPressed = (eventIndex == 1);
 
-		if (cancelPressed || player == nullptr)
+		if (cancelPressed || player == NULL)
 			return;
 
 		ManagedReference<SceneObject*> terminal = suiBox->getUsingObject().get();
 
-		if (terminal == nullptr)
+		if (terminal == NULL)
 			return;
 
 		ManagedReference<SceneObject*> parent = terminal->getParentRecursively(SceneObjectType::BUILDING);
 
-		if (parent == nullptr)
+		if (parent == NULL)
 			return;
 
 		ManagedReference<BuildingObject*> building = cast<BuildingObject*>(parent.get());
 
-		if (building == nullptr)
+		if (building == NULL)
 			return;
 
 		FrsManager* frsMan = player->getZoneServer()->getFrsManager();
 
-		if (frsMan == nullptr)
+		if (frsMan == NULL)
 			return;
 
 		int enclaveType = frsMan->getEnclaveType(building);

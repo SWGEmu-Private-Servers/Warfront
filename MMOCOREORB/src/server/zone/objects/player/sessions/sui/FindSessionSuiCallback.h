@@ -26,9 +26,9 @@ public:
 		ManagedReference<Facade*> facade = player->getActiveSession(SessionFacadeType::FIND);
 		ManagedReference<FindSession*> session = dynamic_cast<FindSession*>(facade.get());
 
-		if (session == nullptr) {
+		if (session == NULL) {
 			ManagedReference<CreatureObject*> pl = cast<CreatureObject*>( suiBox->getUsingObject().get().get());
-			if (pl != nullptr)
+			if (pl != NULL)
 				pl->dropActiveSession(SessionFacadeType::FIND);
 
 			return;

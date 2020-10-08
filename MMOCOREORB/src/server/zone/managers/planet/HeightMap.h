@@ -33,7 +33,7 @@ public:
 	float getHeight(float x, float y);
 
 	inline bool isLoaded() {
-		return reader != nullptr;
+		return reader != NULL;
 	}
 
 	static float getHeightFrom(FileInputStream* file, float x, float y);

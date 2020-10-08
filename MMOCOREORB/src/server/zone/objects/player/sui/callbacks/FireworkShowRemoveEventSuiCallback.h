@@ -31,17 +31,17 @@ public:
 
 		ManagedReference<FireworkObject*> firework = (server->getObject(fireworkObjectID)).castTo<FireworkObject*>();
 
-		if (firework == nullptr || !firework->isFireworkObject())
+		if (firework == NULL || !firework->isFireworkObject())
 			return;
 
 		ManagedReference<SceneObject*> fireworkShow = suiBox->getUsingObject().get();
 
-		if (fireworkShow == nullptr || !fireworkShow->isFireworkObject())
+		if (fireworkShow == NULL || !fireworkShow->isFireworkObject())
 			return;
 
 		DataObjectComponent* data = fireworkShow->getDataObjectComponent()->get();
 
-		if(data == nullptr || !data->isFireworkShowData())
+		if(data == NULL || !data->isFireworkShowData())
 			return;
 
 		FireworkShowDataComponent* fireworkShowData = cast<FireworkShowDataComponent*>(data);
@@ -60,7 +60,7 @@ public:
 
 		ManagedReference<TangibleObject*> fireworkShowObject = fireworkShow.castTo<TangibleObject*>();
 
-		if (fireworkShowObject != nullptr) {
+		if (fireworkShowObject != NULL) {
 			Locker locker(fireworkShowObject);
 			fireworkShowObject->decreaseUseCount();
 		}

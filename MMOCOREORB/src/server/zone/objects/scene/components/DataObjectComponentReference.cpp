@@ -11,7 +11,7 @@
 bool DataObjectComponentReference::toBinaryStream(ObjectOutputStream* stream) {
 	DataObjectComponent* object = Reference<DataObjectComponent*>::get();
 
-	if (object != nullptr)
+	if (object != NULL)
 		object->toBinaryStream(stream);
 	else
 		stream->writeShort(0);
@@ -22,7 +22,7 @@ bool DataObjectComponentReference::toBinaryStream(ObjectOutputStream* stream) {
 bool DataObjectComponentReference::parseFromBinaryStream(ObjectInputStream* stream) {
 	DataObjectComponent* object = Reference<DataObjectComponent*>::get();
 
-	if (object == nullptr)
+	if (object == NULL)
 		stream->readShort();
 	else
 		object->parseFromBinaryStream(stream);
@@ -34,14 +34,4 @@ DataObjectComponent* DataObjectComponentReference::operator= (DataObjectComponen
 	updateObject(obj);
 
 	return obj;
-}
-
-void to_json(nlohmann::json& j, const DataObjectComponentReference& ref) {
-	auto object = ref.get();
-
-	if (object != nullptr)
-		object->writeJSON(j);
-	else
-		j = {};
-
 }

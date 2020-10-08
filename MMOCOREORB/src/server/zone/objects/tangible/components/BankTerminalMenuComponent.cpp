@@ -14,18 +14,17 @@
 #include "server/zone/objects/player/sui/callbacks/BankTerminalSuiCallback.h"
 #include "server/zone/Zone.h"
 #include "server/zone/objects/region/CityRegion.h"
-#include "server/zone/objects/transaction/TransactionLog.h"
 
 void BankTerminalMenuComponent::fillObjectMenuResponse(SceneObject* sceneObject, ObjectMenuResponse* menuResponse, CreatureObject* creature) const {
 
 	ManagedReference<PlayerObject*> ghost = creature->getPlayerObject();
 
-	if (ghost == nullptr)
+	if (ghost == NULL)
 		return;
 
 	Zone* playerZone = sceneObject->getZone();
 
-	if (playerZone == nullptr)
+	if (playerZone == NULL)
 		return;
 
 	String location = ghost->getBankLocation();
@@ -65,7 +64,7 @@ int BankTerminalMenuComponent::handleObjectMenuSelect(SceneObject* sceneObject, 
 
 	Zone* playerZone = creature->getZone();
 
-	if (playerZone == nullptr)
+	if (playerZone == NULL)
 		return 0;
 
 	ManagedReference<PlayerObject*> ghost = creature->getPlayerObject();
@@ -74,7 +73,7 @@ int BankTerminalMenuComponent::handleObjectMenuSelect(SceneObject* sceneObject, 
 
 	ManagedReference<CityRegion* > region = sceneObject->getCityRegion().get();
 
-	if (region != nullptr) {
+	if (region != NULL) {
 		if (region->isBanned(creature->getObjectID())) {
 				creature->sendSystemMessage("@city/city:youre_city_banned"); // you are banned from this city and may not use any of its public services and structures
 				return 0;
@@ -123,7 +122,7 @@ int BankTerminalMenuComponent::handleObjectMenuSelect(SceneObject* sceneObject, 
 
 		if (bank->getContainerObjectsSize() == 0) {
 
-			//creature->removeObject(bank, nullptr, true);
+			//creature->removeObject(bank, NULL, true);
 			bank->sendDestroyTo(creature);
 
 			// QUIT BANK
@@ -157,7 +156,6 @@ int BankTerminalMenuComponent::handleObjectMenuSelect(SceneObject* sceneObject, 
 		params.setDI(cash);
 		creature->sendSystemMessage(params);
 
-		TransactionLog trx(creature, creature, TrxCode::BANK, cash, true);
 		creature->subtractCashCredits(cash);
 		creature->addBankCredits(cash);
 
@@ -171,7 +169,6 @@ int BankTerminalMenuComponent::handleObjectMenuSelect(SceneObject* sceneObject, 
 		params.setDI(cash);
 		creature->sendSystemMessage(params);
 
-		TransactionLog trx(creature, creature, TrxCode::BANK, cash, false);
 		creature->subtractBankCredits(cash);
 		creature->addCashCredits(cash);
 

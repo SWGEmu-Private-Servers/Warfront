@@ -41,11 +41,11 @@ public:
 		entries.put(entry);
 	}
 
-	int count() const {
+	int count() {
 		return entries.size();
 	}
 
-	const LootGroupEntry* get(int idx) const {
+	LootGroupEntry* get(int idx) {
 		return &entries.get(idx);
 	}
 };

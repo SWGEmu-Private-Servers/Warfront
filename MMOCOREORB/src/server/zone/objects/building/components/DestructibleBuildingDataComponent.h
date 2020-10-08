@@ -11,7 +11,6 @@
 #include "engine/engine.h"
 #include "server/zone/objects/building/components/BuildingDataComponent.h"
 #include "system/util/Vector.h"
-#include "server/zone/objects/scene/SceneObject.h"
 
 class DestructibleBuildingDataComponent : public BuildingDataComponent, public Logger {
 
@@ -36,11 +35,10 @@ private:
 	Time vulnerabilityEndTime; //serialized
 	Time placementTime; // serialized
 	Time lastResetTime; // serialized
+	Time lastAttackTime; // serialized
 	int uplinkBand; // secret code used to jam the uplink
 	bool activeDefenses;
 	bool defenseAddedThisVuln;
-	bool terminalsSpawned;
-	Vector<ManagedReference<SceneObject*> > baseTerminals;
 
 public:
 	const static int INVULNERABLE = 0;
@@ -61,7 +59,6 @@ public:
 
 		activeDefenses = true;
 		terminalDamaged = false;
-		terminalsSpawned = false;
 
 		uplinkBand = 0;
 		inRepair = false;
@@ -71,8 +68,6 @@ public:
 	virtual ~DestructibleBuildingDataComponent() {
 
 	}
-
-	void writeJSON(nlohmann::json& j) const;
 
 	bool toBinaryStream(ObjectOutputStream* stream);
 
@@ -102,12 +97,16 @@ public:
 		return vulnerabilityEndTime;
 	}
 
-	Time getPlacementTime() {
+	Time getPlacmenetTime() {
 		return placementTime;
 	}
 
 	Time getLastResetTime() {
 		return lastResetTime;
+	}
+
+	Time getLastAttackTime() {
+		return lastAttackTime;
 	}
 
 	int getUplinkBand() {
@@ -144,6 +143,10 @@ public:
 		lastResetTime = time;
 	}
 
+	void setLastAttackTime(Time time) {
+		lastAttackTime = time;
+	}
+
 	void setUplinkBand(int band) {
 		uplinkBand = band;
 	}
@@ -161,7 +164,7 @@ public:
 	}
 
 	void setActiveMinefield(int indx, uint64 minefieldOID) {
-		minefieldSlots.get(indx) = minefieldOID;
+		minefieldSlots.get(indx) == minefieldOID;
 	}
 
 	void initializeTransientMembers();
@@ -322,30 +325,6 @@ public:
 
 	bool getPowerPosition(int indx) {
 		return powerSwitchStates.get(indx);
-	}
-
-	int getBaseTerminalCount() {
-		return baseTerminals.size();
-	}
-
-	SceneObject* getBaseTerminal(int idx) {
-		return baseTerminals.get(idx);
-	}
-
-	void addBaseTerminal(SceneObject* term) {
-		baseTerminals.add(term);
-	}
-
-	void clearBaseTerminals() {
-		baseTerminals.removeAll();
-	}
-
-	bool areTerminalsSpawned() {
-		return terminalsSpawned;
-	}
-
-	void setTerminalsSpawned(bool val) {
-		terminalsSpawned = val;
 	}
 
 private:

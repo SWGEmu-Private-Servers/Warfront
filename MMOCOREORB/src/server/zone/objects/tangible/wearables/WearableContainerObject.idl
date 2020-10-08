@@ -10,8 +10,8 @@ import server.zone.objects.creature.CreatureObject;
 
 include system.util.VectorMap;
 
-@json
-class WearableContainerObject extends Container {
+class WearableContainerObject extends Container {	
+	
 	@dereferenced
 	protected VectorMap<string, int> wearableSkillMods;
 
@@ -37,15 +37,13 @@ class WearableContainerObject extends Container {
 	public abstract void addSkillMod(final int skillType, final string skillMod, int value, boolean notifyClient = true) {
 		wearableSkillMods.put(skillMod, value);
 	}
-
-	@read
+	
 	public abstract native void applySkillModsTo(CreatureObject creature);
-
+	
 	public abstract native void removeSkillModsFrom(CreatureObject creature);
 
 	@local
-	@read
-	public final VectorMap<string, int> getWearableSkillMods() {
+	public VectorMap<string, int> getWearableSkillMods() {
 		return wearableSkillMods;
 	}
 

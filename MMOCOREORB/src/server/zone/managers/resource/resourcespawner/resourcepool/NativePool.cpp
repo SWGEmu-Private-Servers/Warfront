@@ -43,7 +43,7 @@ void NativePool::addZoneMap(const String& zoneName) {
 
 	for(int j = 0; j < includedResources.size(); ++j) {
 		String resource = includedResources.elementAt(j).getKey() + "_" + zoneName;
-		spawnZone.put(resource, nullptr);
+		spawnZone.put(resource, NULL);
 	}
 
 	spawnsPerZone.put(zoneName, spawnZone);
@@ -88,16 +88,16 @@ bool NativePool::update() {
 			String resourceType = spawnZone->elementAt(j).getKey();
 			ManagedReference<ResourceSpawn* > spawn = spawnZone->elementAt(j).getValue();
 
-			if (spawn == nullptr || !spawn->inShift()) {
+			if (spawn == NULL || !spawn->inShift()) {
 
-				if(spawn != nullptr) {
+				if(spawn != NULL) {
 					resourceSpawner->despawn(spawn);
 					despawnedCount++;
 					//buffer << "Removing: " << spawn->getName() << " : " << spawn->getType();
 				}
 
 				ManagedReference<ResourceSpawn* > newSpawn = resourceSpawner->createResourceSpawn(resourceType, excludedResources);
-				if(newSpawn != nullptr) {
+				if(newSpawn != NULL) {
 					Locker locker(newSpawn);
 					newSpawn->setSpawnPool(ResourcePool::NATIVEPOOL, resourceType);
 					spawnedCount++;
@@ -138,7 +138,7 @@ String NativePool::healthCheck() {
 			if(!pass)
 				heathly = false;
 
-			if(spawn != nullptr) {
+			if(spawn != NULL) {
 				buffer << "   " << i << ". " << resourceType << " : "
 					   << (pass ? "Pass" : "Fail") << "  " << spawn->getName()
 					   << " Zones: " << String::valueOf(spawn->getSpawnMapSize())
@@ -175,7 +175,7 @@ void NativePool::print() {
 
 			StringBuffer msg3;
 
-			if (spawn != nullptr)
+			if (spawn != NULL)
 				msg3 <<  spawn->getName() << " : "<< spawn->getType();
 			else
 				msg3 << "EMPTY";

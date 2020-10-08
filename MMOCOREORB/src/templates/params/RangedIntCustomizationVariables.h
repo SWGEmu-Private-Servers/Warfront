@@ -33,7 +33,7 @@ public:
 		//std::cout << "DELETING RangedIntCustomizationVariables\n";
 	}
 
-	String toString() const;
+	String toString();
 
 	void toString(String& str) {
 		//std::cout << "entering void toString(QString& str)\n";

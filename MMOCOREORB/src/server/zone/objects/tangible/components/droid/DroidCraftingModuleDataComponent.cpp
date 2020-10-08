@@ -15,7 +15,7 @@ DroidCraftingModuleDataComponent::~DroidCraftingModuleDataComponent() {
 
 }
 
-String DroidCraftingModuleDataComponent::getModuleName() const {
+String DroidCraftingModuleDataComponent::getModuleName() {
 	if (isClothingArmor())
 		return "crafting_clothing";
 	else if (isWeaponDroidGeneric())
@@ -33,14 +33,14 @@ String DroidCraftingModuleDataComponent::getModuleName() const {
 void DroidCraftingModuleDataComponent::initializeTransientMembers() {
 	// load template data here
 	SceneObject* craftedModule = getParent();
-	if (craftedModule == nullptr) {
+	if (craftedModule == NULL) {
 		return;
 	}
 
-	craftingStation = nullptr;
+	craftingStation = NULL;
 
-	Reference<DroidCraftingModuleTemplate*> moduleTemplate = cast<DroidCraftingModuleTemplate*>(craftedModule->getObjectTemplate());
-	if (moduleTemplate == nullptr) {
+	ManagedReference<DroidCraftingModuleTemplate*> moduleTemplate = cast<DroidCraftingModuleTemplate*>(craftedModule->getObjectTemplate());
+	if (moduleTemplate == NULL) {
 		info("Module was null");
 		return;
 	}
@@ -95,7 +95,7 @@ bool DroidCraftingModuleDataComponent::actsAsCraftingStation() {
 	return true;
 }
 
-String DroidCraftingModuleDataComponent::toString() const {
+String DroidCraftingModuleDataComponent::toString() {
 	return BaseDroidModuleComponent::toString();
 }
 
@@ -104,23 +104,23 @@ CraftingStation* DroidCraftingModuleDataComponent::getCraftingStation() {
 	return craftingStation;
 }
 
-bool DroidCraftingModuleDataComponent::isWeaponDroidGeneric() const {
+bool DroidCraftingModuleDataComponent::isWeaponDroidGeneric() {
 	return craftingType == CraftingTool::WEAPON;
 }
 
-bool DroidCraftingModuleDataComponent::isFoodChemical() const {
+bool DroidCraftingModuleDataComponent::isFoodChemical() {
 	return craftingType == CraftingTool::FOOD;
 }
 
-bool DroidCraftingModuleDataComponent::isClothingArmor() const {
+bool DroidCraftingModuleDataComponent::isClothingArmor() {
 	return craftingType == CraftingTool::CLOTHING;
 }
 
-bool DroidCraftingModuleDataComponent::isStructureFurniture() const {
+bool DroidCraftingModuleDataComponent::isStructureFurniture() {
 	return craftingType == CraftingTool::STRUCTURE;
 }
 
-bool DroidCraftingModuleDataComponent::isShip() const {
+bool DroidCraftingModuleDataComponent::isShip() {
 	return craftingType == CraftingTool::SPACE;
 }
 
@@ -130,8 +130,8 @@ bool DroidCraftingModuleDataComponent::validCraftingType(int type) {
 
 void DroidCraftingModuleDataComponent::onCall() {
 	SceneObject* craftedModule = getParent();
-	Reference<DroidCraftingModuleTemplate*> moduleTemplate = cast<DroidCraftingModuleTemplate*>(craftedModule->getObjectTemplate());
-	if (craftingStation == nullptr) {
+	ManagedReference<DroidCraftingModuleTemplate*> moduleTemplate = cast<DroidCraftingModuleTemplate*>(craftedModule->getObjectTemplate());
+	if (craftingStation == NULL) {
 		String stationTemplate = moduleTemplate->getCraftingStationTemplate();
 		craftingStation = (craftedModule->getZoneServer()->createObject(stationTemplate.hashCode(), 0)).castTo<CraftingStation*>();
 		craftingStation->setEffectiveness(25);
@@ -139,7 +139,7 @@ void DroidCraftingModuleDataComponent::onCall() {
 }
 
 void DroidCraftingModuleDataComponent::onStore() {
-	craftingStation = nullptr;
+	craftingStation = NULL;
 }
 
 void DroidCraftingModuleDataComponent::copy(BaseDroidModuleComponent* other) {

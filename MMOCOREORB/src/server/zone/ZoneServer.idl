@@ -43,7 +43,6 @@ import server.zone.managers.creature.DnaManager;
 import server.zone.managers.creature.PetManager;
 import server.zone.managers.guild.GuildManager;
 import server.zone.managers.city.CityManager;
-import server.zone.managers.name.NameManager;
 
 @dirty
 class ZoneServer extends ManagedService implements Logger {
@@ -57,7 +56,7 @@ class ZoneServer extends ManagedService implements Logger {
 
 	private transient ZoneProcessServer processor;
 
-	private transient VectorMap<string, Zone> zones;
+	private VectorMap<string, Zone> zones;
 
 	private transient ObjectManager objectManager;
 	private PlayerManager playerManager;
@@ -101,8 +100,7 @@ class ZoneServer extends ManagedService implements Logger {
 	@dereferenced
 	private AtomicInteger totalDeletedPlayers;
 
-	@dereferenced
-	private AtomicInteger serverState;
+	private int serverState;
 
 	private string galaxyName;
 	private string loginMessage;
@@ -224,12 +222,12 @@ class ZoneServer extends ManagedService implements Logger {
 	@dirty
 	public native void increaseTotalDeletedPlayers();
 
-	@read
+	@dirty
 	public int getGalaxyID() {
 		return galaxyID;
 	}
 
-	@read
+	@dirty
 	public string getGalaxyName() {
 		return galaxyName;
 	}
@@ -238,42 +236,41 @@ class ZoneServer extends ManagedService implements Logger {
 		galaxyName = name;
 	}
 
-	@read
+	@dirty
 	public boolean isServerLocked() {
-		return serverState.get() == LOCKED;
+		return serverState == LOCKED;
 	}
 
-	@read
+	@dirty
 	public boolean isServerOnline() {
-		return serverState.get() == ONLINE;
+		return serverState == ONLINE;
 	}
 
-	@read
+	@dirty
 	public boolean isServerOffline() {
-		return serverState.get() == OFFLINE;
+		return serverState == OFFLINE;
 	}
 
-	@read
+	@dirty
 	public boolean isServerLoading() {
-		return serverState.get() == LOADING;
+		return serverState == LOADING;
 	}
 
-	@read
+	@dirty
 	public boolean isServerShuttingDown() {
-		return serverState.get() == SHUTTINGDOWN;
+		return serverState == SHUTTINGDOWN;
 	}
 
-	@read
 	public int getServerCap() {
 		return serverCap;
 	}
 
-	@read
+	@dirty
 	public int getServerState() {
-		return serverState.get();
+		return serverState;
 	}
 
-	@read
+	@dirty
 	public Zone getZone(final string terrainName) {
 		return zones.get(terrainName);
 	}
@@ -288,22 +285,22 @@ class ZoneServer extends ManagedService implements Logger {
 		return zones.get(idx);
 	}
 
-	@read
+	@dirty
 	public int getZoneCount() {
 		return zones.size();
 	}
 
-	@read
+	@dirty
 	public int getMaxPlayers() {
 		return maximumPlayers.get();
 	}
 
-	@read
+	@dirty
 	public int getTotalPlayers() {
 		return totalPlayers.get();
 	}
 
-	@read
+	@dirty
 	public int getDeletedPlayers() {
 		return totalDeletedPlayers.get();
 	}
@@ -323,7 +320,7 @@ class ZoneServer extends ManagedService implements Logger {
 	public ReactionManager getReactionManager() {
 		return reactionManager;
 	}
-
+	
 	@dirty
 	public FrsManager getFrsManager() {
 		return frsManager;
@@ -392,12 +389,6 @@ class ZoneServer extends ManagedService implements Logger {
 
 	@local
 	@dirty
-	public NameManager getNameManager() {
-		return processor.getNameManager();
-	}
-
-	@local
-	@dirty
 	public Time getStartTimestamp() {
 		return startTimestamp;
 	}
@@ -407,14 +398,14 @@ class ZoneServer extends ManagedService implements Logger {
 	}
 
 	public void setServerState(int state) {
-		serverState.set(state);
+		serverState = state;
 	}
 
 	public void setShouldDeleteNavAreas(boolean b) {
 		deleteNavAreas = b;
 	}
 
-	@read
+	@dirty
 	public boolean shouldDeleteNavAreas() {
 		return deleteNavAreas;
 	}
@@ -428,6 +419,6 @@ class ZoneServer extends ManagedService implements Logger {
 	public native void loadLoginMessage();
 	public native void changeLoginMessage(final string motd);
 
-	@read
+	@dirty
 	public native string getLoginMessage();
 }

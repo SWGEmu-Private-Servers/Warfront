@@ -35,16 +35,16 @@ public:
 
 		ManagedReference<CityRegion*> city = cityRegion.get();
 
-		if (city == nullptr)
+		if (city == NULL)
 			return;
 
-		if (!suiBox->isMessageBox() || player == nullptr || cancelPressed) {
+		if (!suiBox->isMessageBox() || player == NULL || cancelPressed) {
 			return;
 		}
 
 		PlayerObject* ghost = player->getPlayerObject();
 
-		if (ghost == nullptr)
+		if (ghost == NULL)
 			return;
 
 		if (!ghost->isPrivileged())

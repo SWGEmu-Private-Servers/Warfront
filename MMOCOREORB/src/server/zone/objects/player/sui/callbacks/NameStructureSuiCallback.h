@@ -24,12 +24,12 @@ public:
 
 		ManagedReference<SceneObject*> obj = sui->getUsingObject().get();
 
-		if (obj == nullptr)
+		if (obj == NULL)
 			return;
 
 		if (obj->getGameObjectType() == SceneObjectType::PLAYERTERMINALSTRUCTURE) {
 			ManagedReference<SceneObject*> root = obj->getRootParent();
-			if (root != nullptr)
+			if (root != NULL)
 				obj = root;
 		}
 

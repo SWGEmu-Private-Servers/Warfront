@@ -6,7 +6,6 @@
  */
 
 #include "CreatureTemplate.h"
-#include "server/zone/managers/creature/CreatureTemplateManager.h"
 
 CreatureTemplate::CreatureTemplate() {
 	conversationTemplate = 0;
@@ -36,6 +35,8 @@ CreatureTemplate::CreatureTemplate() {
 	specialDamageMult = 1.f;
 	range = 0;
 	baseXp = 0;
+	bonusType = "", //bonus xp type is added to current gains --mindsoft
+	bonusXP = 0, //ammount of bonus xp to gain (static non-scalable) --mindsoft
 	baseHAM = 0;
 	baseHAMmax = 0;
 	armor = 0;
@@ -76,7 +77,7 @@ CreatureTemplate::~CreatureTemplate() {
 	weapons.removeAll();
 
 	delete attacks;
-	attacks = nullptr;
+	attacks = NULL;
 }
 
 void CreatureTemplate::readObject(LuaObject* templateData) {
@@ -96,6 +97,8 @@ void CreatureTemplate::readObject(LuaObject* templateData) {
 	specialDamageMult = templateData->getFloatField("specialDamageMult");
 	if (specialDamageMult < 0.001f) specialDamageMult = 1.f; // could use numeric_limit here, but this will prevent people from putting tiny modifiers in as well.
 	baseXp = templateData->getIntField("baseXp");
+	bonusType = templateData->getStringField("bonusType");//mindsoft
+	bonusXP = templateData->getIntField("bonusXP");//mindsoft
 	baseHAM = templateData->getIntField("baseHAM");
 	baseHAMmax = templateData->getIntField("baseHAMmax");
 	armor = templateData->getIntField("armor");
@@ -143,15 +146,7 @@ void CreatureTemplate::readObject(LuaObject* templateData) {
 	LuaObject temps = templateData->getObjectField("templates");
 	if (temps.isValidTable()) {
 		for (int i = 1; i <= temps.getTableSize(); ++i) {
-			String tempName = temps.getStringAt(i).trim();
-
-			if (tempName.endsWith(".iff")) {
-				templates.add(tempName);
-				continue;
-			}
-
-			const Vector<String>& dressGroup = CreatureTemplateManager::instance()->getDressGroup(tempName);
-			templates.addAll(dressGroup);
+			templates.add(temps.getStringAt(i).trim());
 		}
 	}
 
@@ -194,15 +189,6 @@ void CreatureTemplate::readObject(LuaObject* templateData) {
 	}
 
 	attackList.pop();
-
-	LuaObject hueTable = templateData->getObjectField("hues");
-	if (hueTable.isValidTable()) {
-		for (int i = 1; i <= hueTable.getTableSize(); ++i) {
-			hues.add(hueTable.getIntAt(i));
-		}
-	}
-
-	hueTable.pop();
 
 	outfit = templateData->getStringField("outfit");
 

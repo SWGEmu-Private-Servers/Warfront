@@ -9,8 +9,6 @@
 #define WORLDCOORDINATES_H_
 
 #include "engine/engine.h"
-#include "engine/util/json_utils.h"
-
 #include "server/zone/objects/cell/CellObject.h"
 
 namespace server {
@@ -59,11 +57,6 @@ public:
 
 	bool operator==(const WorldCoordinates& c) {
 		return (point == c.point) && (cell == c.cell);
-	}
-
-	friend void to_json(nlohmann::json& j, const WorldCoordinates& c) {
-		j["point"] = c.point;
-		j["cell"] = c.cell;
 	}
 
 	bool toBinaryStream(ObjectOutputStream* stream);
@@ -120,7 +113,7 @@ public:
 	inline String toString() const {
 		StringBuffer sb;
 		sb << point.toString();
-		sb << " in " << String::valueOf(cell != nullptr ? cell->getCellNumber() : 0) << ".";
+		sb << " in " << String::valueOf(cell != NULL ? cell->getCellNumber() : 0) << ".";
 		return sb.toString();
 	}
 };

@@ -38,7 +38,7 @@ public:
 		}
 
 		ManagedReference<SceneObject*> obj = server->getZoneServer()->getObject(target);
-		if (obj == nullptr || !obj->isPlayerCreature()) {
+		if (obj == NULL || !obj->isPlayerCreature()) {
 			player->sendSystemMessage("SYNTAX: /clearVeteranReward player milestone");
 			return INVALIDPARAMETERS;
 		}
@@ -57,7 +57,7 @@ public:
 		// Get account
 		ManagedReference<Account*> account = targetGhost->getAccount();
 
-		if( account == nullptr ){
+		if( account == NULL ){
 			player->sendSystemMessage("Error finding account");
 			return GENERALERROR;
 		}
@@ -68,7 +68,7 @@ public:
 
 		GalaxyAccountInfo *info = targetGhost->getGalaxyAccountInfo();
 
-		if(info == nullptr)
+		if(info == NULL)
 			return GENERALERROR;
 
 		info->clearVeteranReward(milestone);

@@ -142,7 +142,7 @@ protected:
 public:
 	ThreatMap(TangibleObject* me) : VectorMap<ManagedReference<CreatureObject*> , ThreatMapEntry>(1, 0) {
 		self = me;
-		currentThreat = nullptr;
+		currentThreat = NULL;
 		setNoDuplicateInsertPlan();
 	}
 
@@ -187,6 +187,7 @@ public:
 
 	bool hasState(uint64 state);
 	bool isUniqueState(uint64 state);
+	bool hasAggro(CreatureObject* target);
 
 	CreatureObject* getHighestDamagePlayer();
 	CreatureObject* getHighestDamageGroupLeader();

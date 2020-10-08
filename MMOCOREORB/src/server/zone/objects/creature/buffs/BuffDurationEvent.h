@@ -28,7 +28,7 @@ namespace server {
 				ManagedReference<CreatureObject*> creature = creatureObject.get();
 				ManagedReference<Buff*> buff = buffObject.get();
 
-				if (creature == nullptr || buff == nullptr)
+				if (creature == NULL || buff == NULL)
 					return;
 
 				Locker locker(creature);

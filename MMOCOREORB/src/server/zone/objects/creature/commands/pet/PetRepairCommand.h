@@ -15,7 +15,7 @@ public:
 
 		ManagedReference<PetControlDevice*> controlDevice = creature->getControlDevice().get().castTo<PetControlDevice*>();
 
-		if (controlDevice == nullptr)
+		if (controlDevice == NULL)
 			return GENERALERROR;
 
 		// Droid specific command
@@ -23,12 +23,12 @@ public:
 			return GENERALERROR;
 
 		ManagedReference<DroidObject*> droidPet = cast<DroidObject*>(creature);
-		if( droidPet == nullptr )
+		if( droidPet == NULL )
 			return GENERALERROR;
 
 		// Target must be a droid
 		Reference<DroidObject*> targetDroid = server->getZoneServer()->getObject(target, true).castTo<DroidObject*>();
-		if (targetDroid == nullptr || !targetDroid->isDroidObject() ) {
+		if (targetDroid == NULL || !targetDroid->isDroidObject() ) {
 			droidPet->showFlyText("npc_reaction/flytext","confused", 204, 0, 0);  // "?!!?!?!"
 			return GENERALERROR;
 		}

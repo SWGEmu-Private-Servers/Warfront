@@ -30,6 +30,3 @@ SceneObject* DataObjectComponent::getParent() {
 	return parent.get().get();
 }
 
-void to_json(nlohmann::json& j, const DataObjectComponent& comp) {
-	comp.writeJSON(j);
-}

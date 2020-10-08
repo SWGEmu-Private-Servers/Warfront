@@ -106,16 +106,16 @@ int DestroyStructureSessionImplementation::sendDestroyCode() {
 int DestroyStructureSessionImplementation::destroyStructure() {
 	creatureObject->sendSystemMessage("@player_structure:processing_destruction"); //Processing confirmed structure destruction...
 
-	if (structureObject == nullptr || structureObject->getZone() == nullptr)
+	if (structureObject == NULL || structureObject->getZone() == NULL)
 		return cancelSession();
 
 	if (structureObject->isGCWBase()) {
 		Zone* zone = structureObject->getZone();
-		if (zone == nullptr)
+		if (zone == NULL)
 			return cancelSession();
 
 		GCWManager* gcwMan = zone->getGCWManager();
-		if (gcwMan == nullptr)
+		if (gcwMan == NULL)
 			return cancelSession();
 
 		gcwMan->doBaseDestruction(structureObject);

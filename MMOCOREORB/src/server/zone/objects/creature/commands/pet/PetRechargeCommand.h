@@ -16,7 +16,7 @@ public:
 
 		ManagedReference<PetControlDevice*> controlDevice = creature->getControlDevice().get().castTo<PetControlDevice*>();
 
-		if (controlDevice == nullptr)
+		if (controlDevice == NULL)
 			return GENERALERROR;
 
 		// Droid specific command
@@ -24,11 +24,11 @@ public:
 			return GENERALERROR;
 
 		ManagedReference<DroidObject*> droidPet = cast<DroidObject*>(creature);
-		if( droidPet == nullptr )
+		if( droidPet == NULL )
 			return GENERALERROR;
 
 		ManagedReference< CreatureObject*> player = droidPet->getLinkedCreature().get();
-		if( player == nullptr )
+		if( player == NULL )
 			return GENERALERROR;
 
 		// Recharge

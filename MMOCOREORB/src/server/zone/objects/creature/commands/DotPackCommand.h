@@ -8,7 +8,6 @@
 #ifndef DOTPACKCOMMAND_H_
 #define DOTPACKCOMMAND_H_
 
-#include "server/zone/objects/building/BuildingObject.h"
 #include "server/zone/objects/scene/SceneObject.h"
 #include "server/zone/objects/tangible/pharmaceutical/DotPack.h"
 #include "server/zone/ZoneServer.h"
@@ -99,7 +98,7 @@ public:
 
 		Zone* zone = creature->getZone();
 
-		if (zone == nullptr)
+		if (zone == NULL)
 			return;
 
 
@@ -120,30 +119,6 @@ public:
 
 				if (areaCenter->getWorldPosition().distanceTo(object->getWorldPosition()) - object->getTemplateRadius() > range)
 					continue;
-
-				if (creature->isPlayerCreature() && object->getParentID() != 0 && creature->getParentID() != object->getParentID()) {
-					Reference<CellObject*> targetCell = object->getParent().get().castTo<CellObject*>();
-
-					if (targetCell != nullptr) {
-						if (object->isPlayerCreature()) {
-							auto perms = targetCell->getContainerPermissions();
-
-							if (!perms->hasInheritPermissionsFromParent()) {
-								if (!targetCell->checkContainerPermission(creature, ContainerPermissions::WALKIN))
-									continue;
-							}
-						}
-
-						ManagedReference<SceneObject*> parentSceneObject = targetCell->getParent().get();
-
-						if (parentSceneObject != nullptr) {
-							BuildingObject* buildingObject = parentSceneObject->asBuildingObject();
-
-							if (buildingObject != nullptr && !buildingObject->isAllowedEntry(creature))
-								continue;
-						}
-					}
-				}
 
 				CreatureObject* creatureTarget = cast<CreatureObject*>( object);
 
@@ -250,21 +225,21 @@ public:
 			return INSUFFICIENTHAM;
 
 		ManagedReference<SceneObject*> object = server->getZoneServer()->getObject(target);
-		if (object == nullptr || !object->isCreatureObject() || creature == object)
+		if (object == NULL || !object->isCreatureObject() || creature == object)
 			return INVALIDTARGET;
 
 		uint64 objectId = 0;
 
 		parseModifier(arguments.toString(), objectId);
-		ManagedReference<DotPack*> dotPack = nullptr;
+		ManagedReference<DotPack*> dotPack = NULL;
 
 		SceneObject* inventory = creature->getSlottedObject("inventory");
 
-		if (inventory != nullptr) {
+		if (inventory != NULL) {
 			dotPack = inventory->getContainerObject(objectId).castTo<DotPack*>();
 		}
 
-		if (dotPack == nullptr)
+		if (dotPack == NULL)
 			return GENERALERROR;
 
 		PlayerManager* playerManager = server->getPlayerManager();
@@ -275,36 +250,6 @@ public:
 		if (creature != creatureTarget && !CollisionManager::checkLineOfSight(creature, creatureTarget)) {
 			creature->sendSystemMessage("@healing:no_line_of_sight"); // You cannot see your target.
 			return GENERALERROR;
-		}
-
-		ManagedReference<SceneObject*> targetObject = server->getZoneServer()->getObject(target);
-
-		if (creature->isPlayerCreature() && targetObject->getParentID() != 0 && creature->getParentID() != targetObject->getParentID()) {
-			Reference<CellObject*> targetCell = targetObject->getParent().get().castTo<CellObject*>();
-
-			if (targetCell != nullptr) {
-				if (!targetObject->isPlayerCreature()) {
-					auto perms = targetCell->getContainerPermissions();
-
-					if (!perms->hasInheritPermissionsFromParent()) {
-						if (!targetCell->checkContainerPermission(creature, ContainerPermissions::WALKIN)) {
-							creature->sendSystemMessage("@combat_effects:cansee_fail"); // You cannot see your target.
-							return GENERALERROR;
-						}
-					}
-				}
-
-				ManagedReference<SceneObject*> parentSceneObject = targetCell->getParent().get();
-
-				if (parentSceneObject != nullptr) {
-					BuildingObject* buildingObject = parentSceneObject->asBuildingObject();
-
-					if (buildingObject != nullptr && !buildingObject->isAllowedEntry(creature)) {
-						creature->sendSystemMessage("@combat_effects:cansee_fail"); // You cannot see your target.
-						return GENERALERROR;
-					}
-				}
-			}
 		}
 
 		int	range = int(dotPack->getRange() + creature->getSkillMod("healing_range") / 100 * 14);
@@ -323,7 +268,7 @@ public:
 			if (creature->hasBuff(BuffCRC::FOOD_HEAL_RECOVERY)) {
 				DelayedBuff* buff = cast<DelayedBuff*>( creature->getBuff(BuffCRC::FOOD_HEAL_RECOVERY));
 
-				if (buff != nullptr) {
+				if (buff != NULL) {
 					float percent = buff->getSkillModifierValue("heal_recovery");
 
 					delay = round(delay * (100.0f - percent) / 100.0f);
@@ -400,7 +345,7 @@ public:
 			handleArea(creature, creatureTarget, dotPack, dotPack->getArea());
 		}
 
-		if (dotPack != nullptr) {
+		if (dotPack != NULL) {
 			if (creatureTarget != creature)
 				clocker.release();
 

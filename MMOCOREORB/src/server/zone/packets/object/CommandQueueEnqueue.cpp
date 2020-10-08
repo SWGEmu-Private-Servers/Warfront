@@ -28,17 +28,18 @@ void CommandQueueEnqueueCallback::parse(Message* message) {
 void CommandQueueEnqueueCallback::run() {
 	ManagedReference<CreatureObject*> player = client->getPlayer();
 
-	if (player == nullptr)
+	if (player == NULL)
 		return;
 
+	//ObjectController* objectController = server->getZoneServer()->getObjectController();
 	Time* commandCooldown = client->getCommandSpamCooldown();
 	int commandCount = client->getCommandCount();
 	uint64 miliDifference = commandCooldown->miliDifference();
 
-	if (commandCount >= 5 && miliDifference < 1000) {
+	if (commandCount >= 3 && miliDifference < 1000) {
+		//creature->clearQueueAction(actioncntr);
 		player->clearQueueAction(actionCount);
-
-		player->debug() << "command spam detected";
+		//player->sendSystemMessage("Please stop spamming commands");
 	} else {
 		ObjectController* objectController = server->getObjectController();
 

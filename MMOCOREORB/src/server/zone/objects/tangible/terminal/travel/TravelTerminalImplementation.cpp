@@ -17,7 +17,7 @@ int TravelTerminalImplementation::handleObjectMenuSelect(CreatureObject* player,
 	Reference<PlanetTravelPoint*> ptp = getPlanetTravelPoint();
 
 	// Complain loudly if we failed to find a travel point for this terminal
-	if(ptp == nullptr) {
+	if(ptp == NULL) {
 		error("TravelTerminalImplementation::handleObjectMenuSelect(" + String::valueOf(getObjectID()) + " Could not determine related PlanetTravelPoint");
 		return 0;
 	}

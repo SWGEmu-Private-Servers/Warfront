@@ -19,19 +19,19 @@ void TrapMenuComponent::fillObjectMenuResponse(SceneObject* sceneObject, ObjectM
 		return;
 
 	TangibleObject* tano = cast<TangibleObject*>(sceneObject);
-	if(tano == nullptr)
+	if(tano == NULL)
 		return;
 
 	TangibleObjectMenuComponent::fillObjectMenuResponse(sceneObject, menuResponse, player);
 	// load trap menu needs add
-	if (player != nullptr){
+	if (player != NULL){
 		ManagedReference<PlayerObject*> ghost = player->getPlayerObject();
 		for (int i = 0; i < ghost->getActivePetsSize(); ++i) {
 			ManagedReference<AiAgent*> object = ghost->getActivePet(i);
-			if (object != nullptr) {
+			if (object != NULL) {
 				if(object->isDroidObject()) {
 					DroidObject* droid = cast<DroidObject*>(object.get());
-					if (droid != nullptr) {
+					if (droid != NULL) {
 						if (droid->isTrapDroid()) {
 							menuResponse->addRadialMenuItem(25, 3, "@pet/droid_modules:add_trap_to_droid" );
 							return;
@@ -61,14 +61,14 @@ int TrapMenuComponent::handleObjectMenuSelect(SceneObject* sceneObject, Creature
 		ManagedReference<PlayerObject*> ghost = player->getPlayerObject();
 		for (int i = 0; i < ghost->getActivePetsSize(); ++i) {
 			ManagedReference<AiAgent*> object = ghost->getActivePet(i);
-			if (object != nullptr) {
+			if (object != NULL) {
 				if(object->isDroidObject()) {
 					DroidObject* droid = cast<DroidObject*>(object.get());
-					if (droid != nullptr) {
+					if (droid != NULL) {
 						if (droid->isTrapDroid()) {
 							Locker lock(droid);
 							auto module = droid->getModule("trap_module").castTo<DroidTrapModuleDataComponent*>();
-							if (module != nullptr) {
+							if (module != NULL) {
 								module->handleInsertTrap(player,cast<TangibleObject*>(sceneObject));
 								return 0;
 							}

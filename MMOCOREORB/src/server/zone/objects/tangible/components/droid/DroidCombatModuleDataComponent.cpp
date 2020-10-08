@@ -15,13 +15,13 @@ DroidCombatModuleDataComponent::~DroidCombatModuleDataComponent() {
 
 }
 
-String DroidCombatModuleDataComponent::getModuleName() const {
+String DroidCombatModuleDataComponent::getModuleName() {
 	return String("combat_module");
 }
 
 void DroidCombatModuleDataComponent::initializeTransientMembers() {
 	DroidComponent* droidComponent = cast<DroidComponent*>(getParent());
-	if (droidComponent == nullptr) {
+	if (droidComponent == NULL) {
 		info("droidComponent was null");
 		return;
 	}
@@ -41,7 +41,7 @@ void DroidCombatModuleDataComponent::fillAttributeList(AttributeListMessage* alm
 
 	// Should insert Base Stuff for hit/min/max/speed values
 	ManagedReference<DroidObject*> droid = getDroidObject();
-	if (droid == nullptr) {
+	if (droid == NULL) {
 		return;
 	}
 
@@ -62,31 +62,31 @@ void DroidCombatModuleDataComponent::fillAttributeList(AttributeListMessage* alm
 	alm->insertAttribute("creature_damage", String::valueOf(damageMin) + " - " + String::valueOf(damageMax));
 }
 
-String DroidCombatModuleDataComponent::toString() const {
+String DroidCombatModuleDataComponent::toString() {
 	return BaseDroidModuleComponent::toString();
 }
 
 void DroidCombatModuleDataComponent::addToStack(BaseDroidModuleComponent* other) {
 	DroidCombatModuleDataComponent* otherModule = cast<DroidCombatModuleDataComponent*>(other);
-	if (otherModule == nullptr)
+	if (otherModule == NULL)
 		return;
 
 	rating = rating + otherModule->rating;
 
 	DroidComponent* droidComponent = cast<DroidComponent*>(getParent());
-	if (droidComponent != nullptr)
+	if (droidComponent != NULL)
 		droidComponent->changeAttributeValue("cmbt_module", (float)rating);
 }
 
 void DroidCombatModuleDataComponent::copy(BaseDroidModuleComponent* other) {
 	DroidCombatModuleDataComponent* otherModule = cast<DroidCombatModuleDataComponent*>(other);
-	if (otherModule == nullptr)
+	if (otherModule == NULL)
 		return;
 
 	rating = otherModule->rating;
 
 	DroidComponent* droidComponent = cast<DroidComponent*>(getParent());
-	if (droidComponent != nullptr)
+	if (droidComponent != NULL)
 		droidComponent->addProperty("cmbt_module", (float)rating, 0, "exp_effectiveness");
 }
 

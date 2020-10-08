@@ -8,7 +8,7 @@ void SpawnObserverImplementation::despawnSpawns() {
 	for (int i = 0; i < spawnedCreatures.size(); ++i) {
 		ManagedReference<CreatureObject*> obj = spawnedCreatures.get(i);
 
-		if (obj != nullptr && obj->isAiAgent()) {
+		if (obj != NULL && obj->isAiAgent()) {
 			AiAgent* aiObj = cast<AiAgent*>(obj.get());
 			agents.add(aiObj);
 		}

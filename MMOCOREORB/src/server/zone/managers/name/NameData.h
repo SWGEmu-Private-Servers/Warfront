@@ -3,7 +3,6 @@
 
 #include "server/zone/managers/name/NameRules.h"
 #include "server/zone/managers/name/NameUnique.h"
-#include "engine/lua/Lua.h"
 
 class NameData: public Object {
 	NameRules* firstNameRules;
@@ -23,8 +22,8 @@ class NameData: public Object {
 
 public:
 	NameData() {
-		firstNameRules = nullptr;
-		lastNameRules = nullptr;
+		firstNameRules = NULL;
+		lastNameRules = NULL;
 
 		beginningConsonantOdds = 0;
 		middleConsonantOdds = 0;
@@ -263,15 +262,15 @@ public:
 		patternTable.pop();
 	}
 
-	const NameRules* getFirstNameRules() const {
+	NameRules* getFirstNameRules() {
 		return firstNameRules;
 	}
 
-	const NameRules* getLastNameRules() const {
+	NameRules* getLastNameRules() {
 		return lastNameRules;
 	}
 
-	String getRandomBeginningConsonant() const {
+	String getRandomBeginningConsonant() {
 		int randOdd = System::random(beginningConsonantOdds);
 		int tempTotal = 0;
 		String consonant = "";
@@ -289,11 +288,11 @@ public:
 		return consonant;
 	}
 
-	bool beginningConsonantContains(const String& fragment) const {
+	bool beginningConsonantContains(String fragment) {
 		return beginningConsonants.contains(fragment);
 	}
 
-	String getRandomMiddleConsonant() const {
+	String getRandomMiddleConsonant() {
 		int randOdd = System::random(middleConsonantOdds);
 		int tempTotal = 0;
 		String consonant = "";
@@ -311,11 +310,11 @@ public:
 		return consonant;
 	}
 
-	bool middeConsonantContains(const String& fragment) const {
+	bool middeConsonantContains(String fragment) {
 		return middleConsonants.contains(fragment);
 	}
 
-	String getRandomEndingConsonant() const {
+	String getRandomEndingConsonant() {
 		int randOdd = System::random(endingConsonantOdds);
 		int tempTotal = 0;
 		String consonant = "";
@@ -333,11 +332,11 @@ public:
 		return consonant;
 	}
 
-	bool endingConsonantContains(const String& fragment) const {
+	bool endingConsonantContains(String fragment) {
 		return endingConsonants.contains(fragment);
 	}
 
-	String getRandomVowel() const {
+	String getRandomVowel() {
 		int randOdd = System::random(vowelOdds);
 		int tempTotal = 0;
 		String vowel = "";
@@ -355,11 +354,11 @@ public:
 		return vowel;
 	}
 
-	bool vowelsContains(const String& fragment) const {
+	bool vowelsContains(String fragment) {
 		return vowels.contains(fragment);
 	}
 
-	String getRandomSpecialSyllable() const {
+	String getRandomSpecialSyllable() {
 		int randOdd = System::random(specialSyllableOdds);
 		int tempTotal = 0;
 		String special = "";
@@ -377,7 +376,7 @@ public:
 		return special;
 	}
 
-	String getRandomUniquePattern() const {
+	String getRandomUniquePattern() {
 		int randOdd = System::random(uniquePatternOdds);
 		int tempTotal = 0;
 		String pattern = "";
@@ -397,7 +396,7 @@ public:
 		return pattern;
 	}
 
-	String getRandomUnique(const String& type, String &root) const {
+	String getRandomUnique(String type, String &root) {
 		Vector<Reference<NameUnique*> > uniqueList;
 
 		for (int i = 0; i < uniques.size(); i++) {
@@ -414,7 +413,7 @@ public:
 		return final->getWord();
 	}
 
-	bool specialSyllablesContains(const String& fragment) const {
+	bool specialSyllablesContains(String fragment) {
 		return specialSyllables.contains(fragment);
 	}
 };

@@ -33,13 +33,13 @@ public:
 
 		ManagedReference<CityRegion*> city = cityRegion.get();
 
-		if (city == nullptr || !suiBox->isMessageBox() || player == nullptr || cancelPressed) {
+		if (city == NULL || !suiBox->isMessageBox() || player == NULL || cancelPressed) {
 			return;
 		}
 
 		PlayerObject* ghost = player->getPlayerObject();
 
-		if (ghost == nullptr)
+		if (ghost == NULL)
 			return;
 
 		if (!city->isMayor(player->getObjectID()) && !ghost->isAdmin()) {

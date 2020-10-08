@@ -9,10 +9,6 @@
 #include "engine/lua/Lua.h"
 #include "server/zone/packets/charcreation/ClientCreateCharacterCallback.h"
 
-#include "ProfessionDefaultsInfo.h"
-#include "RacialCreationData.h"
-#include "HairStyleInfo.h"
-
 namespace server {
 namespace zone {
 	class ZoneServer;
@@ -68,6 +64,21 @@ class PlayerCreationManager : public Singleton<PlayerCreationManager>, public Lo
 	 */
 	Vector<String> commonStartingItems;
 
+	/** -Mindsoft added
+	 * Vector containing starting items for humanoid models only.
+	 */
+	Vector<String> humanStartingItems;
+
+	/**-Mindsoft added
+	 * Vector containing starting items for ithorian models only.
+	 */
+	Vector<String> ithorianStartingItems;
+
+	/**-Mindsoft added
+	 * Vector containing starting items for wookie models only.
+	 */
+	Vector<String> wookieStartingItems;
+
 	int startingCash;
 	int startingBank;
 	int skillPoints;
@@ -92,7 +103,7 @@ class PlayerCreationManager : public Singleton<PlayerCreationManager>, public Lo
 
 	void addCustomization(CreatureObject* creature, const String& customizationString, const String& appearanceFilename) const;
 	void addHair(CreatureObject* creature, const String& hairTemplate, const String& hairCustomization) const;
-	void addRacialMods(CreatureObject* creature, const String& race, const Vector<String>* startingSkills, const Vector<String>* startingItems, bool equipmentOnly) const;
+	void addRacialMods(CreatureObject* creature, const String& race, Vector<String>* startingSkills, Vector<String>* startingItems, bool equipmentOnly) const;
 	void addStartingItems(CreatureObject* creature, const String& clientTemplate, bool equipmentOnly) const;
 	void addProfessionStartingItems(CreatureObject* creature, const String& profession, const String& clientTemplate, bool equipmentOnly) const;
 	//void generateHologrindProfessions(CreatureObject* creature);

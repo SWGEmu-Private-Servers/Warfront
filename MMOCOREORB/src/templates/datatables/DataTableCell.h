@@ -27,38 +27,38 @@ public:
 		throw Exception("No valid type specified.");
 	}*/
 
-	virtual void getValue(Vector<String>& out) const {
+	virtual void getValue(Vector<String>& out) {
 		throw Exception(String("No valid type specified. Correct type is ").concat((char)getType()));
 	}
 
-	virtual void getValue(SortedVector<String>& out) const {
+	virtual void getValue(SortedVector<String>& out) {
 		throw Exception(String("No valid type specified. Correct type is ").concat((char)getType()));
 	}
 
-	virtual void getValue(String& out) const {
+	virtual void getValue(String& out) {
 		throw Exception(String("No valid type specified. Correct type is ").concat((char)getType()));
 	}
 
-	virtual void getValue(int& out) const {
+	virtual void getValue(int& out) {
 		throw Exception(String("No valid type specified. Correct type is ").concat((char)getType()));
 	}
 
-	virtual void getValue(uint32& out) const {
+	virtual void getValue(uint32& out) {
 		throw Exception(String("No valid type specified. Correct type is ").concat((char)getType()));
 	}
 
-	virtual void getValue(float& out) const {
+	virtual void getValue(float& out) {
 		throw Exception(String("No valid type specified. Correct type is ").concat((char)getType()));
 	}
 
-	virtual void getValue(bool& out) const {
+	virtual void getValue(bool& out) {
 		throw Exception(String("No valid type specified. Correct type is ").concat((char)getType()));
 	}
 
 
-	virtual byte getType() const = 0;
+	virtual byte getType() = 0;
 
-	virtual String toString() const = 0;
+	virtual String toString() = 0;
 };
 
 class DataTableCellString : public DataTableCell {
@@ -68,22 +68,22 @@ public:
 	DataTableCellString() {
 	}
 
-	void getValue(SortedVector<String>& out) const;
-	void getValue(Vector<String>& out) const;
+	void getValue(SortedVector<String>& out);
+	void getValue(Vector<String>& out);
 
 	void parse(Chunk* chunk) {
 		chunk->readString(value);
 	}
 
-	void getValue(String& out) const {
+	void getValue(String& out) {
 		out = value;
 	}
 
-	byte getType() const {
+	byte getType() {
 		return 's';
 	}
 
-	String toString() const {
+	String toString() {
 		return value;
 	}
 };
@@ -100,15 +100,15 @@ public:
 		value = chunk->readSignedInt();
 	}
 
-	void getValue(int& out) const {
+	void getValue(int& out) {
 		out = value;
 	}
 
-	byte getType() const {
+	byte getType() {
 		return 'i';
 	}
 
-	String toString() const {
+	String toString() {
 		return String::valueOf(value);
 	}
 };
@@ -125,15 +125,15 @@ public:
 		value = chunk->readInt();
 	}
 
-	void getValue(uint32& out) const {
+	void getValue(uint32& out) {
 		out = value;
 	}
 
-	byte getType() const {
+	byte getType() {
 		return 'h';
 	}
 
-	String toString() const {
+	String toString() {
 		return String::valueOf(value);
 	}
 };
@@ -150,15 +150,15 @@ public:
 		value = chunk->readFloat();
 	}
 
-	void getValue(float& out) const {
+	void getValue(float& out) {
 		out = value;
 	}
 
-	byte getType() const {
+	byte getType() {
 		return 'f';
 	}
 
-	String toString() const {
+	String toString() {
 		return String::valueOf(value);
 	}
 };
@@ -175,15 +175,15 @@ public:
 		value = (bool) chunk->readInt();
 	}
 
-	void getValue(bool& out) const {
+	void getValue(bool& out) {
 		out = value;
 	}
 
-	byte getType() const {
+	byte getType() {
 		return 'b';
 	}
 
-	String toString() const {
+	String toString() {
 		return String::valueOf(value);
 	}
 };

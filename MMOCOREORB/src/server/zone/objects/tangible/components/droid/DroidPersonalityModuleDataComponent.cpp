@@ -8,7 +8,6 @@
 #include "templates/tangible/DroidPersonalityModuleTemplate.h"
 #include "server/chat/ChatManager.h"
 #include "server/zone/managers/reaction/ReactionManager.h"
-#include "server/zone/objects/creature/ai/DroidObject.h"
 
 DroidPersonalityModuleDataComponent::DroidPersonalityModuleDataComponent() {
 	setLoggingName("DroidPersonalityModule");
@@ -18,20 +17,20 @@ DroidPersonalityModuleDataComponent::~DroidPersonalityModuleDataComponent() {
 
 }
 
-String DroidPersonalityModuleDataComponent::getModuleName() const {
+String DroidPersonalityModuleDataComponent::getModuleName() {
 	return "personality_chip";
 }
 
 void DroidPersonalityModuleDataComponent::initializeTransientMembers() {
 	// load template data here
 	DroidComponent* droidComponent = cast<DroidComponent*>(getParent());
-	if (droidComponent == nullptr) {
+	if (droidComponent == NULL) {
 		info("droidComponent was null");
 		return;
 	}
 
-	Reference<DroidPersonalityModuleTemplate*> moduleTemplate = cast<DroidPersonalityModuleTemplate*>(droidComponent->getObjectTemplate());
-	if (moduleTemplate == nullptr) {
+	ManagedReference<DroidPersonalityModuleTemplate*> moduleTemplate = cast<DroidPersonalityModuleTemplate*>(droidComponent->getObjectTemplate());
+	if (moduleTemplate == NULL) {
 		info("Module was null");
 		return;
 	}
@@ -63,13 +62,13 @@ void DroidPersonalityModuleDataComponent::deactivate() {
 	// no op
 }
 
-String DroidPersonalityModuleDataComponent::toString() const {
+String DroidPersonalityModuleDataComponent::toString() {
 	return BaseDroidModuleComponent::toString();
 }
 
 void DroidPersonalityModuleDataComponent::onCall() {
 	ManagedReference<DroidObject*> droid = getDroidObject();
-	if (droid == nullptr) {
+	if (droid == NULL) {
 		info("Droid is null");
 		return;
 	}
@@ -80,7 +79,7 @@ void DroidPersonalityModuleDataComponent::onCall() {
 		droid->clearOptionBit(OptionBitmask::CONVERSE, true);
 	}
 
-	if (observer == nullptr) {
+	if (observer == NULL) {
 		observer = new DroidPersonalityObserver(this);
 		observer->deploy();
 	}
@@ -94,12 +93,12 @@ void DroidPersonalityModuleDataComponent::onCall() {
 
 void DroidPersonalityModuleDataComponent::onStore() {
 	ManagedReference<DroidObject*> droid = getDroidObject();
-	if (droid == nullptr) {
+	if (droid == NULL) {
 		info("Droid is null");
 		return;
 	}
 
-	if (observer == nullptr) {
+	if (observer == NULL) {
 		info("bad observer");
 		return;
 	}
@@ -126,7 +125,7 @@ void DroidPersonalityModuleDataComponent::quip(String m,DroidObject* droid) {
 
 void DroidPersonalityModuleDataComponent::notifyEvent(unsigned int eventType, ManagedObject* arg1, int64 arg2, bool forced) {
 	ManagedReference<DroidObject*> droid = getDroidObject();
-	if (droid == nullptr) {
+	if (droid == NULL) {
 		info("Droid is null");
 		return;
 	}

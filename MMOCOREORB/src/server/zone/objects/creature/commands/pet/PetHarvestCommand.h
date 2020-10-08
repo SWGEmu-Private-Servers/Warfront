@@ -15,32 +15,32 @@ public:
 
 	int doQueueCommand(CreatureObject* creature, const uint64& targetID, const UnicodeString& arguments) const {
 		ManagedReference<PetControlDevice*> controlDevice = creature->getControlDevice().get().castTo<PetControlDevice*>();
-		if (controlDevice == nullptr)
+		if (controlDevice == NULL)
 			return GENERALERROR;
 
 		ManagedReference<AiAgent*> pet = cast<AiAgent*>(creature);
-		if( pet == nullptr )
+		if( pet == NULL )
 			return GENERALERROR;
 		if (pet->hasRidingCreature())
 			return GENERALERROR;
 
 		ManagedReference<CreatureObject*> owner = pet->getLinkedCreature().get();
-		if (owner == nullptr) {
+		if (owner == NULL) {
 			return GENERALERROR;
 		}
 
 		Locker olock(owner);
 		// RE-DO here, pull target form harvest target list on module. and ignore the target id passed in.
 		ManagedReference<DroidObject*> droid = cast<DroidObject*>(creature);
-		if( droid == nullptr )
+		if( droid == NULL )
 			return GENERALERROR;
 
-		if(droid->getPendingTask("harvest_check") != nullptr) {
+		if(droid->getPendingTask("harvest_check") != NULL) {
 			droid->removePendingTask("harvest_check");
 		}
 
 		auto module = droid->getModule("harvest_module").castTo<DroidHarvestModuleDataComponent*>();
-		if(module == nullptr) {
+		if(module == NULL) {
 			return GENERALERROR;
 		}
 		uint64 droidTarget = module->getNextHarvestTarget();
@@ -50,7 +50,7 @@ public:
 		// end re-do
 		Reference<CreatureObject*> target = server->getZoneServer()->getObject(droidTarget, true).castTo<CreatureObject*>();
 
-		if (target == nullptr || !target->isCreature()) {
+		if (target == NULL || !target->isCreature()) {
 			owner->sendSystemMessage("@pet/droid_modules:invalid_harvest_target");
 			return GENERALERROR;
 		}
@@ -62,12 +62,12 @@ public:
 
 		Creature* cr = cast<Creature*>(target.get());
 
-		if (cr->getZone() == nullptr)
+		if (cr->getZone() == NULL)
 			return GENERALERROR;
 		// Check if droid is spawned
-		if( droid->getLocalZone() == nullptr ){  // Not outdoors
+		if( droid->getLocalZone() == NULL ){  // Not outdoors
 			ManagedReference<SceneObject*> parent = droid->getParent().get();
-			if( parent == nullptr || !parent->isCellObject() ){ // Not indoors either
+			if( parent == NULL || !parent->isCellObject() ){ // Not indoors either
 				return GENERALERROR;
 			}
 		}

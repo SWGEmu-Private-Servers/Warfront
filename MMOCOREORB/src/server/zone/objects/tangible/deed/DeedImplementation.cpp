@@ -13,7 +13,7 @@ void DeedImplementation::loadTemplateData(SharedObjectTemplate* templateData) {
 
 	DeedTemplate* deedData = dynamic_cast<DeedTemplate*>(templateData);
 
-	if (deedData == nullptr)
+	if (deedData == NULL)
 		return;
 
 	String generatetmpl = deedData->getGeneratedObjectTemplate();

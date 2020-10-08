@@ -22,7 +22,7 @@ public:
 
 		ManagedReference<BuildingObject*> strongRef = building;
 
-		if (strongRef == nullptr) {
+		if (strongRef == NULL) {
 			return;
 		}
 

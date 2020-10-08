@@ -17,11 +17,11 @@ public:
 	int doQueueCommand(CreatureObject* creature, const uint64& target, const UnicodeString& arguments) const {
 
 		ManagedReference<PetControlDevice*> controlDevice = creature->getControlDevice().get().castTo<PetControlDevice*>();
-		if (controlDevice == nullptr)
+		if (controlDevice == NULL)
 			return GENERALERROR;
 
 		ManagedReference<AiAgent*> pet = cast<AiAgent*>(creature);
-		if( pet == nullptr )
+		if( pet == NULL )
 			return GENERALERROR;
 
 		if (pet->hasRidingCreature())
@@ -30,7 +30,7 @@ public:
 		// Check if droid has power
 		if( controlDevice->getPetType() == PetManager::DROIDPET ) {
 			ManagedReference<DroidObject*> droidPet = cast<DroidObject*>(pet.get());
-			if( droidPet == nullptr )
+			if( droidPet == NULL )
 				return GENERALERROR;
 
 			if( !droidPet->hasPower() ){
@@ -52,7 +52,7 @@ public:
 		}
 
 		ManagedReference<SceneObject*> targetObject = server->getZoneServer()->getObject(target, true);
-		if (targetObject != nullptr && targetObject->isPlayerCreature()) {
+		if (targetObject != NULL && targetObject->isPlayerCreature()) {
 			CreatureObject* player = cast<CreatureObject*>(targetObject.get());
 			player->sendSystemMessage("@pet/pet_menu:patrol_removed"); // Patrol points forgotten
 		}

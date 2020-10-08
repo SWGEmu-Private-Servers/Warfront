@@ -25,7 +25,7 @@ public:
 
 		ManagedReference<SceneObject*> object = server->getZoneServer()->getObject(target);
 
-		if (object == nullptr)
+		if (object == NULL)
 			return GENERALERROR;
 
 		if (!object->isPlayerCreature())
@@ -35,7 +35,7 @@ public:
 
 		Reference<PlayerObject*> playerObject = playerCreature->getSlottedObject("ghost").castTo<PlayerObject*>();
 
-		if (playerObject != nullptr)
+		if (playerObject != NULL)
 			playerObject->sendBadgesResponseTo(creature);
 
 		return SUCCESS;

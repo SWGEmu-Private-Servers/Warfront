@@ -15,7 +15,6 @@ import server.zone.objects.scene.variables.ContainerPermissions;
 import server.zone.objects.manufactureschematic.ManufactureSchematic;
 import server.zone.objects.manufactureschematic.craftingvalues.CraftingValues;
 
-@json
 class CraftingTool extends ToolTangibleObject {
 
 	protected string status;
@@ -132,7 +131,7 @@ class CraftingTool extends ToolTangibleObject {
 	}
 
 	/**
-	 * Sends message to player if the tool is unable
+	 * Sends message to player if the tool is unable 
 	 * to start
 	 */
 	@dirty

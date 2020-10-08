@@ -36,7 +36,7 @@ void MinimumPool::addResource(ManagedReference<ResourceSpawn*> resourceSpawn, co
 		String resourceType = includedResources.elementAt(i).getKey();
 		ManagedReference<ResourceSpawn* > spawn = includedResources.elementAt(i).getValue();
 
-		if(resourceType == poolSlot && spawn == nullptr) {
+		if(resourceType == poolSlot && spawn == NULL) {
 			index = i;
 			break;
 		}
@@ -66,21 +66,21 @@ bool MinimumPool::update() {
 		String resourceType = includedResources.elementAt(i).getKey();
 		ManagedReference<ResourceSpawn* > spawn = includedResources.elementAt(i).getValue();
 
-		if (spawn == nullptr || !spawn->inShift()) {
+		if (spawn == NULL || !spawn->inShift()) {
 
-			ManagedReference<ResourceSpawn* > newSpawn = nullptr;
+			ManagedReference<ResourceSpawn* > newSpawn = NULL;
 
-			if(spawn != nullptr) {
+			if(spawn != NULL) {
 				resourceSpawner->despawn(spawn);
 				despawnedCount++;
 				newSpawn = resourceSpawner->getFromRandomPool(spawn->getType());
 				//buffer << "Removing: " << spawn->getName() << " : " << spawn->getType();
 			}
 
-			if(newSpawn == nullptr)
+			if(newSpawn == NULL)
 				newSpawn = resourceSpawner->createResourceSpawn(resourceType, excludedResources);
 
-			if(newSpawn != nullptr) {
+			if(newSpawn != NULL) {
 				Locker locker(newSpawn);
 				newSpawn->setSpawnPool(ResourcePool::MINIMUMPOOL, resourceType);
 				spawnedCount++;
@@ -116,7 +116,7 @@ String MinimumPool::healthCheck() {
 		if(!pass)
 			heathly = false;
 
-		if (spawn != nullptr) {
+		if (spawn != NULL) {
 			buffer << "   " << i << ". " << resourceType << " : "
 					<< (pass ? "Pass" : "Fail") << "  " << spawn->getName()
 					<< " Zones: " << String::valueOf(spawn->getSpawnMapSize())

@@ -15,13 +15,13 @@ namespace login {
 
 	class LoginPacketHandler : public Logger {
 		LoginProcessServerImplementation* processServer;
-		Reference<LoginServer*> server;
+		ManagedReference<LoginServer*> server;
 
 	public:
 
 		LoginPacketHandler() : Logger() {
-			server = nullptr;
-			processServer = nullptr;
+			server = NULL;
+			processServer = NULL;
 		}
 
 		LoginPacketHandler(const String& s, LoginProcessServerImplementation* serv);

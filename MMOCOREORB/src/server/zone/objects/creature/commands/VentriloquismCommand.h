@@ -42,7 +42,7 @@ public:
 		uint64 selectedTarget = creature->getTargetID();
  		ManagedReference<CreatureObject*> targetCreature = server->getZoneServer()->getObject(selectedTarget).castTo<CreatureObject*>();
 
- 		if(targetCreature == nullptr) {
+ 		if(targetCreature == NULL) {
 			creature->sendSystemMessage("@performance:effect_need_target");
 			return GENERALERROR;
 		}

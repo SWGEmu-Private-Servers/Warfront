@@ -23,14 +23,14 @@ public:
 	void run() {
 		ManagedReference<CreatureObject*> creature = creatureObject.get();
 
-		if (creature == nullptr)
+		if (creature == NULL)
 			return;
 
 		Locker lock(creature);
 
 		ManagedReference<PlaceStructureSession*> session = creature->getActiveSession(SessionFacadeType::PLACESTRUCTURE).castTo<PlaceStructureSession*>();
 
-		if (session == nullptr)
+		if (session == NULL)
 			return;
 
 		session->completeSession();

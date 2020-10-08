@@ -10,7 +10,7 @@
 #include "server/zone/objects/creature/CreatureObject.h"
 
 void FireHeavyWeaponMenuComponent::fillObjectMenuResponse(SceneObject* sceneObject, ObjectMenuResponse* menuResponse, CreatureObject* player) const {
-	if (sceneObject == nullptr || !sceneObject->isWeaponObject() || player == nullptr)
+	if (sceneObject == NULL || !sceneObject->isWeaponObject() || player == NULL)
 		return;
 
 	WeaponObjectMenuComponent::fillObjectMenuResponse(sceneObject, menuResponse, player);

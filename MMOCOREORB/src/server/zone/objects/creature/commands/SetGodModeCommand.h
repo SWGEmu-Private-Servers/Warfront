@@ -26,7 +26,7 @@ public:
 		PermissionLevelList* permissionLevelList = PermissionLevelList::instance();
 		ManagedReference<PlayerObject*> ghost = creature->getPlayerObject();
 
-		if (ghost == nullptr) {
+		if (ghost == NULL) {
 			return GENERALERROR;
 		}
 
@@ -53,25 +53,21 @@ public:
 
 		ManagedReference<PlayerManager*> playerManager = server->getPlayerManager();
 		SkillManager* skillManager = server->getSkillManager();
-		ManagedReference<CreatureObject*> targetPlayer = creature;
+		ManagedReference<CreatureObject*> targetPlayer = playerManager->getPlayer(targetName);
 
-		if (targetName.toLowerCase() != "self")
-			targetPlayer = playerManager->getPlayer(targetName);
-
-		if (targetPlayer == nullptr)
+		if (targetPlayer == NULL)
 			return GENERALERROR;
 
 		Locker clocker(targetPlayer, creature);
 
 		ManagedReference<PlayerObject*> targetGhost = targetPlayer->getPlayerObject();
-		if (targetGhost != nullptr) {
+		if (targetGhost != NULL) {
 			int targetPermissionLevel = targetGhost->getAdminLevel();
 
 			if (targetPermissionLevel > ghostPermissionLevel)
 				return INSUFFICIENTPERMISSION;
 
 			if (param == "on" && targetPermissionLevel > 0) {
-				skillManager->removeAbility(targetGhost, "admin");
 				skillManager->addAbility(targetGhost, "admin");
 				playerManager->updatePermissionName(targetPlayer, targetPermissionLevel);
 			} else if (param == "off" && targetPermissionLevel > 0) {

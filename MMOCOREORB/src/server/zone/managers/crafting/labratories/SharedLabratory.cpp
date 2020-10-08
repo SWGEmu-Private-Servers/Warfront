@@ -84,17 +84,17 @@ float SharedLabratory::getWeightedValue(ManufactureSchematic* manufactureSchemat
 		if (ingredientslot->isComponentSlot()) {
 			ComponentSlot* compSlot = cast<ComponentSlot*>(ingredientslot.get());
 
-			if (compSlot == nullptr)
+			if (compSlot == NULL)
 				continue;
 
 			ManagedReference<TangibleObject*> tano = compSlot->getPrototype();
 
-			if (tano == nullptr || !tano->isCustomIngredient())
+			if (tano == NULL || !tano->isCustomIngredient())
 				continue;
 
 			ManagedReference<CustomIngredient*> component = cast<CustomIngredient*>( tano.get());
 
-			if (component == nullptr)
+			if (component == NULL)
 				continue;
 
 			n = draftslot->getQuantity();
@@ -114,12 +114,12 @@ float SharedLabratory::getWeightedValue(ManufactureSchematic* manufactureSchemat
 
 		ResourceSlot* resSlot = cast<ResourceSlot*>(ingredientslot.get());
 
-		if(resSlot == nullptr)
+		if(resSlot == NULL)
 			continue;
 
 		ManagedReference<ResourceSpawn* > spawn = resSlot->getCurrentSpawn();
 
-		if (spawn == nullptr) {
+		if (spawn == NULL) {
 			error("Spawn object is null when running getWeightedValue");
 			return 0.0f;
 		}
@@ -164,7 +164,7 @@ int SharedLabratory::calculateAssemblySuccess(CreatureObject* player,DraftSchema
 	if (player->hasBuff(BuffCRC::FOOD_CRAFT_BONUS)) {
 		Buff* buff = player->getBuff(BuffCRC::FOOD_CRAFT_BONUS);
 
-		if (buff != nullptr) {
+		if (buff != NULL) {
 			craftbonus = buff->getSkillModifierValue("craft_bonus");
 			toolModifier *= 1.0f + (craftbonus / 100.0f);
 		}

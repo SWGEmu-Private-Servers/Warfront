@@ -30,7 +30,7 @@ public:
 		ManagedReference<EntertainingSession*> session =
 				dynamic_cast<EntertainingSession*> (facade.get());
 
-		if (session == nullptr) {
+		if (session == NULL) {
 			session = new EntertainingSession(creature);
 			creature->addActiveSession(SessionFacadeType::ENTERTAINING, session);
 		}
@@ -44,10 +44,10 @@ public:
 			sui->setPromptTitle("@performance:available_songs"); // Available Songs
 			sui->setPromptText("@performance:select_song"); // Select a song to play.
 
-			const AbilityList* list = ghost->getAbilityList();
+			AbilityList* list = ghost->getAbilityList();
 
 			for (int i = 0; i < list->size(); ++i) {
-				const Ability* ability = list->get(i);
+				Ability* ability = list->get(i);
 
 				String abilityName = ability->getAbilityName();
 
@@ -85,7 +85,7 @@ public:
 		ManagedReference<Facade*> facade = creature->getActiveSession(SessionFacadeType::ENTERTAINING);
 		ManagedReference<EntertainingSession*> session = dynamic_cast<EntertainingSession*> (facade.get());
 
-		if (session != nullptr) {
+		if (session != NULL) {
 			if (session->isDancing()) {
 				session->stopDancing();
 			}
@@ -102,17 +102,17 @@ public:
 		Reference<Instrument*> instrument = creature->getSlottedObject("hold_r").castTo<Instrument*> ();
 		bool targetedInstrument = false;
 
-		if (instrument == nullptr) {
+		if (instrument == NULL) {
 			ManagedReference<SceneObject*> nala = server->getZoneServer()->getObject(creature->getTargetID());
 
-			if (nala != nullptr && dynamic_cast<Instrument*> (nala.get())) {
+			if (nala != NULL && dynamic_cast<Instrument*> (nala.get())) {
 
 				targetedInstrument = true;
 				instrument = cast<Instrument*> (nala.get());
 				ManagedReference<SceneObject*> creatureParent = creature->getParent().get();
 
 				if (creature->getDistanceTo(nala) >= 3 || nala->getZone()
-						== nullptr || (creatureParent == nullptr && nullptr
+						== NULL || (creatureParent == NULL && NULL
 						!= nala->getParent().get())) {
 					creature->sendSystemMessage("@elevator_text:too_far"); // You are too far away to use that.
 
@@ -120,7 +120,7 @@ public:
 				}
 
 				ManagedReference<CreatureObject*> spawnerPlayer = instrument->getSpawnerPlayer().get();
-				if (spawnerPlayer != nullptr && spawnerPlayer != creature) {
+				if (spawnerPlayer != NULL && spawnerPlayer != creature) {
 					creature->sendSystemMessage("You must be the owner of the instrument");
 
 					return GENERALERROR;
@@ -132,7 +132,7 @@ public:
 					return GENERALERROR;
 				}
 
-				if (instrument->getParent() != nullptr || spawnerPlayer != nullptr) {
+				if (instrument->getParent() != NULL || spawnerPlayer != NULL) {
 					instrument->setDirection(*creature->getDirection());
 					instrument->teleport(creature->getPositionX(), creature->getPositionZ(), creature->getPositionY(), creature->getParentID());
 				}
@@ -158,7 +158,7 @@ public:
 
 		ManagedReference<GroupObject*> group = creature->getGroup();
 
-		if (group != nullptr) {
+		if (group != NULL) {
 			String bandSong = group->getBandSong();
 
 			if (args.length() < 2) {

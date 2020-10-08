@@ -17,13 +17,13 @@ class CharacterBuilderTerminalTemplate : public SharedTangibleObjectTemplate {
 	Vector<String> villageBranchUnlocks;
 
 public:
-	CharacterBuilderTerminalTemplate() : rootNode(nullptr) {
+	CharacterBuilderTerminalTemplate() : rootNode(NULL) {
 	}
 
 	~CharacterBuilderTerminalTemplate() {
-		if (rootNode != nullptr) {
+		if (rootNode != NULL) {
 			//delete rootNode;
-			rootNode = nullptr;
+			rootNode = NULL;
 		}
 	}
 
@@ -61,15 +61,15 @@ public:
 		luaItemList.pop();
     }
 
-    inline const CharacterBuilderMenuNode* getItemList() const {
+    inline CharacterBuilderMenuNode* getItemList() const {
         return rootNode;
     }
 
-    inline const Vector<int>& getGlowyBadgeIds() const {
+    inline Vector<int> getGlowyBadgeIds() const {
         return glowyBadgeIds;
     }
 
-    inline const Vector<String>& getVillageBranchUnlocks() const {
+    inline Vector<String> getVillageBranchUnlocks() const {
         return villageBranchUnlocks;
     }
 };

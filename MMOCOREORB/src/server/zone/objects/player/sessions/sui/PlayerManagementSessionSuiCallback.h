@@ -53,9 +53,9 @@ public:
 		ManagedReference<PlayerManagementSession*> session = cast<PlayerManagementSession*>(facade.get());
 		ManagedReference<PlayerManager*> playerManager = server->getPlayerManager();
 
-		if (session == nullptr || playerManager == nullptr) {
+		if (session == NULL || playerManager == NULL) {
 			ManagedReference<CreatureObject*> pl = cast<CreatureObject*>(suiBox->getUsingObject().get().get());
-			if (pl != nullptr)
+			if (pl != NULL)
 				pl->dropActiveSession(SessionFacadeType::PLAYERMANAGEMENT);
 
 			return;
@@ -71,8 +71,6 @@ public:
 		int index = Integer::valueOf(args->get(1).toString());
 		String firstName = "";
 		int tablevel = 0;
-
-		StringBuffer argsString;
 
 		if (index != -1) {
 			SuiListBox* listBox = cast<SuiListBox*>(suiBox);
@@ -112,20 +110,6 @@ public:
 
 				galaxyID = getPlayerGalaxyID(player, listBox, index, galaxyName);
 				playerName = firstName;
-			}
-
-			if (tablevel == 3) {
-				String accountId;
-				StringTokenizer tokenizer(listString);
-				tokenizer.setDelimiter(":");
-				while(tokenizer.hasMoreTokens()) {
-					tokenizer.getStringToken(accountId);
-				}
-
-				if (!accountId.isEmpty()) {
-					session->cancelSession();
-					player->sendCommand(STRING_HASHCODE("getaccountinfo"), "-a " + accountId);
-				}
 			}
 
 			if (otherPressed) {
@@ -190,9 +174,9 @@ public:
 		ManagedReference<PlayerManagementSession*> session = cast<PlayerManagementSession*>(facade.get());
 		ManagedReference<PlayerManager*> playerManager = server->getPlayerManager();
 
-		if (session == nullptr || playerManager == nullptr) {
+		if (session == NULL || playerManager == NULL) {
 			ManagedReference<CreatureObject*> pl = cast<CreatureObject*>( suiBox->getUsingObject().get().get());
-			if (pl != nullptr)
+			if (pl != NULL)
 				pl->dropActiveSession(SessionFacadeType::PLAYERMANAGEMENT);
 
 			return;
@@ -213,9 +197,9 @@ public:
 		ManagedReference<PlayerManagementSession*> session = cast<PlayerManagementSession*>(facade.get());
 		ManagedReference<PlayerManager*> playerManager = server->getPlayerManager();
 
-		if (session == nullptr || playerManager == nullptr) {
+		if (session == NULL || playerManager == NULL) {
 			ManagedReference<CreatureObject*> pl = cast<CreatureObject*>( suiBox->getUsingObject().get().get());
-			if (pl != nullptr)
+			if (pl != NULL)
 				pl->dropActiveSession(SessionFacadeType::PLAYERMANAGEMENT);
 
 			return;
@@ -236,9 +220,9 @@ public:
 		ManagedReference<PlayerManagementSession*> session = cast<PlayerManagementSession*>(facade.get());
 		ManagedReference<PlayerManager*> playerManager = server->getPlayerManager();
 
-		if (session == nullptr || playerManager == nullptr) {
+		if (session == NULL || playerManager == NULL) {
 			ManagedReference<CreatureObject*> pl = cast<CreatureObject*>( suiBox->getUsingObject().get().get());
-			if (pl != nullptr)
+			if (pl != NULL)
 				pl->dropActiveSession(SessionFacadeType::PLAYERMANAGEMENT);
 
 			return;
@@ -267,9 +251,9 @@ public:
 		ManagedReference<PlayerManagementSession*> session = cast<PlayerManagementSession*>(facade.get());
 		ManagedReference<PlayerManager*> playerManager = server->getPlayerManager();
 
-		if (session == nullptr || playerManager == nullptr) {
+		if (session == NULL || playerManager == NULL) {
 			ManagedReference<CreatureObject*> pl = cast<CreatureObject*>( suiBox->getUsingObject().get().get());
-			if (pl != nullptr)
+			if (pl != NULL)
 				pl->dropActiveSession(SessionFacadeType::PLAYERMANAGEMENT);
 
 			return;

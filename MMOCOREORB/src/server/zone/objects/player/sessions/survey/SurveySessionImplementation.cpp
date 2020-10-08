@@ -29,13 +29,13 @@ int SurveySessionImplementation::startSession() {
 	ManagedReference<SurveyTool*> activeSurveyTool = this->activeSurveyTool.get();
 	ManagedReference<CreatureObject*> surveyer = this->surveyer.get();
 
-	if (surveyer == nullptr || activeSurveyTool == nullptr) {
+	if (surveyer == NULL || activeSurveyTool == NULL) {
 		cancelSession();
 		return false;
 	}
 
 	resourceManager = surveyer->getZoneServer()->getResourceManager();
-	if (resourceManager.get() == nullptr) {
+	if (resourceManager.get() == NULL) {
 		cancelSession();
 		return false;
 	}
@@ -48,7 +48,7 @@ int SurveySessionImplementation::startSession() {
 int SurveySessionImplementation::cancelSession() {
 	ManagedReference<CreatureObject*> ref = surveyer.get();
 
-	if (ref != nullptr)
+	if (ref != NULL)
 		ref->dropActiveSession(SessionFacadeType::SURVEY);
 
 
@@ -65,22 +65,22 @@ void SurveySessionImplementation::startSurvey(const String& resname) {
 	ManagedReference<ResourceManager*> resourceManager = this->resourceManager.get();
 	ManagedReference<CreatureObject*> surveyer = this->surveyer.get();
 
-	if (activeSurveyTool == nullptr) {
-		error("surveyTool is nullptr");
+	if (activeSurveyTool == NULL) {
+		error("surveyTool is NULL");
 		return;
 	}
 
-	if (resourceManager == nullptr) {
-		error("ResourceManager is nullptr");
+	if (resourceManager == NULL) {
+		error("ResourceManager is NULL");
 		return;
 	}
 
-	if (surveyer == nullptr) {
-		error("surveyer is nullptr");
+	if (surveyer == NULL) {
+		error("surveyer is NULL");
 		return;
 	}
 
-	if (surveyer->getParent() != nullptr && surveyer->getParent().get()->isCellObject()) {
+	if (surveyer->getParent() != NULL && surveyer->getParent().get()->isCellObject()) {
 		surveyer->sendSystemMessage("@error_message:survey_in_structure"); //You cannot perform survey-related actions inside a structure.
 		return;
 	}
@@ -112,7 +112,7 @@ void SurveySessionImplementation::startSurvey(const String& resname) {
 	}
 
 	ManagedReference<ResourceSpawn*> spawn = resourceManager->getResourceSpawn(resname);
-	if (spawn == nullptr) {
+	if (spawn == NULL) {
 		return;
 	}
 
@@ -138,30 +138,30 @@ void SurveySessionImplementation::startSample(const String& resname) {
 	ManagedReference<ResourceManager*> resourceManager = this->resourceManager.get();
 	ManagedReference<CreatureObject*> surveyer = this->surveyer.get();
 
-	if (activeSurveyTool == nullptr) {
-		error("surveyTool is nullptr");
+	if (activeSurveyTool == NULL) {
+		error("surveyTool is NULL");
 		return;
 	}
 
-	if (resourceManager == nullptr) {
-		info("ResourceManager is nullptr");
+	if (resourceManager == NULL) {
+		info("ResourceManager is NULL");
 		return;
 	}
 
-	if (surveyer == nullptr) {
-		info("surveyer is nullptr");
+	if (surveyer == NULL) {
+		info("surveyer is NULL");
 		return;
 	}
 
 	Reference<PlayerObject*> ghost = surveyer->getPlayerObject();
-	if (ghost == nullptr)
+	if (ghost == NULL)
 		return;
 
 	if (!resname.isEmpty())
 		 lastResourceSampleName = resname;
 
 	ManagedReference<ResourceSpawn* > resourceSpawn = resourceManager->getResourceSpawn(lastResourceSampleName);
-	if (resourceSpawn == nullptr) {
+	if (resourceSpawn == NULL) {
 		return;
 	}
 
@@ -170,7 +170,7 @@ void SurveySessionImplementation::startSample(const String& resname) {
 		return;
 	}
 
-	if (surveyer->getParent() != nullptr && surveyer->getParent().get()->isCellObject()) {
+	if (surveyer->getParent() != NULL && surveyer->getParent().get()->isCellObject()) {
 		surveyer->sendSystemMessage("@error_message:survey_in_structure"); //You cannot perform survey-related actions inside a structure.
 		return;
 	}
@@ -220,7 +220,7 @@ void SurveySessionImplementation::startSample(const String& resname) {
 		surveyer->setPosture(CreaturePosture::CROUCHED, true);
 	}
 
-	if (surveyer->getPendingTask("sample") != nullptr) {
+	if (surveyer->getPendingTask("sample") != NULL) {
 		return;
 	}
 
@@ -228,7 +228,7 @@ void SurveySessionImplementation::startSample(const String& resname) {
 	message.setTO(lastResourceSampleName);
 	surveyer->sendSystemMessage(message);
 
-	if (!doGamble && richSampleLocation.getPosition() == Vector3(0, 0, 0) && System::random(50) == 7) {
+	if (!doGamble && richSampleLocation.getPosition() != Vector3(0, 0, 0) && System::random(50) == 7) {
 
 		if (ghost->hasSuiBoxWindowType(SuiWindowType::SURVEY_TOOL_CONCENTRATED_MINIGAME)) {
 			ghost->removeSuiBoxType(SuiWindowType::SURVEY_TOOL_CONCENTRATED_MINIGAME);
@@ -275,11 +275,11 @@ void SurveySessionImplementation::surveyCnodeMinigameSui() {
 void SurveySessionImplementation::surveyCnodeMinigame(int value) {
 	ManagedReference<CreatureObject*> surveyer = this->surveyer.get();
 
-	if (surveyer == nullptr)
+	if (surveyer == NULL)
 		return;
 
 	Reference<PlayerObject*> ghost = surveyer->getPlayerObject();
-	if (ghost == nullptr)
+	if (ghost == NULL)
 		return;
 
 	if (value == 0) {
@@ -292,13 +292,13 @@ void SurveySessionImplementation::surveyCnodeMinigame(int value) {
 	richSampleLocation = Coordinate(surveyer->getPositionX(), surveyer->getPositionZ(), surveyer->getPositionY());
 	richSampleLocation.randomizePosition(50);
 
-	ManagedReference<WaypointObject*> newwaypoint = nullptr;
+	ManagedReference<WaypointObject*> newwaypoint = NULL;
 
 	// Get previous survey waypoint
 	ManagedReference<WaypointObject*> waypoint = ghost->getSurveyWaypoint();
 
 	// Create new waypoint
-	if (waypoint == nullptr)
+	if (waypoint == NULL)
 		newwaypoint = ( surveyer->getZoneServer()->createObject(0xc456e788, 1)).castTo<WaypointObject*>();
 	else {
 		ghost->removeWaypoint(waypoint->getObjectID(), true, false);
@@ -346,7 +346,7 @@ void SurveySessionImplementation::surveyGnodeMinigameSui() {
 void SurveySessionImplementation::surveyGnodeMinigame(int value) {
 	ManagedReference<CreatureObject*> surveyer = this->surveyer.get();
 
-	if (surveyer == nullptr)
+	if (surveyer == NULL)
 		return;
 
 	if (value == 1) {
@@ -366,7 +366,7 @@ void SurveySessionImplementation::surveyGnodeMinigame(int value) {
 void SurveySessionImplementation::rescheduleSurvey(SurveyMessage* surveyMessage, WaypointObject* waypoint, float maxDensity, ResourceSpawn* resourceSpawn) {
 	ManagedReference<CreatureObject*> surveyer = this->surveyer.get();
 
-	if (surveyer == nullptr)
+	if (surveyer == NULL)
 		return;
 
 	surveyTask = new SurveyTask(surveyer, surveyMessage, waypoint, maxDensity * 100, resourceSpawn);
@@ -376,25 +376,25 @@ void SurveySessionImplementation::rescheduleSurvey(SurveyMessage* surveyMessage,
 void SurveySessionImplementation::rescheduleSample() {
 	ManagedReference<CreatureObject*> surveyer = this->surveyer.get();
 
-	if (surveyer == nullptr)
+	if (surveyer == NULL)
 		return;
 
 	// Add sampletask
-	if (sampleTask == nullptr)
+	if (sampleTask == NULL)
 		sampleTask = new SampleTask(surveyer, activeSurveyTool.get());
 
-	if (surveyer->getPendingTask("sample") == nullptr)
+	if (surveyer->getPendingTask("sample") == NULL)
 		surveyer->addPendingTask("sample", sampleTask, 25000);
 }
 
-void SurveySessionImplementation::rescheduleSampleResults(const ResourceSpawner* resourceSpawner, float density, const String& resname) {
+void SurveySessionImplementation::rescheduleSampleResults(ResourceSpawner* resourceSpawner, float density, const String& resname) {
 	ManagedReference<CreatureObject*> surveyer = this->surveyer.get();
 
-	if (surveyer == nullptr)
+	if (surveyer == NULL)
 		return;
 
 	// Add sampleresultstask
-	if (surveyer->getPendingTask("sampleresults") == nullptr) {
+	if (surveyer->getPendingTask("sampleresults") == NULL) {
 		sampleResultsTask = new SampleResultsTask(surveyer, resourceSpawner, density, resname);
 		surveyer->addPendingTask("sampleresults", sampleResultsTask, 3000);
 	}

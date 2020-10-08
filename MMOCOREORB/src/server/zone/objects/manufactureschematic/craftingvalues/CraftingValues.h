@@ -80,43 +80,43 @@ public:
 		experimentalValuesMap.addExperimentalProperty(title, subtitle, min, max, precision, filler, combine);
 	}
 
-	const String& getExperimentalPropertyTitle(const String& subtitle) const {
+	String& getExperimentalPropertyTitle(const String& subtitle) {
 		return experimentalValuesMap.getExperimentalPropertyTitle(subtitle);
 	}
 
-	const String& getExperimentalPropertyTitle(const int i) const {
+	String& getExperimentalPropertyTitle(const int i) {
 		return experimentalValuesMap.getExperimentalPropertyTitle(i);
 	}
 
-	const String& getVisibleExperimentalPropertyTitle(const int i) const {
+	String& getVisibleExperimentalPropertyTitle(const int i) {
 		return experimentalValuesMap.getVisibleExperimentalPropertyTitle(i);
 	}
 
-	const String& getExperimentalPropertySubtitlesTitle(const int i) const {
+	String& getExperimentalPropertySubtitlesTitle(const int i) {
 		return experimentalValuesMap.getExperimentalPropertySubtitlesTitle(i);
 	}
 
-	const String& getExperimentalPropertySubtitle(const int i) const {
+	String& getExperimentalPropertySubtitle(const int i) {
 		return experimentalValuesMap.getExperimentalPropertySubtitle(i);
 	}
 
-	const String& getExperimentalPropertySubtitle(const String title, const int i) const {
+	String& getExperimentalPropertySubtitle(const String title, const int i) {
 		return experimentalValuesMap.getExperimentalPropertySubtitle(title, i);
 	}
 
-	int getExperimentalPropertySubtitleSize() const {
+	int getExperimentalPropertySubtitleSize() {
 		return experimentalValuesMap.getExperimentalPropertySubtitleSize();
 	}
 
-	int getExperimentalPropertySubtitleSize(const String title) const {
+	int getExperimentalPropertySubtitleSize(const String title) {
 		return experimentalValuesMap.getExperimentalPropertySubtitleSize(title);
 	}
 
-	bool hasProperty(const String& attribute) const {
+	bool hasProperty(const String& attribute) {
 		return experimentalValuesMap.hasProperty(attribute);
 	}
 
-	bool isHidden(const String& attribute) const {
+	bool isHidden(const String& attribute) {
 		return experimentalValuesMap.isHidden(attribute);
 	}
 
@@ -128,7 +128,7 @@ public:
 		experimentalValuesMap.unsetHidden(attribute);
 	}
 
-	short getCombineType(const String& attribute) const {
+	short getCombineType(const String& attribute) {
 		return experimentalValuesMap.getCombineType(attribute);
 	}
 
@@ -140,11 +140,11 @@ public:
 		experimentalValuesMap.setCurrentValue(attribute, value, min, max);
 	}
 
-	float getCurrentValue(const String& attribute) const {
+	float getCurrentValue(const String& attribute) {
 		return experimentalValuesMap.getCurrentValue(attribute);
 	}
 
-	float getCurrentValue(const int i) const {
+	float getCurrentValue(const int i) {
 		return experimentalValuesMap.getCurrentValue(i);
 	}
 
@@ -168,15 +168,15 @@ public:
 		experimentalValuesMap.setCurrentPercentage(subtitle, value, max);
 	}
 
-	float getCurrentPercentage(const String& attribute) const {
+	float getCurrentPercentage(const String& attribute) {
 		return experimentalValuesMap.getCurrentPercentage(attribute);
 	}
 
-	float getCurrentPercentage(const int i) const {
+	float getCurrentPercentage(const int i) {
 		return experimentalValuesMap.getCurrentPercentage(i);
 	}
 
-	float getCurrentVisiblePercentage(const String title) const {
+	float getCurrentVisiblePercentage(const String title) {
 		return experimentalValuesMap.getCurrentVisiblePercentage(title);
 	}
 
@@ -184,23 +184,23 @@ public:
 		experimentalValuesMap.setMaxPercentage(attribute, value);
 	}
 
-	float getMaxPercentage(const String& attribute) const {
+	float getMaxPercentage(const String& attribute) {
 		return experimentalValuesMap.getMaxPercentage(attribute);
 	}
 
-	float getMaxPercentage(const int i) const {
+	float getMaxPercentage(const int i) {
 		return experimentalValuesMap.getMaxPercentage(i);
 	}
 
-	float getMaxVisiblePercentage(const int i) const {
+	float getMaxVisiblePercentage(const int i) {
 		return experimentalValuesMap.getMaxVisiblePercentage(i);
 	}
 
-	float getMinValue(const String& attribute) const {
+	float getMinValue(const String& attribute) {
 		return experimentalValuesMap.getMinValue(attribute);
 	}
 
-	float getMaxValue(const String& attribute) const {
+	float getMaxValue(const String& attribute) {
 		return experimentalValuesMap.getMaxValue(attribute);
 	}
 
@@ -212,7 +212,7 @@ public:
 		experimentalValuesMap.setMaxValue(attribute, value);
 	}
 
-	int getPrecision(const String& attribute) const {
+	int getPrecision(const String& attribute) {
 		return experimentalValuesMap.getPrecision(attribute);
 	}
 
@@ -222,9 +222,9 @@ public:
 
 	void recalculateValues(bool initial);
 
-	String toString() const;
+	String toString();
 
-	inline int getExperimentalPropertyTitleSize() const {
+	inline int getExperimentalPropertyTitleSize() {
 		return experimentalValuesMap.size();
 	}
 
@@ -236,34 +236,34 @@ public:
 		slots.removeAll();
 	}
 
-	inline bool hasSlotFilled(const String& name) const {
+	inline bool hasSlotFilled(const String& name) {
 		if (!slots.contains(name))
 			return false;
 
 		return slots.get(name);
 	}
 
-	inline int getVisibleExperimentalPropertyTitleSize() const {
+	inline int getVisibleExperimentalPropertyTitleSize() {
 		return experimentalValuesMap.getVisibleExperimentalPropertyTitleSize();
 	}
 
-	inline int getSubtitleCount() const {
+	inline int getSubtitleCount() {
 		return experimentalValuesMap.getSubtitleCount();
 	}
 
-	inline int getValuesToSendSize() const {
+	inline int getValuesToSendSize() {
 		return valuesToSend.size();
 	}
 
-	inline int getTitleLine(const String& title) const {
+	inline int getTitleLine(String& title) {
 		return experimentalValuesMap.getTitleLine(title);
 	}
 
-	const String& getValuesToSend(const int i) const {
+	String& getValuesToSend(const int i) {
 		return valuesToSend.get(i);
 	}
 
-	float getAttributeAndValue(const String& attribute, const int i) const {
+	float getAttributeAndValue(String& attribute, const int i) {
 		String attributeName = getExperimentalPropertySubtitle(i);
 
 		return getCurrentValue(attributeName);

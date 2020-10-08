@@ -5,7 +5,6 @@
 #ifndef HEALSTATECOMMAND_H_
 #define HEALSTATECOMMAND_H_
 
-#include "server/zone/objects/building/BuildingObject.h"
 #include "server/zone/objects/scene/SceneObject.h"
 #include "server/chat/StringIdChatParameter.h"
 #include "server/zone/objects/tangible/pharmaceutical/StatePack.h"
@@ -39,7 +38,7 @@ public:
 		if (creature->hasBuff(BuffCRC::FOOD_HEAL_RECOVERY)) {
 			DelayedBuff* buff = cast<DelayedBuff*>( creature->getBuff(BuffCRC::FOOD_HEAL_RECOVERY));
 
-			if (buff != nullptr) {
+			if (buff != NULL) {
 				float percent = buff->getSkillModifierValue("heal_recovery");
 
 				delay = round(delay * (100.0f - percent) / 100.0f);
@@ -108,13 +107,8 @@ public:
 			return false;
 		}
 
-		if (statePack == nullptr) {
+		if (statePack == NULL) {
 			creature->sendSystemMessage("@healing_response:healing_response_60"); //No valid medicine found.
-			return false;
-		}
-
-		if (creature != creatureTarget && checkForArenaDuel(creatureTarget)) {
-			creature->sendSystemMessage("@jedi_spam:no_help_target"); // You are not permitted to help that target.
 			return false;
 		}
 
@@ -136,7 +130,7 @@ public:
 
 		int medicineUse = creature->getSkillMod("healing_ability");
 
-		if (inventory != nullptr) {
+		if (inventory != NULL) {
 			for (int i = 0; i < inventory->getContainerObjectsSize(); i++) {
 				SceneObject* object = inventory->getContainerObject(i);
 
@@ -154,7 +148,7 @@ public:
 			}
 		}
 
-		return nullptr;
+		return NULL;
 	}
 
 	void parseModifier(const String& modifier, uint64& state, uint64& objectId) const {
@@ -185,11 +179,11 @@ public:
 
 		ManagedReference<SceneObject*> object = server->getZoneServer()->getObject(target);
 
-		if (object != nullptr) {
+		if (object != NULL) {
 			if (!object->isCreatureObject()) {
 				TangibleObject* tangibleObject = dynamic_cast<TangibleObject*>(object.get());
 
-				if (tangibleObject != nullptr && tangibleObject->isAttackableBy(creature)) {
+				if (tangibleObject != NULL && tangibleObject->isAttackableBy(creature)) {
 					object = creature;
 				} else {
 					creature->sendSystemMessage("@healing_response:healing_response_73"); //Target must be a player or a creature pet in order to heal a state.
@@ -214,14 +208,14 @@ public:
 
 		SceneObject* inventory = creature->getSlottedObject("inventory");
 
-		ManagedReference<StatePack*> statePack = nullptr;
+		ManagedReference<StatePack*> statePack = NULL;
 
 		if(state != CreatureState::INVALID || objectId != 0) {
-			if (inventory != nullptr) {
+			if (inventory != NULL) {
 				statePack = inventory->getContainerObject(objectId).castTo<StatePack*>();
 			}
 
-			if (statePack == nullptr)
+			if (statePack == NULL)
 				statePack = findStatePack(creature, state);
 		}else {
 			uint64 targetStateBitmask = creatureTarget->getStateBitmask();
@@ -236,13 +230,13 @@ public:
 				state = healableState;
 				statePack = findStatePack(creature, healableState);
 
-				if(statePack != nullptr) {
+				if(statePack != NULL) {
 					break;
 				}
 			}
 
 			//if state is INVALID they had no healable states
-			//if it is valid but statePack is nullptr they had no valid medicine for *any* state and will error in canPerformSkill
+			//if it is valid but statePack is NULL they had no valid medicine for *any* state and will error in canPerformSkill
 			if(state == CreatureState::INVALID) {
 				StringIdChatParameter stringId("healing", "no_state_to_heal"); // %TT has no state that you can heal.
 				stringId.setTT(creatureTarget->getDisplayedName());
@@ -264,34 +258,6 @@ public:
 		if (creature != creatureTarget && !CollisionManager::checkLineOfSight(creature, creatureTarget)) {
 			creature->sendSystemMessage("@healing:no_line_of_sight"); // You cannot see your target.
 			return GENERALERROR;
-		}
-
-		if (creature->isPlayerCreature() && creatureTarget->getParentID() != 0 && creature->getParentID() != creatureTarget->getParentID()) {
-			Reference<CellObject*> targetCell = creatureTarget->getParent().get().castTo<CellObject*>();
-
-			if (targetCell != nullptr) {
-				if (!creatureTarget->isPlayerCreature()) {
-					auto perms = targetCell->getContainerPermissions();
-
-					if (!perms->hasInheritPermissionsFromParent()) {
-						if (!targetCell->checkContainerPermission(creature, ContainerPermissions::WALKIN)) {
-							creature->sendSystemMessage("@combat_effects:cansee_fail"); // You cannot see your target.
-							return GENERALERROR;
-						}
-					}
-				}
-
-				ManagedReference<SceneObject*> parentSceneObject = targetCell->getParent().get();
-
-				if (parentSceneObject != nullptr) {
-					BuildingObject* buildingObject = parentSceneObject->asBuildingObject();
-
-					if (buildingObject != nullptr && !buildingObject->isAllowedEntry(creature)) {
-						creature->sendSystemMessage("@combat_effects:cansee_fail"); // You cannot see your target.
-						return GENERALERROR;
-					}
-				}
-			}
 		}
 
 		if (statePack->getState() != state)
@@ -319,7 +285,7 @@ public:
 
 		deactivateStateTreatment(creature);
 
-		if (statePack != nullptr) {
+		if (statePack != NULL) {
 			Locker locker(statePack);
 			statePack->decreaseUseCount();
 		}

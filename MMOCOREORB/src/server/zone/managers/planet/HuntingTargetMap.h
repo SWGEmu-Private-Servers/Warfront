@@ -42,7 +42,7 @@ public:
 	}
 
 	HuntingTargetEntry* getRandomTarget(int lev) {
-		HuntingTargetEntry* result = nullptr;
+		HuntingTargetEntry* result = NULL;
 
 		//rlock();
 

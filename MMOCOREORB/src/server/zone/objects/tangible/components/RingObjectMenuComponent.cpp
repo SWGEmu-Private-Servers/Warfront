@@ -17,13 +17,13 @@ void RingObjectMenuComponent::fillObjectMenuResponse(SceneObject* sceneObject, O
 		return;
 
 	WearableObject* wearable = cast<WearableObject*>(sceneObject);
-	if (wearable == nullptr)
+	if (wearable == NULL)
 		return;
 
 	ZoneServer* server = player->getZoneServer();
 	PlayerObject* ghost = player->getPlayerObject();
 
-	if (server == nullptr || ghost == nullptr)
+	if (server == NULL || ghost == NULL)
 		return;
 
 	if (!wearable->isEquipped() && !wearable->isNoTrade()) {
@@ -33,7 +33,7 @@ void RingObjectMenuComponent::fillObjectMenuResponse(SceneObject* sceneObject, O
 			uint64 targetID = player->getTargetID();
 			ManagedReference<CreatureObject*> target = server->getObject(targetID, true).castTo<CreatureObject*>();
 
-			if (target != nullptr && target->isPlayerCreature())
+			if (target != NULL && target->isPlayerCreature())
 				menuResponse->addRadialMenuItem(22, 3, "@unity:mnu_propose"); // Propose Unity
 		}
 	}
@@ -49,10 +49,10 @@ int RingObjectMenuComponent::handleObjectMenuSelect(SceneObject* sceneObject, Cr
 
 		ManagedReference<SceneObject*> target = player->getZoneServer()->getObject(player->getTargetID());
 
-		if (target != nullptr && target->isPlayerCreature()) {
+		if (target != NULL && target->isPlayerCreature()) {
 			PlayerManager* playerManager = player->getZoneServer()->getPlayerManager();
 
-			if (playerManager != nullptr)
+			if (playerManager != NULL)
 				playerManager->proposeUnity(player, cast<CreatureObject*>(target.get()), sceneObject);
 
 			return 0;
@@ -67,7 +67,7 @@ int RingObjectMenuComponent::handleObjectMenuSelect(SceneObject* sceneObject, Cr
 
 		PlayerManager* playerManager = player->getZoneServer()->getPlayerManager();
 
-		if (playerManager != nullptr)
+		if (playerManager != NULL)
 			playerManager->promptDivorce(player);
 
 		return 0;

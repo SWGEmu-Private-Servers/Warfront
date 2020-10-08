@@ -51,11 +51,11 @@ public:
 
 		ManagedReference<SceneObject*> sceno = server->getZoneServer()->getObject(targetObjectID);
 
-		if (object != nullptr) {
+		if (object != NULL) {
 
 			ManagedReference<SceneObject*> objectsParent = object->getParent().get();
 
-			if (objectsParent == nullptr)
+			if (objectsParent == NULL)
 				return GENERALERROR;
 
 			if (!objectsParent->checkContainerPermission(creature, ContainerPermissions::MOVEOUT))
@@ -73,7 +73,7 @@ public:
 					return SUCCESS;
 				}
 
-			} else if (sceno != nullptr) {
+			} else if (sceno != NULL) {
 				Locker clocker(sceno, creature);
 
 				if (sceno->isVendor() && sceno->isCreatureObject()) {
@@ -92,13 +92,13 @@ public:
 						}
 
 						DataObjectComponentReference* data = sceno->getDataObjectComponent();
-						if(data == nullptr || data->get() == nullptr || !data->get()->isVendorData()) {
+						if(data == NULL || data->get() == NULL || !data->get()->isVendorData()) {
 							error("Vendor has no data component");
 							return GENERALERROR;
 						}
 
 						VendorDataComponent* vendorData = cast<VendorDataComponent*>(data->get());
-						if(vendorData == nullptr) {
+						if(vendorData == NULL) {
 							error("Vendor has invalid data component");
 							return GENERALERROR;
 						}
@@ -108,7 +108,7 @@ public:
 						if (creature->getObjectID() != vendorData->getOwnerId())
 							return GENERALERROR;
 
-						if(vendor == nullptr || vendor->getZone() == nullptr || vendor->getZone()->getCreatureManager() == nullptr)
+						if(vendor == NULL || vendor->getZone() == NULL || vendor->getZone()->getCreatureManager() == NULL)
 							return GENERALERROR;
 
 						if(vendor->getZone()->getCreatureManager()->addWearableItem(vendor, clothing))
@@ -120,12 +120,12 @@ public:
 				}
 				else if( sceno->isPet() && object->getGameObjectType() == SceneObjectType::FOOD){
 					Reference<AiAgent*> aiAgent = sceno.castTo<AiAgent*>();
-					if( aiAgent != nullptr ){
+					if( aiAgent != NULL ){
 
 						Locker crossLocker(aiAgent, creature);
 
 						PetManager* petManager = aiAgent->getZoneServer()->getPetManager();
-						if (petManager == nullptr)
+						if (petManager == NULL)
 							return GENERALERROR;
 
 						petManager->enqueueOwnerOnlyPetCommand(creature, aiAgent, STRING_HASHCODE("petfeed"), String::valueOf( object->getObjectID() ) );
@@ -135,13 +135,13 @@ public:
 				}
 				else if (sceno->isPet() && sceno->isDroidObject() && object->getGameObjectType() == SceneObjectType::STIMPACK) {
 					Reference<DroidObject*> droid = sceno.castTo<DroidObject*>();
-					if (droid != nullptr) {
+					if (droid != NULL) {
 						Locker cross(sceno,creature);
 						StimPack* medicine = cast<StimPack*>(object.get());
-						if(medicine != nullptr) {
+						if(medicine != NULL) {
 							auto module = droid->getModule("stimpack_module").castTo<DroidStimpackModuleDataComponent*>();
 							CreatureObject* player = cast<CreatureObject*>(creature);
-							if(module != nullptr)
+							if(module != NULL)
 								module->handleInsertStimpack(player,medicine);
 							else
 								creature->sendSystemMessage("@pet/droid_modules:not_stimpack_droid");
@@ -152,13 +152,13 @@ public:
 				}
 				else if(sceno->isPet() && sceno->isDroidObject() && object->isTrapObject()) {
 					Reference<DroidObject*> droid = sceno.castTo<DroidObject*>();
-					if (droid != nullptr) {
+					if (droid != NULL) {
 						Locker cross(sceno,creature);
 						TangibleObject* trap = cast<TangibleObject*>(object.get());
-						if(trap != nullptr) {
+						if(trap != NULL) {
 							auto module = droid->getModule("trap_module").castTo<DroidTrapModuleDataComponent*>();
 							CreatureObject* player = cast<CreatureObject*>(creature);
-							if(module != nullptr)
+							if(module != NULL)
 								module->handleInsertTrap(player,trap);
 						} else {
 							return GENERALERROR;

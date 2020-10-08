@@ -29,8 +29,8 @@ void WearableContainerObjectImplementation::fillAttributeList(AttributeListMessa
 	}
 }
 
-void WearableContainerObjectImplementation::applySkillModsTo(CreatureObject* creature) const {
-	if (creature == nullptr) {
+void WearableContainerObjectImplementation::applySkillModsTo(CreatureObject* creature) {
+	if (creature == NULL) {
 		return;
 	}
 
@@ -39,17 +39,14 @@ void WearableContainerObjectImplementation::applySkillModsTo(CreatureObject* cre
 		int value = wearableSkillMods.get(name);
 
 		if (!SkillModManager::instance()->isWearableModDisabled(name))
-		{
 			creature->addSkillMod(SkillModManager::WEARABLE, name, value, true);
-			creature->updateTerrainNegotiation();
-		}
 	}
 
 	SkillModManager::instance()->verifyWearableSkillMods(creature);
 }
 
 void WearableContainerObjectImplementation::removeSkillModsFrom(CreatureObject* creature) {
-	if (creature == nullptr) {
+	if (creature == NULL) {
 		return;
 	}
 
@@ -58,10 +55,7 @@ void WearableContainerObjectImplementation::removeSkillModsFrom(CreatureObject* 
 		int value = wearableSkillMods.get(name);
 
 		if (!SkillModManager::instance()->isWearableModDisabled(name))
-		{
 			creature->removeSkillMod(SkillModManager::WEARABLE, name, value, true);
-			creature->updateTerrainNegotiation();
-		}
 	}
 
 	SkillModManager::instance()->verifyWearableSkillMods(creature);
@@ -69,7 +63,7 @@ void WearableContainerObjectImplementation::removeSkillModsFrom(CreatureObject* 
 
 bool WearableContainerObjectImplementation::isEquipped() {
 	ManagedReference<SceneObject*> parent = getParent().get();
-	if (parent != nullptr && parent->isPlayerCreature())
+	if (parent != NULL && parent->isPlayerCreature())
 		return true;
 
 	return false;

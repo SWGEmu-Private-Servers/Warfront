@@ -22,7 +22,7 @@ public:
 
 	~ZoneMessageProcessorTask() {
 		delete message;
-		message = nullptr;
+		message = NULL;
 	}
 
 	void run() {
@@ -48,7 +48,7 @@ public:
 		}
 
 		delete message;
-		message = nullptr;
+		message = NULL;
 
 	}
 

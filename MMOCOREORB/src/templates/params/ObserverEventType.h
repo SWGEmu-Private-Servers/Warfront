@@ -13,7 +13,7 @@ public:
 	enum {
 		POSITIONCHANGED,			// ManagedObject arg1 = null, long arg2 = 0
 		CLOSECONTAINER,				// ManagedObject arg1 = player that closes the container, long arg2 = 0
-		POSTURECHANGED,				// ManagedObject arg1 = nullptr, long arg2 = new posture
+		POSTURECHANGED,				// ManagedObject arg1 = NULL, long arg2 = new posture
 		OBJECTDESTRUCTION,			// ManagedObject arg1 = attacker, long arg2 = condition used when a certain object is destroyed
 		OBJECTDISABLED,				// ManagedObject arg1 = attacker, long arg2 = 0
 		SAMPLE,						// ManagedObject arg1 = ResourceSpawn, long arg2 = density
@@ -57,6 +57,7 @@ public:
 		WOUNDHEALINGRECEIVED,		// ManagedObject arg1 = player, long arg2 = wound heal amount
 		XPAWARDED,					// ManagedObject arg1 = player, long arg2 = xp amount
 		SPICEDOWNERACTIVATED,		// ManagedObject arg1 = player, long arg2 = 0
+		FORCEBUFFHIT,				// ManagedObject arg1 = player, long arg2 = damage amount absorbed.
 		FORCEARMOR,					// ManagedObject arg1 = player, long arg2 = damage amount absorbed.
 		FORCESHIELD,				// ManagedObject arg1 = player, long arg2 = damage amount absorbed.
 		FORCEFEEDBACK,				// ManagedObject arg1 = player, long arg2 = damage amount absorbed.
@@ -89,7 +90,6 @@ public:
 		TUNEDCRYSTAL,				// ManagedObject arg1 = crystal, long arg2 = 0
 		BHTEFCHANGED,				// ManagedObject arg1 = null, long arg2 = 0
 		FACTIONCHANGED,				// ManagedObject arg1 = null, long arg2 = 0
-		SLICED,						// ManagedObject arg1 = player doing slicing, long arg2 = result (1/0)
 	};
 };
 

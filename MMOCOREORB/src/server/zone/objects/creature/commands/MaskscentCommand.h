@@ -86,7 +86,7 @@ public:
 		}
 
 		Zone* zone = creature->getZone();
-		if (creature->getZone() == nullptr || creature->isInCombat()) {
+		if (creature->getZone() == NULL || creature->isInCombat()) {
 			creature->sendSystemMessage("@skl_use:sys_scentmask_fail"); // You cannot mask your scent now.
 			return false;
 		}

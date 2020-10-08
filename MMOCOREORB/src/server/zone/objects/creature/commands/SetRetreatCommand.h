@@ -39,10 +39,7 @@ public:
 			return false;
 		}	
 		
-		ZoneProcessServer* zps = player->getZoneProcessServer();
-		NameManager* nameManager = zps->getNameManager();
-
-		if (nameManager->isProfane(message)){
+		if (NameManager::instance()->isProfane(message)){
 			player->sendSystemMessage("Your Retreat message has failed the profanity filter.");
 			return false;				
 		}

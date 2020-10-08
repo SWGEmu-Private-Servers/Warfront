@@ -10,16 +10,16 @@
 #include "server/zone/objects/group/GroupObject.h"
 
 int LootContainerComponent::notifyObjectRemoved(SceneObject* sceneObject, SceneObject* object, SceneObject* destination) const {
-	if (destination != nullptr) {
+	if (destination != NULL) {
 		ManagedReference<SceneObject*> rootParent = destination->getParent().get();
 
-		if (rootParent != nullptr && rootParent->isCreatureObject()) {
+		if (rootParent != NULL && rootParent->isCreatureObject()) {
 			CreatureObject* creature = cast<CreatureObject*>(rootParent.get());
 
-			if (creature != nullptr) {
+			if (creature != NULL) {
 				ManagedReference<GroupObject*> group = creature->getGroup();
 
-				if (group != nullptr) {
+				if (group != NULL) {
 					StringIdChatParameter params("group", "notify_single_loot"); //[GROUP] %TU looted %TO from %TT.
 					params.setTO(object->getDisplayedName());
 					params.setTU(creature->getDisplayedName());
@@ -41,7 +41,7 @@ int LootContainerComponent::notifyObjectRemoved(SceneObject* sceneObject, SceneO
 
 
 bool LootContainerComponent::checkContainerPermission(SceneObject* sceneObject, CreatureObject* creature, uint16 permission) const {
-	auto permissions = sceneObject->getContainerPermissions();
+	ContainerPermissions* permissions = sceneObject->getContainerPermissions();
 	if(permission == ContainerPermissions::MOVEIN)
 		return false;
 	else if (permission == ContainerPermissions::MOVEOUT ){
@@ -57,7 +57,7 @@ int LootContainerComponent::canAddObject(SceneObject* sceneObject, SceneObject* 
 		errorDescription = "@error_message:remove_only_corpse"; //You cannot place items into a corpse.
 		 return TransferErrorCode::INVALIDTYPE;
 	}
-
+	
 	return 1;
 }
 

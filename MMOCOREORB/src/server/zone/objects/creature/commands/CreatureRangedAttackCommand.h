@@ -25,7 +25,7 @@ public:
 
 		ManagedReference<WeaponObject*> weapon = creature->getWeapon();
 
-		if (weapon == nullptr || !weapon->isRangedWeapon()) {
+		if (weapon == NULL || !weapon->isRangedWeapon()) {
 			return INVALIDWEAPON;
 		}
 

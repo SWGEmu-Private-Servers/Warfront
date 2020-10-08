@@ -48,7 +48,7 @@ public:
 
 		ManagedReference<CityRegion*> city = mayor->getCityRegion().get();
 
-		if(city == nullptr) {
+		if(city == NULL) {
 			mayor->sendSystemMessage("@player_structure:cant_place_civic"); //This structure must be placed within the borders of the city in which you are mayor.
 			return;
 		}
@@ -61,7 +61,7 @@ public:
 		}
 
 		PlayerObject* mayorGhost = mayor->getPlayerObject().get();
-		if (mayorGhost == nullptr) {
+		if (mayorGhost == NULL) {
 			return;
 		}
 
@@ -78,7 +78,7 @@ public:
 
 		Zone* zone = mayor->getZone();
 
-		if (zone == nullptr || obj->getObjectTemplate() == nullptr)
+		if (zone == NULL || obj->getObjectTemplate() == NULL)
 			return;
 
 		ManagedReference<PlanetManager*> planetManager = zone->getPlanetManager();
@@ -92,7 +92,7 @@ public:
 
 		Reference<SceneObject*> objTooClose = zone->getPlanetManager()->findObjectTooCloseToDecoration(mayor->getPositionX(), mayor->getPositionY(), obj->getObjectTemplate()->getNoBuildRadius());
 
-		if (objTooClose != nullptr && !obj->isCityStreetLamp()) {
+		if (objTooClose != NULL && !obj->isCityStreetLamp()) {
 			StringIdChatParameter msg;
 			msg.setStringId("@city/city:deco_too_close"); //"You can't place a decoration here, it would be too close to structure %TO.");
 
@@ -134,7 +134,7 @@ public:
 
 		ManagedReference<CityRegion*> city = mayor->getCityRegion().get();
 
-		if(city == nullptr)
+		if(city == NULL)
 			return;
 
 		if(!city->isMayor(mayor->getObjectID())) {
@@ -143,12 +143,12 @@ public:
 
 		Zone* zone = mayor->getZone();
 
-		if (zone == nullptr)
+		if (zone == NULL)
 			return;
 
 		ManagedReference<SceneObject*> inv = mayor->getSlottedObject("inventory");
 
-		if(inv == nullptr)
+		if(inv == NULL)
 			return;
 
 		if(inv->isContainerFullRecursive()) {

@@ -9,7 +9,6 @@
 #define STRUCTUREPERMISSIONLIST_H_
 
 #include "engine/engine.h"
-#include "engine/util/json_utils.h"
 
 #include "server/zone/objects/creature/CreatureObject.h"
 
@@ -18,7 +17,7 @@ class StructurePermissionList : public Object {
 	VectorMap<String, SortedVector<uint64> > idPermissionLists;
 	String ownerName;
 	uint64 ownerID;
-	mutable ReadWriteLock lock;
+	ReadWriteLock lock;
 
 private:
 	int writeObjectMembers(ObjectOutputStream* stream);
@@ -63,15 +62,13 @@ public:
 	int revokeAllPermissions(const uint64 objectID);
 	void revokeAllPermissions();
 
-	friend void to_json(nlohmann::json& j, const StructurePermissionList& p);
-
 	void setOwner(const uint64 objectID) {
 		Locker locker(&lock);
 
 		ownerID = objectID;
 	}
-
 	inline uint64 getOwner() const {
+
 		return ownerID;
 	}
 
@@ -81,20 +78,41 @@ public:
 	 * @param playerName The player name to check.
 	 * @return Returns false if the permission list does not exist, or the player name is not found in the list.
 	 */
-	bool isOnPermissionList(const String& listName, const uint64 objectID) const;
+	inline bool isOnPermissionList(const String& listName, const uint64 objectID) {
+		ReadLocker locker(&lock);
+
+		if (listName != "BAN" && objectID == ownerID)
+			return true;
+
+		if (!idPermissionLists.contains(listName))
+			return false;
+
+		SortedVector<uint64>* list = &idPermissionLists.get(listName);
+
+		return list->contains(objectID);
+	}
 
 	/**
 	 * Checks to see if the number of entries in the specified list exceeds or is equal to the max number of entries allowed per list.
 	 * @param listName The list that is being checked.
 	 * @return Returns true if the permission list does not exist or it exceeds or equals the the max number of entries allowed per list.
 	 */
-	bool isListFull(const String& listName) const;
+	inline bool isListFull(const String& listName) {
+		ReadLocker locker(&lock);
+
+		if (!idPermissionLists.contains(listName))
+			return true;
+
+		SortedVector<uint64>* list = &idPermissionLists.get(listName);
+
+		return list->size() >= MAX_ENTRIES;
+	}
 
 	/**
 	 * Adds the specified list name to this permission list.
 	 * @param listName The list to add.
 	 */
-	void addList(const String& listName) {
+	inline void addList(const String& listName) {
 		Locker locker(&lock);
 
 		if (idPermissionLists.contains(listName))
@@ -109,7 +127,7 @@ public:
 	 * Drops the specified list name from this permission list.
 	 * @param listName The list to drop.
 	 */
-	void dropList(const String& listName) {
+	inline void dropList(const String& listName) {
 		Locker locker(&lock);
 
 		idPermissionLists.drop(listName);
@@ -120,7 +138,7 @@ public:
 	 * @param listName The list to check for.
 	 * @return Returns true if the specified list exists, or false if it does not exist.
 	 */
-	bool containsList(const String& listName) const {
+	inline bool containsList(const String& listName) {
 		ReadLocker locker(&lock);
 
 		return idPermissionLists.contains(listName);

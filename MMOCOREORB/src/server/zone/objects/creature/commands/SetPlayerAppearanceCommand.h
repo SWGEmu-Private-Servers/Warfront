@@ -21,7 +21,7 @@ public:
 		if (!checkInvalidLocomotions(creature))
 			return INVALIDLOCOMOTION;
 
-		ManagedReference<CreatureObject*> targetCreature = nullptr;
+		ManagedReference<CreatureObject*> targetCreature = NULL;
 		PlayerManager* playerManager = server->getZoneServer()->getPlayerManager();
 
 		UnicodeTokenizer tokenizer(arguments);
@@ -41,7 +41,7 @@ public:
 			targetCreature = playerManager->getPlayer(targetName);
 		}
 
-		if (targetCreature == nullptr || !targetCreature->isPlayerCreature()) {
+		if (targetCreature == NULL || !targetCreature->isPlayerCreature()) {
 			sendSyntax(creature);
 			return INVALIDTARGET;
 		}
@@ -56,7 +56,7 @@ public:
 			TemplateManager* templateManager = TemplateManager::instance();
 			String templateTest = argument.replaceFirst("shared_", "");
 			SharedObjectTemplate* templateData = templateManager->getTemplate(templateTest.hashCode());
-			if (templateData == nullptr) {
+			if (templateData == NULL) {
 				creature->sendSystemMessage("Unable to find template. Template must be in object/mobile and have shared_ in its filename or left blank to reset to the default template. Example: object/mobile/shared_darth_vader.iff");
 				return GENERALERROR;
 			}
@@ -71,7 +71,7 @@ public:
 		if (templateName == "") {
 			Zone* zone = targetCreature->getZone();
 
-			if (zone != nullptr) {
+			if (zone != NULL) {
 				creature->sendSystemMessage("The target's player appearance template has been reset to its default.");
 				targetCreature->switchZone(zone->getZoneName(), targetCreature->getPositionX(), targetCreature->getPositionZ(), targetCreature->getPositionY(), targetCreature->getParentID());
 			}

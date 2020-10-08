@@ -25,12 +25,10 @@ public:
 		this->triangleID = triangleID;
 		this->edgeID = edgeID;
 	}
-
 	EdgeID() {
 		triangleID = -1;
 		edgeID = -1;
 	}
-
 	EdgeID(const EdgeID& edge) {
 		triangleID = edge.triangleID;
 		edgeID = edge.edgeID;
@@ -190,19 +188,22 @@ public:
 		return neighbors.size() < 3;
 	}
 
-	inline uint32 getID() const final {
+	inline uint32 getID() const {
+		return triangleID;
+	}
+
+	inline uint32 getID() {
 		return triangleID;
 	}
 
 	const Edge* getEdges() const {
 		return edges;
 	}
-
 	inline void addNeighbor(TriangleNode* node) {
 		neighbors.add(node);
 	}
 
-	inline const Vector<TriangleNode*>* getNeighbors() const final {
+	inline Vector<TriangleNode*>* getNeighbors() {
 		return &neighbors;
 	}
 
@@ -243,39 +244,35 @@ public:
 
 	Vector <Reference<MeshData*>> getTransformedMeshData(const Matrix4& parentTransform) const;
 
-	const Vector<TriangleNode*>* getNeighbors(uint32 triangleID) const;
+	Vector<TriangleNode*>* getNeighbors(uint32 triangleID);
 
-	const TriangleNode* findNearestTriangle(const Vector3& point) const;
+	TriangleNode* findNearestTriangle(const Vector3& point);
 
-	bool testCollide(float x, float z, float y, float radius) const;
+	bool testCollide(float x, float z, float y, float radius);
 
-	const PathNode* getGlobalNode(int globalID) const;
-
-	inline const PathGraph* getPathGraph() const {
-		return pathGraph;
-	}
+	PathNode* getGlobalNode(int globalID);
 
 	inline PathGraph* getPathGraph() {
 		return pathGraph;
 	}
 
-	inline const FloorMeshTriangleNode* getTriangle(int tri) const {
+	inline FloorMeshTriangleNode* getTriangle(int tri) {
 		return tris.get(tri);
 	}
 
-	inline int getTriangleCount() const {
+	inline int getTriangleCount() {
 		return tris.size();
 	}
 
-	inline const AABBTree* getAABBTree() const {
+	inline AABBTree* getAABBTree() {
 		return aabbTree;
 	}
 
-	inline const Vector3* getVertex(int vert) const {
+	inline Vector3* getVertex(int vert) {
 		return &vertices.get(vert);
 	}
 
-	inline int getCellID() const {
+	inline int getCellID() {
 		return cellID;
 	}
 
@@ -283,7 +280,7 @@ public:
 		cellID = id;
 	}
 
-	float calculateManhattanDistance(const TriangleNode* node1, const TriangleNode* node2) const {
+	float calculateManhattanDistance(TriangleNode* node1, TriangleNode* node2) {
 		Vector3 bary = node1->getBarycenter();
 		Vector3 bary2 = node2->getBarycenter();
 

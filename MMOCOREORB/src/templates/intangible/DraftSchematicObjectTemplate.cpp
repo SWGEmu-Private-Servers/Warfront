@@ -32,7 +32,7 @@ DraftSchematicObjectTemplate::DraftSchematicObjectTemplate() {
 
 	additionalTemplates = new Vector<String> ();
 
-	tangibleTemplate = nullptr;
+	tangibleTemplate = NULL;
 
 	tanoCRC = 0;
 
@@ -235,23 +235,25 @@ void DraftSchematicObjectTemplate::readObject(LuaObject* templateData) {
 	}
 }
 
-const Vector<Reference<ResourceWeight*> >* DraftSchematicObjectTemplate::getResourceWeights() {
+Vector<Reference<ResourceWeight*> >* DraftSchematicObjectTemplate::getResourceWeights() {
 
-	try {
-		if (tangibleTemplate == nullptr)
+	//try {
+		if (tangibleTemplate == NULL)
 			tangibleTemplate = dynamic_cast<SharedTangibleObjectTemplate*> (TemplateManager::instance()->getTemplate(tanoCRC));
 
-		if (tangibleTemplate == nullptr) {
+		if (tangibleTemplate == NULL) {
 			Logger::console.error(
 					"Template not found for server crc: "
 							+ additionalTemplates->get(0));
-			return nullptr;
+			return NULL;
 		}
+	/*
 	} catch (...) {
 		Logger::console.error(
 				"Unhandled exception in DraftSchematicObjectTemplate::getResourceWeights");
-		return nullptr;
+		return NULL;
 	}
+	*/
 
 	return tangibleTemplate->getResourceWeights();
 

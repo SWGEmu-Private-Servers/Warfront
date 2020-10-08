@@ -9,7 +9,7 @@ import server.zone.objects.creature.CreatureObject;
 import server.zone.packets.object.ObjectMenuResponse;
 import server.zone.packets.scene.AttributeListMessage;
 import server.zone.objects.creature.ai.AiAgent;
-include server.zone.objects.tangible.components.droid.BaseDroidModuleComponent;
+import server.zone.objects.tangible.components.droid.BaseDroidModuleComponent;
 include server.zone.objects.tangible.tool.CraftingStation;
 include server.zone.objects.structure.StructureObject;
 include system.util.Vector;
@@ -17,7 +17,6 @@ include system.lang.ref.Reference;
 import server.zone.Zone;
 import server.zone.objects.scene.SceneObject;
 
-@json
 class DroidObject extends AiAgent {
 
 	/**
@@ -93,7 +92,7 @@ class DroidObject extends AiAgent {
 	protected int minDamage;
 	protected int maxDamage;
 	protected float attackSpeed;
-
+	
 	public DroidObject() {
 		Logger.setLoggingName("DroidObject");
 		Logger.setLogging(false);
@@ -102,7 +101,7 @@ class DroidObject extends AiAgent {
 		paintCount = 0;
 		maximumHam = 55;
 		minDamage = 1;
-		maxDamage = 1;
+		maxDamage = 1;	
 		attackSpeed = 2.0;
 		armor = 0;
 		resist = 0;
@@ -132,7 +131,7 @@ class DroidObject extends AiAgent {
 	@dirty
 	@preLocked
 	@arg1preLocked
-	public native abstract int handleObjectMenuSelect(CreatureObject player, byte selectedID);
+	public native abstract int handleObjectMenuSelect(CreatureObject player, byte selectedID);	
 
 	/**
 	 * Fills the module radial options, needs to be overriden
@@ -157,21 +156,21 @@ class DroidObject extends AiAgent {
 	public boolean isDroidObject() {
 		return true;
 	}
-
+	
 	@dirty
 	public int getMaximumHAM() {
 		return maximumHam;
 	}
-
+	
 	@preLocked
 	public void setMaximumHAM(int idx) {
 		maximumHam = idx;
 	}
-
+	
 	public void setAttackSpeed(float f) {
 		attackSpeed = f;
 	}
-
+	
 	@dirty
 	public boolean isCamouflaged(CreatureObject target) {
 		return isAggressiveTo(target) && isConcealed(target);
@@ -237,7 +236,7 @@ class DroidObject extends AiAgent {
 	 */
 	@preLocked
 	@arg1preLocked
-	public native void rechargeOtherDroid( DroidObject otherDroid );
+	public native void rechargeOtherDroid( DroidObject otherDroid );	
 
 	/**
 	 * Called when the droid runs out of power
@@ -272,7 +271,7 @@ class DroidObject extends AiAgent {
 	/**
 	 * Returns a reaction stf if the droid has a personality chip
 	 */
-	@read
+	@local
 	public native string getPersonalityBase();
 
 	@local
@@ -329,18 +328,18 @@ class DroidObject extends AiAgent {
 	public void setResists(float res){
 		resist = res;
 	}
-
+	
 	@local
 	@preLocked
 	public void setMaxDamage(int i){
 		maxDamage = i;
-	}
-
+	}	
+	
 	@local
 	@preLocked
 	public void setMinDamage(int i){
 		minDamage = i;
-	}
+	}	
 
 	@local
 	public unsigned int getArmor(){
@@ -478,7 +477,7 @@ class DroidObject extends AiAgent {
 	public native boolean isStructureAssigned(StructureObject structure);
 
 	/**
-	 * sends the conversation notification
+	 * sends the conversation notification 
 	 * @pre {this locked, player locked }
 	 * @post { this locked, player locked }
 	 * @return whether the conversation was started or not
@@ -491,24 +490,24 @@ class DroidObject extends AiAgent {
 		return getPersonalityBase() != "" || super.hasReactionChatMessages();
 	}
 
-	@read
+	@dirty
 	public string getReactionStf() {
 		if (getPersonalityBase() != "")
 			return getPersonalityBase();
 
 		return super.getReactionStf();
 	}
-
-	@read
+	
+	@dirty
 	public int getHamMaximum() {
 		return maximumHam;
 	}
-
-	@read
+	
+	@dirty
 	public int getHamBase() {
 		return maximumHam;
 	}
-
+	
 	@dirty
 	public int getDamageMin() {
 		if (isPet())
@@ -521,7 +520,7 @@ class DroidObject extends AiAgent {
 	public int getDamageMax() {
 		if(isPet())
 			return maxDamage;
-		else
+		else	
 			return super.getDamageMax();
 	}
 
@@ -533,7 +532,7 @@ class DroidObject extends AiAgent {
 	@dirty
 	@preLocked
 	public float calculateAttackSpeed(int level) {
-		if (isPet())
+		if (isPet()) 
 			return attackSpeed;
 		else
 			return super.calculateAttackSpeed(level);

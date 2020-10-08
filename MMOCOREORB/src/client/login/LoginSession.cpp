@@ -16,7 +16,7 @@ LoginSession::LoginSession(int instance) : Logger("LoginSession" + String::value
 	selectedCharacter = -1;
 	LoginSession::instance = instance;
 
-	loginThread = nullptr;
+	loginThread = NULL;
 
 	accountID = 0;
 	sessionID = 0;
@@ -24,7 +24,7 @@ LoginSession::LoginSession(int instance) : Logger("LoginSession" + String::value
 }
 
 LoginSession::~LoginSession() {
-	if (loginThread != nullptr)
+	if (loginThread != NULL)
 		loginThread->stop();
 }
 

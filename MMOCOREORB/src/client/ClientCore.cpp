@@ -9,7 +9,7 @@
 
 #include "client/login/LoginSession.h"
 
-ClientCore::ClientCore(int instances) : Core("log/core3client.log", "client3"), Logger("CoreClient") {
+ClientCore::ClientCore(int instances) : Core("log/core3client.log"), Logger("CoreClient") {
 	ClientCore::instances = instances;
 
 	setInfoLogLevel();
@@ -23,7 +23,7 @@ int connectCount = 0, disconnectCount = 0;
 
 void ClientCore::run() {
 	for (int i = 0; i < instances; ++i) {
-		zones.add(nullptr);
+		zones.add(NULL);
 	}
 
 	info("initialized", true);
@@ -36,7 +36,7 @@ void ClientCore::run() {
 
 	for (int i = 0; i < instances; ++i) {
 		Zone* zone = zones.get(i);
-		if (zone != nullptr)
+		if (zone != NULL)
 			zone->disconnect();
 	}
 
@@ -46,7 +46,7 @@ void ClientCore::run() {
 void ClientCore::loginCharacter(int index) {
 	try {
 		Zone* zone = zones.get(index);
-		if (zone != nullptr)
+		if (zone != NULL)
 			return;
 
 		Reference<LoginSession*> loginSession = new LoginSession(index);
@@ -71,16 +71,16 @@ void ClientCore::loginCharacter(int index) {
 
 		connectCount++;
 	} catch (Exception& e) {
-		e.printMessage();
+
 	}
 }
 
 void ClientCore::logoutCharacter(int index) {
 	Zone* zone = zones.get(index);
-	if (zone == nullptr || !zone->isStarted())
+	if (zone == NULL || !zone->isStarted())
 		return;
 
-	zones.set(index, nullptr);
+	zones.set(index, NULL);
 
 	zone->disconnect();
 

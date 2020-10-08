@@ -8,7 +8,6 @@ import server.zone.objects.area.ActiveArea;
 import server.zone.objects.region.CityRegion;
 import server.zone.objects.scene.SceneObject;
 
-@json
 class Region extends ActiveArea {
 	@weakReference
 	protected CityRegion cityRegion;
@@ -23,7 +22,7 @@ class Region extends ActiveArea {
 	}
 
 	@weakReference
-	@read
+	@dirty
 	public CityRegion getCityRegion() {
 		return cityRegion;
 	}
@@ -43,7 +42,7 @@ class Region extends ActiveArea {
 
 		CityRegion strongReference = cityRegion;
 
-		if (!strongReference)
+		if (strongReference == null)
 			return;
 
 		synchronized (strongReference) {
@@ -56,7 +55,7 @@ class Region extends ActiveArea {
 
 		CityRegion strongReference = cityRegion;
 
-		if (!strongReference)
+		if (strongReference == null)
 			return;
 
 		synchronized (strongReference) {

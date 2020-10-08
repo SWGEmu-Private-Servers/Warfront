@@ -11,13 +11,12 @@ import server.zone.objects.creature.CreatureObject;
 include server.zone.packets.scene.AttributeListMessage;
 import server.zone.objects.scene.SceneObject;
 
-@json
 class ResourceContainer extends TangibleObject {
 
 	protected ResourceSpawn spawnObject;
 	protected int stackQuantity;
 
-	public static final int MAXSIZE = 100000;
+	public static final int MAXSIZE = 10000000;
 
 	public ResourceContainer() {
 		stackQuantity = 0;
@@ -39,7 +38,7 @@ class ResourceContainer extends TangibleObject {
 	 */
 	@preLocked
 	public native void destroyObjectFromDatabase(boolean destroyContainedObjects = false);
-
+        
 	/**
 	 * Fills the attribute list message options that are sent to player creature
 	 * @pre { }
@@ -67,18 +66,18 @@ class ResourceContainer extends TangibleObject {
 		return true;
 	}
 
-	@read
+	@dirty
 	public int getQuantity() {
 		return stackQuantity;
 	}
 
-	@read
+	@dirty
 	public int getUseCount() {
 		return getQuantity();
 	}
 
 	public native void setUseCount(unsigned int newUseCount, boolean notifyClient = true);
-
+	
 	public native void decreaseUseCount(unsigned int decrement=1, boolean notifyClient = true) {
 		setUseCount(stackQuantity-decrement, notifyClient);
 	}
@@ -92,7 +91,7 @@ class ResourceContainer extends TangibleObject {
 	public string getSpawnName() {
 		string ret;
 
-		if (spawnObject) {
+		if (spawnObject != null) {
 			ret = spawnObject.getName();
 		}
 
@@ -103,7 +102,7 @@ class ResourceContainer extends TangibleObject {
 	public string getSpawnType() {
 		string ret;
 
-		if (spawnObject) {
+		if (spawnObject != null) {
 			ret = spawnObject.getType();
 		}
 
@@ -114,7 +113,7 @@ class ResourceContainer extends TangibleObject {
 	public unsigned long getSpawnID() {
 		unsigned long id = 0;
 
-		if (spawnObject) {
+		if (spawnObject != null) {
 			id = spawnObject.getObjectID();
 		}
 

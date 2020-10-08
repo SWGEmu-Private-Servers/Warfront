@@ -10,7 +10,6 @@
 #include "LoginMessageProcessorTask.h"
 
 #include "conf/ConfigManager.h"
-#include "server/login/account/Account.h"
 #include "server/login/account/AccountManager.h"
 
 #include "LoginHandler.h"
@@ -20,7 +19,7 @@
 LoginServerImplementation::LoginServerImplementation(ConfigManager* configMan) :
 		ManagedServiceImplementation(), Logger("LoginServer") {
 
-	phandler = nullptr;
+	phandler = NULL;
 
 	datagramService = new DatagramServiceThread("LoginDatagramService");
 	datagramService->setLogging(false);
@@ -31,17 +30,19 @@ LoginServerImplementation::LoginServerImplementation(ConfigManager* configMan) :
 
 	configManager = configMan;
 
-	processor = nullptr;
+	processor = NULL;
 
-	accountManager = nullptr;
+	enumClusterMessage = NULL;
+
+	accountManager = NULL;
 
 	setLogging(false);
 }
 
 void LoginServerImplementation::initializeTransientMembers() {
-	phandler = nullptr;
+	phandler = NULL;
 
-	processor = nullptr;
+	processor = NULL;
 
 	ManagedObjectImplementation::initializeTransientMembers();
 }
@@ -57,6 +58,8 @@ void LoginServerImplementation::initialize() {
 
 	//taskManager->setLogging(false);
 
+	populateGalaxyList();
+
 	return;
 }
 
@@ -67,6 +70,7 @@ void LoginServerImplementation::startManagers() {
 	accountManager = new AccountManager(_this.getReferenceUnsafeStaticCast());
 	accountManager->setAutoRegistrationEnabled(configManager->getAutoReg());
 	accountManager->setRequiredVersion(configManager->getLoginRequiredVersion());
+	accountManager->setMaxOnlineCharacters(configManager->getZoneOnlineCharactersPerAccount());
 	accountManager->setDBSecret(configManager->getDBSecret());
 }
 
@@ -80,14 +84,15 @@ void LoginServerImplementation::stop() {
 	shutdown();
 
 	datagramService->stop();
-	datagramService = nullptr;
+	datagramService = NULL;
 }
 
 void LoginServerImplementation::shutdown() {
 	stopManagers();
-	loginHandler = nullptr;
-	phandler = nullptr;
-	processor = nullptr;
+	loginHandler = NULL;
+	phandler = NULL;
+	processor = NULL;
+	enumClusterMessage = NULL;
 
 	printInfo();
 
@@ -95,8 +100,8 @@ void LoginServerImplementation::shutdown() {
 }
 
 void LoginServerImplementation::stopManagers() {
-	accountManager = nullptr;
-	configManager = nullptr;
+	accountManager = NULL;
+	configManager = NULL;
 
 	info("managers stopped", true);
 }
@@ -117,13 +122,13 @@ LoginClient* LoginServerImplementation::createConnection(Socket* sock, SocketAdd
 }
 
 void LoginServerImplementation::handleMessage(LoginClient* client, Packet* message) {
-	if (phandler == nullptr)
+	if (phandler == NULL)
 		return;
 
 	BaseClientProxy* session = cast<BaseClientProxy*>(client->getSession());
 
 	try {
-		if (session != nullptr && session->isAvailable())
+		if (session != NULL && session->isAvailable())
 			phandler->handlePacket(session, message);
 
 	} catch (PacketIndexOutOfBoundsException& e) {
@@ -136,10 +141,11 @@ void LoginServerImplementation::handleMessage(LoginClient* client, Packet* messa
 }
 
 void LoginServerImplementation::processMessage(Message* message) {
-	debug() << "processing message " << *message;
+	//info("processing message " + message->toStringData());
 
 	Reference<Task*> task = new LoginMessageProcessorTask(message, processor->getPacketHandler());
-	task->execute();
+
+	Core::getTaskManager()->executeTask(task);
 }
 
 LoginClient* LoginServerImplementation::getLoginClient(ServiceClient* session) {
@@ -149,7 +155,7 @@ LoginClient* LoginServerImplementation::getLoginClient(ServiceClient* session) {
 bool LoginServerImplementation::handleError(ServiceClient* client, Exception& e) {
 	BaseClientProxy* bclient = cast<BaseClientProxy*>(client);
 
-	if (bclient != nullptr) {
+	if (bclient != NULL) {
 		bclient->setError();
 
 		bclient->disconnect();
@@ -161,40 +167,52 @@ bool LoginServerImplementation::handleError(ServiceClient* client, Exception& e)
 void LoginServerImplementation::printInfo() {
 	lock();
 
-	info(true) << "MessageQueue - size = " << datagramService->getMessageQueue()->size();
+	StringBuffer msg;
+	msg << "MessageQueue - size = " << datagramService->getMessageQueue()->size();
+	info(msg, true);
 
 	unlock();
 }
 
-LoginEnumCluster* LoginServerImplementation::getLoginEnumClusterMessage(Account* account) {
-	auto galaxies = GalaxyList(account->getUsername());
+void LoginServerImplementation::populateGalaxyList() {
+	//Populate the galaxies list for the login server.
+	GalaxyList galaxies;
 	uint32 galaxyCount = galaxies.size();
 
-	auto msg = new LoginEnumCluster(galaxyCount);
-
-	while (galaxies.next()) {
-		msg->addGalaxy(galaxies.getID(), galaxies.getName());
+	//In case we want to add the functionality to update the lists while the server is running...
+	if (enumClusterMessage != NULL) {
+		delete enumClusterMessage;
+		enumClusterMessage = NULL;
 	}
 
-	msg->finish();
+	enumClusterMessage = new LoginEnumCluster(galaxyCount);
+    while (galaxies.next()) {
+    	uint32 galaxyID = galaxies.getGalaxyID();
 
-	return msg;
+    	String name;
+    	galaxies.getGalaxyName(name);
+
+    	enumClusterMessage->addGalaxy(galaxyID, name);
+    }
+
+    enumClusterMessage->finish();
 }
 
-LoginClusterStatus* LoginServerImplementation::getLoginClusterStatusMessage(Account* account) {
-	auto galaxies = GalaxyList(account->getUsername());
+LoginClusterStatus* LoginServerImplementation::getLoginClusterStatusMessage() {
+	GalaxyList galaxies;
 	uint32 galaxyCount = galaxies.size();
 
-	auto msg = new LoginClusterStatus(galaxyCount);
+	auto clusterStatusMessage = new LoginClusterStatus(galaxyCount);
 
 	while (galaxies.next()) {
-		msg->addGalaxy(
-			galaxies.getID(),
-			galaxies.getAddress(),
-			galaxies.getRandomPort(),
-			galaxies.getPingPort()
-		);
+		uint32 galaxyID = galaxies.getGalaxyID();
+
+		String address;
+		galaxies.getGalaxyAddress(address);
+
+		clusterStatusMessage->addGalaxy(galaxyID, address, galaxies.getRandomGalaxyPort(), galaxies.getGalaxyPingPort());
 	}
 
-	return msg;
+	return clusterStatusMessage;
 }
+

@@ -16,17 +16,17 @@
 int SingleUseBuffObserverImplementation::notifyObserverEvent(unsigned int eventType, Observable* observable, ManagedObject* arg1, int64 arg2) {
 	ManagedReference<SingleUseBuff* > buff = this->buff.get();
 
-	if (buff == nullptr)
+	if (buff == NULL)
 		return 1;
 
 	ManagedReference<CreatureObject*> player = buff->getPlayer();
-	if (player == nullptr)
+	if (player == NULL)
 		return 1;
 
 	ManagedReference<ObjectController*> objectController = player->getZoneServer()->getObjectController();
 
 	unsigned int commandCRC = buff->getCommandCRC();
-	const QueueCommand* queueCommand = objectController->getQueueCommand(commandCRC);
+	QueueCommand* queueCommand = objectController->getQueueCommand(commandCRC);
 
 	SceneObject* creature = cast<SceneObject*>( observable);
 

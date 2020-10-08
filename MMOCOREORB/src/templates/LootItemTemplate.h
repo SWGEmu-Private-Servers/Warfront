@@ -22,7 +22,6 @@ protected:
 	int junkMaxValue;
 
 	ValuesMap craftingValues;
-	bool suppressSerialNumber;
 
 	Vector<String> customizationStringNames;
 	Vector<Vector<int> > customizationValues;
@@ -44,13 +43,11 @@ public:
 		junkDealerTypeNeeded = 0;
 		junkMinValue = 0;
 		junkMaxValue = 0;
-		suppressSerialNumber = false;
 	}
 
 	void readObject(LuaObject* templateData) {
 		customObjectName = templateData->getStringField("customObjectName");
 		directObjectTemplate = templateData->getStringField("directObjectTemplate");
-		suppressSerialNumber = templateData->getBooleanField("suppressSerialNumber");
 
 		junkDealerTypeNeeded = templateData->getIntField("junkDealerTypeNeeded");
 		junkMinValue = templateData->getIntField("junkMinValue");
@@ -186,63 +183,56 @@ public:
 
 	}
 
-	const String& getTemplateName() const {
+	String& getTemplateName() {
 		return templateName;
 	}
 
-	const String& getDirectObjectTemplate() const {
+	String& getDirectObjectTemplate() {
 		return directObjectTemplate;
 	}
 
-	const String& getCustomObjectName() const {
+	String& getCustomObjectName() {
 		return customObjectName;
 	}
 
-	const Vector<String>* getCustomizationStringNames() const {
+	Vector<String>* getCustomizationStringNames() {
 		return &customizationStringNames;
 	}
 
-	const Vector<Vector<int> >* getCustomizationValues() const {
+	Vector<Vector<int> >* getCustomizationValues() {
 		return &customizationValues;
 	}
 
-	bool getSuppressSerialNumber() const {
-		return suppressSerialNumber;
-	}
-
-	ValuesMap getValuesMapCopy() const {
+	ValuesMap getValuesMapCopy() {
 		return craftingValues;
 	}
 
-	const VectorMap<String, int>* getSkillMods() const {
+	VectorMap<String, int>* getSkillMods() {
 		return &skillMods;
 	}
 
-	float getRandomDotChance() const {
+	float getRandomDotChance() {
 		return randomDotChance;
 	}
 
-	float getStaticDotChance() const {
+	float getStaticDotChance() {
 		return staticDotChance;
 	}
 
-	int getStaticDotType() const {
+	int getStaticDotType() {
 		return staticDotType;
 	}
 
-	int getJunkDealerTypeNeeded() const {
+	int getJunkDealerTypeNeeded() {
 		return junkDealerTypeNeeded;
 	}
-
-	int getJunkMinValue() const {
+	int getJunkMinValue() {
 		return junkMinValue;
 	}
-
-	int getJunkMaxValue() const {
+	int getJunkMaxValue() {
 		return junkMaxValue;
 	}
-
-	const VectorMap<String, SortedVector<int> >* getStaticDotValues() const {
+	VectorMap<String, SortedVector<int> >* getStaticDotValues() {
 		return &staticDotValues;
 	}
 };

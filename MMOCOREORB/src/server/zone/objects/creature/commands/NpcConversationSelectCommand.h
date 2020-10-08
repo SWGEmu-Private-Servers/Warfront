@@ -30,7 +30,7 @@ public:
 		uint64 conversationCreatureOid = ghost->getConversatingCreature();
 		ManagedReference<CreatureObject*> object = server->getZoneServer()->getObject(conversationCreatureOid).castTo<CreatureObject*>();
 
-		if (object != nullptr) {
+		if (object != NULL) {
 			int option = Integer::valueOf(arguments.toString());
 
 			try {

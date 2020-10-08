@@ -27,7 +27,7 @@ public:
 	void run() {
 		ManagedReference<CreatureObject*> player = client->getPlayer();
 
-		if (player != nullptr) {
+		if (player != NULL) {
 			RadialManager* radialManager = server->getZoneServer()->getRadialManager();
 			radialManager->handleObjectMenuSelect(player, radialID, objectID);
 		}

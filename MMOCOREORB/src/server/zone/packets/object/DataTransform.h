@@ -62,13 +62,13 @@ public:
 		objectControllerMain = objectControllerCallback;
 
 		ManagedReference<CreatureObject*> player = client->getPlayer();
-
-		if (player != nullptr) {
+		
+		if (player != NULL) {
 			Zone* zone = player->getZone();
-
-			if (zone != nullptr) {
+			
+			if (zone != NULL) {
 				String zoneName = zone->getZoneName();
-
+			
 				setCustomTaskQueue(zoneName);
 			}
 		}
@@ -91,7 +91,7 @@ public:
 
 		//client->info(message->toStringData(), true);
 
-		debug("datatransform parsed");
+		//info("datatransform", true);
 	}
 
 	void bounceBack(CreatureObject* object, ValidatedPosition& pos) {
@@ -103,11 +103,11 @@ public:
 
 	void run() {
 		ManagedReference<CreatureObject*> object = client->getPlayer();
-
-		if (object == nullptr)
+		
+		if (object == NULL)
 			return;
 
-		if (object->getZone() == nullptr)
+		if (object->getZone() == NULL)
 			return;
 
 		int posture = object->getPosture();
@@ -136,7 +136,7 @@ public:
 				ManagedReference<SceneObject*> currentParent = object->getParent().get();
 				bool light = objectControllerMain->getPriority() != 0x23;
 
-				if (currentParent != nullptr)
+				if (currentParent != NULL)
 					object->updateZoneWithParent(currentParent, light);
 				else
 					object->updateZone(light);
@@ -147,13 +147,8 @@ public:
 	void updatePosition(CreatureObject* object) {
 		PlayerObject* ghost = object->getPlayerObject();
 
-		if (ghost == nullptr)
+		if (ghost == NULL)
 			return;
-
-#ifdef PLATFORM_WIN
-#undef isnan
-#undef isinf
-#endif
 
 		if (std::isnan(positionX) || std::isnan(positionY) || std::isnan(positionZ))
 			return;
@@ -168,13 +163,11 @@ public:
 			return;*/
 
 		if (positionX > 7680.0f || positionX < -7680.0f || positionY > 7680.0f || positionY < -7680.0f) {
-			/*
 			StringBuffer msg;
 			msg << "position out of bounds";
 			object->error(msg.toString());
-			*/
 			return;
-		}
+		}	
 
 		/*float floorHeight = CollisionManager::instance()->getWorldFloorCollision(positionX, positionY, object->getZone(), true);
 
@@ -182,7 +175,7 @@ public:
 
 		ManagedReference<PlanetManager*> planetManager = object->getZone()->getPlanetManager();
 
-		if (planetManager == nullptr)
+		if (planetManager == NULL)
 			return;
 
 		IntersectionResults intersections;
@@ -201,7 +194,7 @@ public:
 		if (!ghost->hasGodMode()) {
 			SceneObject* inventory = object->getSlottedObject("inventory");
 
-			if (inventory != nullptr && inventory->getCountableObjectsRecursive() > inventory->getContainerVolumeLimit() + 1) {
+			if (inventory != NULL && inventory->getCountableObjectsRecursive() > inventory->getContainerVolumeLimit() + 1) {
 				object->sendSystemMessage("Inventory Overloaded - Cannot Move");
 				bounceBack(object, pos);
 				return;
@@ -236,13 +229,13 @@ public:
 
 		ManagedReference<PlayerManager*> playerManager = server->getPlayerManager();
 
-		if (playerManager == nullptr)
+		if (playerManager == NULL)
 			return;
 
 		if (playerManager->checkSpeedHackFirstTest(object, parsedSpeed, pos, 1.1f) != 0)
 			return;
 
-		if (playerManager->checkSpeedHackSecondTest(object, positionX, positionZ, positionY, movementStamp, nullptr) != 0)
+		if (playerManager->checkSpeedHackSecondTest(object, positionX, positionZ, positionY, movementStamp, NULL) != 0)
 			return;
 
 		playerManager->updateSwimmingState(object, positionZ, &intersections, (CloseObjectsVector*) object->getCloseObjects());
@@ -261,7 +254,7 @@ public:
 
 		ghost->setClientLastMovementStamp(movementStamp);
 
-		if (oldX == positionX && oldY == positionY && oldZ == positionZ &&
+		if (oldX == positionX && oldY == positionY && oldZ == positionZ && 
 			dirw == directionW && dirz == directionZ && dirx == directionX && diry == directionY) {
 
 			return;

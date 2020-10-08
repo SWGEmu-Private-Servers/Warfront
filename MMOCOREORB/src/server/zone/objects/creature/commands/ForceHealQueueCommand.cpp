@@ -8,7 +8,6 @@
 #include "server/zone/managers/stringid/StringIdManager.h"
 #include "server/zone/managers/collision/CollisionManager.h"
 #include "server/zone/managers/frs/FrsManager.h"
-#include "server/zone/objects/building/BuildingObject.h"
 
 ForceHealQueueCommand::ForceHealQueueCommand(const String& name, ZoneProcessServer* server) : JediQueueCommand(name, server) {
 	speed = 3;
@@ -48,12 +47,26 @@ ForceHealQueueCommand::ForceHealQueueCommand(const String& name, ZoneProcessServ
 int ForceHealQueueCommand::runCommand(CreatureObject* creature, CreatureObject* targetCreature) const {
 	ManagedReference<PlayerObject*> playerObject = creature->getPlayerObject();
 
-	if (playerObject == nullptr)
+	if (playerObject == NULL)
 		return GENERALERROR;
 
 	int currentForce = playerObject->getForcePower();
 	int totalCost = forceCost;
 	bool healPerformed = false;
+	float frsManipulationBonus = 0.f;
+	float frsPowerBonus = 0.f;
+	float frsControlBonus = 0.f;
+
+	if (playerObject != NULL){
+		frsPowerBonus = creature->getFrsPower();
+		frsPowerBonus = 1 + (.25 *(frsPowerBonus/120));
+		frsControlBonus = creature->getFrsControl();
+		frsControlBonus = 1 + (.25 *(frsControlBonus/120));
+		frsManipulationBonus = creature->getFrsManipulation(); // * 1.5;
+		frsManipulationBonus = 1 + (.25 *(frsManipulationBonus/120));
+
+	}
+
 
 	// Attribute Wound Healing
 	for (int i = 0; i < 3; i++) {
@@ -64,10 +77,10 @@ int ForceHealQueueCommand::runCommand(CreatureObject* creature, CreatureObject* 
 					uint8 attrib = (i * 3) + j;
 					int woundAmount = targetCreature->getWounds(attrib);
 
-					if (healWoundAmount > 0 && woundAmount > healWoundAmount)
-						woundAmount = healWoundAmount;
+					if ((healWoundAmount*frsManipulationBonus) > 0 && woundAmount > (healWoundAmount*frsManipulationBonus))
+						woundAmount = healWoundAmount*frsManipulationBonus;
 
-					totalCost += woundAmount * forceCostMultiplier;
+					totalCost += ((woundAmount * forceCostMultiplier) / frsManipulationBonus);
 
 					if (totalCost > currentForce) {
 						int forceDiff = totalCost - currentForce;
@@ -85,7 +98,12 @@ int ForceHealQueueCommand::runCommand(CreatureObject* creature, CreatureObject* 
 		}
 	}
 
-	// HAM Attribute Healing
+
+	int healingWithFrs = -1;
+	if (healAmount != -1)
+		healingWithFrs = healAmount * frsManipulationBonus;
+
+		// HAM Attribute Healing
 	for (int i = 0; i < 3; i++) {
 		// Attrib Values: Health = 1, Action = 2, Mind = 4
 		if (attributesToHeal & (1 << i)) {
@@ -95,10 +113,10 @@ int ForceHealQueueCommand::runCommand(CreatureObject* creature, CreatureObject* 
 				int maxHam = targetCreature->getMaxHAM(attrib) - targetCreature->getWounds(attrib);
 				int amtToHeal = maxHam - curHam;
 
-				if (healAmount > 0 && amtToHeal > healAmount)
-					amtToHeal = healAmount;
+				if (healingWithFrs > 0 && amtToHeal > healingWithFrs)
+					amtToHeal = healingWithFrs;
 
-				totalCost += amtToHeal * forceCostMultiplier;
+				totalCost += ((amtToHeal * forceCostMultiplier)/frsManipulationBonus);
 
 				if (totalCost > currentForce) {
 					int forceDiff = totalCost - currentForce;
@@ -146,7 +164,7 @@ int ForceHealQueueCommand::runCommand(CreatureObject* creature, CreatureObject* 
 
 			if ((statesToHeal & state) && targetCreature->hasState(state)) {
 				totalStates++;
-				int newTotal = totalCost + healStateCost;
+				int newTotal = totalCost + (healStateCost * 2);
 
 				if (newTotal < currentForce) {
 					targetCreature->removeStateBuff(state);
@@ -166,9 +184,9 @@ int ForceHealQueueCommand::runCommand(CreatureObject* creature, CreatureObject* 
 		bool result = false;
 		int iteration = 1;
 
-		while (!result && (totalCost + healBleedingCost < currentForce) && (bleedHealIterations == -1 || iteration <= bleedHealIterations)) {
-			result = targetCreature->healDot(CreatureState::BLEEDING, 250, false);
-			totalCost += healBleedingCost;
+		while (!result && (totalCost + healBleedingCost < currentForce) && (bleedHealIterations == -1 || iteration <= (bleedHealIterations*frsControlBonus))) {
+			result = targetCreature->healDot(CreatureState::BLEEDING, 250 * (2 * frsPowerBonus), false);
+			totalCost += (healBleedingCost/frsManipulationBonus);
 			iteration++;
 		}
 
@@ -182,13 +200,17 @@ int ForceHealQueueCommand::runCommand(CreatureObject* creature, CreatureObject* 
 	}
 
 	// Poison
-	if (targetCreature->isPoisoned() && healPoisonCost > 0 && totalCost + healPoisonCost < currentForce) {
+	if (!creature->checkCooldownRecovery("forceCurePoison") && targetCreature->isPoisoned() && healPoisonCost > 0)
+          creature->sendSystemMessage("You arent yet ready to cure poison again.");
+
+
+	if (targetCreature->isPoisoned() && creature->checkCooldownRecovery("forceCurePoison") && healPoisonCost > 0 && totalCost + healPoisonCost < currentForce) {
 		bool result = false;
 		int iteration = 1;
 
-		while (!result && (totalCost + healPoisonCost < currentForce) && (poisonHealIterations == -1 || iteration <= poisonHealIterations)) {
-			result = targetCreature->healDot(CreatureState::POISONED, 250, false);
-			totalCost += healPoisonCost;
+		while (!result && (totalCost + healPoisonCost < currentForce) && (poisonHealIterations == -1 || iteration <= (poisonHealIterations*frsControlBonus))) {
+			result = targetCreature->healDot(CreatureState::POISONED, 250 * (2 * frsPowerBonus), false);
+			totalCost += (healPoisonCost/frsManipulationBonus);
 			iteration++;
 		}
 
@@ -197,18 +219,21 @@ int ForceHealQueueCommand::runCommand(CreatureObject* creature, CreatureObject* 
 		} else {
 			sendHealMessage(creature, targetCreature, HEAL_POISON, 0, 0);
 		}
-
+		creature->updateCooldownTimer("forceCurePoison", 3000); // 3 seconds
 		healPerformed = true;
 	}
 
 	// Disease
+		if (!creature->checkCooldownRecovery("forceCureDisease") && targetCreature->isPoisoned() && healPoisonCost > 0)
+          creature->sendSystemMessage("You arent yet ready to cure disease again.");
+
 	if (targetCreature->isDiseased() && healDiseaseCost > 0 && totalCost + healDiseaseCost < currentForce) {
 		bool result = false;
 		int iteration = 1;
 
-		while (!result && (totalCost + healDiseaseCost < currentForce) && (diseaseHealIterations == -1 || iteration <= diseaseHealIterations)) {
-			result = targetCreature->healDot(CreatureState::DISEASED, 200, false);
-			totalCost += healDiseaseCost;
+		while (!result && (totalCost + healDiseaseCost < currentForce) && (diseaseHealIterations == -1 || iteration <= (diseaseHealIterations*frsControlBonus))) {
+			result = targetCreature->healDot(CreatureState::DISEASED, 200 * (2 * frsPowerBonus), false);
+			totalCost += (healDiseaseCost/frsManipulationBonus);
 			iteration++;
 		}
 
@@ -217,7 +242,7 @@ int ForceHealQueueCommand::runCommand(CreatureObject* creature, CreatureObject* 
 		} else {
 			sendHealMessage(creature, targetCreature, HEAL_DISEASE, 0, 0);
 		}
-
+		creature->updateCooldownTimer("forceCureDisease", 3000); // 3 seconds
 		healPerformed = true;
 	}
 
@@ -225,9 +250,10 @@ int ForceHealQueueCommand::runCommand(CreatureObject* creature, CreatureObject* 
 	if (targetCreature->isOnFire() && healFireCost > 0 && totalCost + healFireCost < currentForce) {
 		bool result = false;
 		int iteration = 1;
-
+		if (targetCreature->isOnFire())
 		while (!result && (totalCost + healFireCost < currentForce) && (fireHealIterations == -1 || iteration <= fireHealIterations)) {
-			result = targetCreature->healDot(CreatureState::ONFIRE, 500, false);
+			result = targetCreature->healDot(CreatureState::ONFIRE, 500 * (2 * frsPowerBonus), false);
+
 			totalCost += healFireCost;
 			iteration++;
 		}
@@ -270,7 +296,7 @@ int ForceHealQueueCommand::runCommand(CreatureObject* creature, CreatureObject* 
 }
 
 void ForceHealQueueCommand::sendHealMessage(CreatureObject* creature, CreatureObject* target, int healType, int healSpec, int amount) const {
-	if (creature == nullptr || target == nullptr || amount < 0)
+	if (creature == NULL || target == NULL || amount < 0)
 		return;
 
 	uint64 playerID = creature->getObjectID();
@@ -358,7 +384,7 @@ void ForceHealQueueCommand::sendHealMessage(CreatureObject* creature, CreatureOb
 }
 
 int ForceHealQueueCommand::runCommandWithTarget(CreatureObject* creature, CreatureObject* targetCreature) const {
-	if (creature == nullptr || targetCreature == nullptr)
+	if (creature == NULL || targetCreature == NULL)
 		return GENERALERROR;
 
 	if (creature->getObjectID() == targetCreature->getObjectID()) // no self healing
@@ -378,7 +404,9 @@ int ForceHealQueueCommand::runCommandWithTarget(CreatureObject* creature, Creatu
 	if(!checkDistance(creature, targetCreature, range))
 		return TOOFAR;
 
-	if (checkForArenaDuel(targetCreature)) {
+	FrsManager* frsManager = server->getZoneServer()->getFrsManager();
+
+	if (frsManager != nullptr && frsManager->isFrsEnabled() && frsManager->isPlayerFightingInArena(targetCreature->getObjectID())) {
 		creature->sendSystemMessage("@jedi_spam:no_help_target"); // You are not permitted to help that target.
 		return GENERALERROR;
 	}
@@ -393,39 +421,11 @@ int ForceHealQueueCommand::runCommandWithTarget(CreatureObject* creature, Creatu
 		return GENERALERROR;
 	}
 
-	if (creature->isPlayerCreature() && targetCreature->getParentID() != 0 && creature->getParentID() != targetCreature->getParentID()) {
-		Reference<CellObject*> targetCell = targetCreature->getParent().get().castTo<CellObject*>();
-
-		if (targetCell != nullptr) {
-			if (!targetCreature->isPlayerCreature()) {
-				auto perms = targetCell->getContainerPermissions();
-
-				if (!perms->hasInheritPermissionsFromParent()) {
-					if (!targetCell->checkContainerPermission(creature, ContainerPermissions::WALKIN)) {
-						creature->sendSystemMessage("@combat_effects:cansee_fail"); // You cannot see your target.
-						return GENERALERROR;
-					}
-				}
-			}
-
-			ManagedReference<SceneObject*> parentSceneObject = targetCell->getParent().get();
-
-			if (parentSceneObject != nullptr) {
-				BuildingObject* buildingObject = parentSceneObject->asBuildingObject();
-
-				if (buildingObject != nullptr && !buildingObject->isAllowedEntry(creature)) {
-					creature->sendSystemMessage("@combat_effects:cansee_fail"); // You cannot see your target.
-					return GENERALERROR;
-				}
-			}
-		}
-	}
-
 	return runCommand(creature, targetCreature);
 }
 
 int ForceHealQueueCommand::doQueueCommand(CreatureObject* creature, const uint64& target, const UnicodeString& arguments) const {
-	if (creature == nullptr || !creature->isPlayerCreature())
+	if (creature == NULL || !creature->isPlayerCreature())
 		return GENERALERROR;
 
 	if (!checkInvalidLocomotions(creature))
@@ -436,24 +436,24 @@ int ForceHealQueueCommand::doQueueCommand(CreatureObject* creature, const uint64
 	if (comResult != SUCCESS)
 		return comResult;
 
-	ManagedReference<CreatureObject*> targetCreature = nullptr;
+	ManagedReference<CreatureObject*> targetCreature = NULL;
 	bool isRemoteHeal = range > 0 && ((allowedTarget == TARGET_AUTO) || (allowedTarget & TARGET_OTHER));
 
 	if (isRemoteHeal && target != 0 && target != creature->getObjectID()) {
 		ManagedReference<SceneObject*> sceno = server->getZoneServer()->getObject(target);
 
-		if (sceno != nullptr && sceno->isCreatureObject()) {
+		if (sceno != NULL && sceno->isCreatureObject()) {
 			targetCreature = sceno.castTo<CreatureObject*>();
 		}
 	}
 
 	const bool selfHealingAllowed = (allowedTarget & TARGET_SELF) || !isRemoteHeal;
-	if (!isRemoteHeal || (targetCreature == nullptr && selfHealingAllowed) || (targetCreature != nullptr && (!targetCreature->isHealableBy(creature)) && selfHealingAllowed)) {
+	if (!isRemoteHeal || (targetCreature == NULL && selfHealingAllowed) || (targetCreature != NULL && (!targetCreature->isHealableBy(creature)) && selfHealingAllowed)) {
 		isRemoteHeal = false;
 		targetCreature = creature;
 	}
 
-	if (targetCreature == nullptr)
+	if (targetCreature == NULL)
 		return GENERALERROR;
 
 	int retval = GENERALERROR;

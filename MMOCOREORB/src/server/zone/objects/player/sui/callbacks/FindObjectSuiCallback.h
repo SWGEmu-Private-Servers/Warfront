@@ -16,7 +16,7 @@ public:
 
 	void run(CreatureObject* creature, SuiBox* sui, uint32 eventIndex, Vector<UnicodeString>* args) {
 		bool cancelPressed = (eventIndex == 1);
-		if (!sui->isListBox() || cancelPressed || server == nullptr)
+		if (!sui->isListBox() || cancelPressed || server == NULL)
 			return;
 
 		SuiListBox* listBox = cast<SuiListBox*>( sui);
@@ -35,7 +35,7 @@ public:
 
 		ManagedReference<SceneObject*> object = server->getObject(objectID);
 
-		if (object == nullptr)
+		if (object == NULL)
 			return;
 
 		Zone* zone = object->getZone();
@@ -45,7 +45,7 @@ public:
 
 			Locker locker(object, creature);
 
-			if (object->getParent().get() != nullptr) {
+			if (object->getParent().get() != NULL) {
 				arguments << String::valueOf(object->getPositionX()) << " " << String::valueOf(object->getPositionY());
 
 				if (zone) {

@@ -17,7 +17,7 @@ namespace events {
 
 class DroidAutoRepairTask : public Task {
 
-	Reference<DroidAutoRepairModuleDataComponent*> module;
+	ManagedReference<DroidAutoRepairModuleDataComponent*> module;
 
 public:
 	DroidAutoRepairTask(DroidAutoRepairModuleDataComponent* module) : Task() {
@@ -26,7 +26,7 @@ public:
 
 	void run() {
 
-		if (module == nullptr || module->getDroidObject() == nullptr) {
+		if (module == NULL || module->getDroidObject() == NULL) {
 			return;
 		}
 
@@ -41,10 +41,10 @@ public:
 		}
 
 		// Check if droid is spawned
-		if (droid->getLocalZone() == nullptr) {  // Not outdoors
+		if (droid->getLocalZone() == NULL) {  // Not outdoors
 			ManagedReference<SceneObject*> parent = droid->getParent().get();
 
-			if (parent == nullptr || !parent->isCellObject()) { // Not indoors either
+			if (parent == NULL || !parent->isCellObject()) { // Not indoors either
 				droid->removePendingTask("droid_auto_repair");
 				return;
 			}
@@ -69,14 +69,14 @@ public:
 		// Heal all droids in group within 30m
 		ManagedReference<GroupObject*> group = droid->getGroup();
 
-		if (group != nullptr) {
+		if (group != NULL) {
 			for (int i = 0; i < group->getGroupSize(); i++) {
 				CreatureObject* member = group->getGroupMember(i);
 
-				if (member != nullptr && member->isDroidObject() && member->isInRange(droid, 30.0f)) {
+				if (member != NULL && member->isDroidObject() && member->isInRange(droid, 30.0f)) {
 					ManagedReference<DroidObject*> groupedDroid = cast<DroidObject*>(member);
 
-					if (groupedDroid != nullptr && groupedDroid != droid) {
+					if (groupedDroid != NULL && groupedDroid != droid) {
 						Locker dlocker(groupedDroid, droid);
 						healDroid(droid, groupedDroid, module->getAutoRepairPower());
 						dlocker.release();

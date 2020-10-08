@@ -11,13 +11,13 @@
 bool DroidDatapadContainerComponent::checkContainerPermission(SceneObject* sceneObject, CreatureObject* creature, uint16 permission) const {
 	ManagedReference<SceneObject*> p = sceneObject->getParent().get();
 
-	if (p == nullptr || !p->isDroidObject()) {
+	if (p == NULL || !p->isDroidObject()) {
 		return false;
 	}
 
 	DroidObject* droid = p.castTo<DroidObject*>();
 
-	if(droid == nullptr){
+	if(droid == NULL){
 		return false;
 	}
 

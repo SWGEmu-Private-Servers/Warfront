@@ -43,7 +43,7 @@ public:
 
 		PlayerObject* ghost = creature->getPlayerObject();
 
-		if (ghost == nullptr)
+		if (ghost == NULL)
 			return GENERALERROR;
 
 		if (ghost->getConsentListSize() >= 20) {
@@ -84,7 +84,7 @@ public:
 				} else {
 					CreatureObject* targetPlayer = playerManager->getPlayer(name);
 
-					if (targetPlayer == nullptr)
+					if (targetPlayer == NULL)
 						return INVALIDTARGET;
 
 					consent(creature, targetPlayer);
@@ -94,7 +94,7 @@ public:
 			ManagedReference<SceneObject*> object = server->getZoneServer()->getObject(targetID);
 			CreatureObject* playerTarget = cast<CreatureObject*>( object.get());
 
-			if (playerTarget == nullptr || !playerTarget->isPlayerCreature() || playerTarget == creature) {
+			if (playerTarget == NULL || !playerTarget->isPlayerCreature() || playerTarget == creature) {
 				return INVALIDTARGET;
 			}
 

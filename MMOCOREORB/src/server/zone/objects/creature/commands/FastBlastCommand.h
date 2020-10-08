@@ -19,14 +19,28 @@ public:
 			if (!checkStateMask(creature))
 				return INVALIDSTATE;
 
-			if (!checkInvalidLocomotions(creature))
-				return INVALIDLOCOMOTION;
+		if (!checkInvalidLocomotions(creature))
+			return INVALIDLOCOMOTION;
+			
+		
+		ManagedReference<WeaponObject*> weapon = creature->getWeapon();
+		
+		if (weapon == NULL)
+			return GENERALERROR;
+
+		String type = weapon->getWeaponType();
+		
+		if (type != "pistol" && type != "carbine"){
+			creature->sendSystemMessage("You must be using a pistol or carbine to use this ability");
+			return GENERALERROR;
+			
+		}
 
 			UnicodeString args = "healthDamageMultiplier=0.33f;actionDamageMultiplier=0.33f;mindDamageMultiplier=0.33f;";
 
 			return doCombatAction(creature, target, args);
 		}
 
-	};
+};
 
 #endif //FASTBLASTCOMMAND_H_

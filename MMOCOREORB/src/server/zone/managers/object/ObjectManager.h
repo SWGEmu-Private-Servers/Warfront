@@ -21,19 +21,19 @@ namespace zone {
 	namespace object {
 
 	class ObjectManager : public DOBObjectManager, public Singleton<ObjectManager>, public Object {
-		Reference<ZoneProcessServer*> server;
+		ManagedReference<ZoneProcessServer*> server;
 
-		TemplateManager* templateManager = nullptr;
+		TemplateManager* templateManager;
 
-		int galaxyId = 0;
+		int galaxyId;
 		Reference<ResultSet*> charactersSaved;
 
 		AtomicInteger saveCounter;
 
 		Reference<DeleteCharactersTask*> deleteCharactersTask;
-
-		static const uint32 serverObjectCrcHashCode;
-		static const uint32 _classNameHashCode;
+		
+		static uint32 serverObjectCrcHashCode;
+		static uint32 _classNameHashCode;
 
 	public:
 		SceneObjectFactory<SceneObject* (), uint32> objectFactory;
@@ -54,10 +54,10 @@ namespace zone {
 
 
 	public:
-		ObjectManager(bool initializeTemplates = true);
+		ObjectManager();
 		~ObjectManager();
 
-		bool contains(uint32 objectCRC) const {
+		bool contains(uint32 objectCRC) {
 			return objectFactory.containsObject(objectCRC);
 		}
 
@@ -105,8 +105,8 @@ namespace zone {
 
 		void shutdown();
 
-		bool isObjectUpdateInProgress() const {
-			return objectUpdateInProgress;
+		bool isObjectUpdateInProcess() {
+			return objectUpdateInProcess;
 		}
 
 		ObjectDatabase* loadTable(const String& database, uint64 objectID = 0);
@@ -122,14 +122,14 @@ namespace zone {
 
 			LocalDatabase* db = databaseManager->getDatabase(tableID);
 
-			if (db == nullptr || !db->isObjectDatabase())
+			if (db == NULL || !db->isObjectDatabase())
 				return;
 
 			ObjectDatabase* database = cast<ObjectDatabase*>( db);
 
 			ObjectInputStream objectData(500);
 
-			if (database->getData(objectID, &objectData, berkeley::LockMode::READ_UNCOMMITED, false, true)) {
+			if (database->getData(objectID, &objectData)) {
 				return;
 			}
 

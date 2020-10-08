@@ -46,10 +46,6 @@ public:
 	Vector<Layer*>* getLayers() {
 		return &layers;
 	}
-
-	const Vector<Layer*>* getLayers() const {
-		return &layers;
-	}
 };
 
 #endif /* LAYERS_H_ */

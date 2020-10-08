@@ -20,7 +20,7 @@ void GeneratorObjectImplementation::fillObjectMenuResponse(ObjectMenuResponse* m
 }
 
 void GeneratorObjectImplementation::synchronizedUIListen(CreatureObject* player, int value) {
-	if (!player->isPlayerCreature() || !isOnAdminList(player) || getZone() == nullptr)
+	if (!player->isPlayerCreature() || !isOnAdminList(player) || getZone() == NULL)
 		return;
 
 	addOperator(player);

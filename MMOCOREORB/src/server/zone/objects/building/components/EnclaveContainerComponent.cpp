@@ -110,7 +110,7 @@ bool EnclaveContainerComponent::checkCellPermission(SceneObject* sceneObject, Cr
 		return false;
 
 	SortedVector<String>* groups = ghost->getPermissionGroups();
-	auto permissions = sceneObject->getContainerPermissions();
+	ContainerPermissions* permissions = sceneObject->getContainerPermissions();
 
 	uint16 allowPermissions = 0;
 

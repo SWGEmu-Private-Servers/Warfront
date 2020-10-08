@@ -9,7 +9,6 @@ import server.zone.objects.creature.CreatureObject;
 import server.zone.objects.area.ActiveArea;
 import server.zone.objects.player.PlayerObject;
 
-@json
 class BadgeActiveArea extends ActiveArea {
 	public unsigned int areaBadge;
 

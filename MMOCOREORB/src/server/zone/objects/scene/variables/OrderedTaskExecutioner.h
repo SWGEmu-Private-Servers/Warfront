@@ -1,4 +1,3 @@
-
 /*
  * OrderedTask.h
  *
@@ -25,13 +24,13 @@ namespace server {
     protected:
     	WeakReference<server::zone::objects::scene::SceneObject*> sceneObject;
 
-    	String taskName;
+    	const char* taskName;
     public:
     	OrderedTaskExecutioner(SceneObject* sceneObject);
 
-    	void run() final;
+    	void run();
 
-    	const char* getTaskName() final;
+    	const char* getTaskName();
     };
 
     }

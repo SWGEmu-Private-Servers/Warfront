@@ -25,12 +25,12 @@ public:
 
 		ManagedReference<GuildManager*> guildManager = server->getGuildManager();
 
-		if (guildManager == nullptr)
+		if (guildManager == NULL)
 			return;
 
 		ManagedReference<SceneObject*> obj = suiBox->getUsingObject().get();
 
-		if (obj == nullptr || !obj->isPlayerCreature())
+		if (obj == NULL || !obj->isPlayerCreature())
 			return;
 
 		CreatureObject* target = cast<CreatureObject*>( obj.get());

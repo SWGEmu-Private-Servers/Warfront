@@ -23,8 +23,8 @@ void FloorMeshTriangleNode::readObject(IffStream* iffStream) {
 
 	triangleID = iffStream->getUnsignedInt(); // Triangle Index
 
-	edges[0].neighbor = iffStream->getInt();
-	edges[1].neighbor = iffStream->getInt();
+	edges[0].neighbor = iffStream->getInt(); 
+	edges[1].neighbor = iffStream->getInt(); 
 	edges[2].neighbor = iffStream->getInt();
 
 	normal.setX(iffStream->getFloat());
@@ -39,8 +39,8 @@ void FloorMeshTriangleNode::readObject(IffStream* iffStream) {
 
 	tag = iffStream->getInt();
 
-	edges[0].portalID = iffStream->getInt();
-	edges[1].portalID = iffStream->getInt();
+	edges[0].portalID = iffStream->getInt(); 
+	edges[1].portalID = iffStream->getInt(); 
 	edges[2].portalID = iffStream->getInt();
 
 	for(int i=0; i<3; i++) {
@@ -61,8 +61,8 @@ void FloorMeshTriangleNode::readObject(IffStream* iffStream) {
 
 FloorMesh::FloorMesh() {
 	setLoggingName("FloorMesh");
-	pathGraph = nullptr;
-	aabbTree = nullptr;
+	pathGraph = NULL;
+	aabbTree = NULL;
 	connectedEdges.setInsertPlan(SortedVector<EdgeID>::NO_DUPLICATE);
 	uncrossableEdges.setInsertPlan(SortedVector<EdgeID>::NO_DUPLICATE);
 	blockingEdges.setInsertPlan(SortedVector<EdgeID>::NO_DUPLICATE);
@@ -71,13 +71,13 @@ FloorMesh::FloorMesh() {
 }
 
 FloorMesh::~FloorMesh() {
-	if (pathGraph != nullptr) {
+	if (pathGraph != NULL) {
 		delete pathGraph;
-		pathGraph = nullptr;
+		pathGraph = NULL;
 	}
 
 	delete aabbTree;
-	aabbTree = nullptr;
+	aabbTree = NULL;
 
 	for (int i = 0; i < tris.size(); ++i)
 		delete tris.get(i);
@@ -140,18 +140,18 @@ void FloorMesh::readObject(IffStream* iffStream) {
 	iffStream->closeForm('FLOR');
 }
 
-const Vector<TriangleNode*>* FloorMesh::getNeighbors(uint32 triangleID) const {
+Vector<TriangleNode*>* FloorMesh::getNeighbors(uint32 triangleID) {
 	TriangleNode* triangle = tris.get(triangleID);
 
 	return triangle->getNeighbors();
 }
 
-const TriangleNode* FloorMesh::findNearestTriangle(const Vector3& point) const {
+TriangleNode* FloorMesh::findNearestTriangle(const Vector3& point) {
 	float dist = MAX_FLOAT;
-	const TriangleNode* found = nullptr;
+	TriangleNode* found = NULL;
 
 	for (int i = 0; i < tris.size(); ++i) {
-		const TriangleNode* node = tris.getUnsafe(i);
+		TriangleNode* node = tris.getUnsafe(i);
 
 		Vector3 bary = node->getBarycenter();
 
@@ -163,9 +163,12 @@ const TriangleNode* FloorMesh::findNearestTriangle(const Vector3& point) const {
 		}
 	}
 
-	if (found == nullptr) {
-		error() << "ERROR findNearestTriangle nullptr tris.size() = " << tris.size() << "point: x:" << point.getX() << " y:"
+	if (found == NULL) {
+		StringBuffer msg;
+		msg << "ERROR findNearestTriangle NULL tris.size() = " << tris.size() << "point: x:" << point.getX() << " y:"
 				<< point.getY() << " z:" << point.getZ() << endl;
+
+		error(msg);
 
 		StackTrace::printStackTrace();
 	}
@@ -382,11 +385,11 @@ void FloorMesh::parsePGRF(IffStream* iffStream) {
 	pathGraph->readObject(iffStream);
 }
 
-const PathNode* FloorMesh::getGlobalNode(int globalID) const {
+PathNode* FloorMesh::getGlobalNode(int globalID) {
 	return pathGraph->findGlobalNode(globalID);
 }
 
-bool FloorMesh::testCollide(float x, float z, float y, float radius) const {
+bool FloorMesh::testCollide(float x, float z, float y, float radius) {
 	Vector3 point(x, z, y);
 
 	Sphere sphere(point, radius);

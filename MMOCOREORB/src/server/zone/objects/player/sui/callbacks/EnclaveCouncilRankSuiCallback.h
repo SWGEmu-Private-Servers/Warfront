@@ -21,7 +21,7 @@ public:
 
 		FrsManager* frsMan = player->getZoneServer()->getFrsManager();
 
-		if (frsMan == nullptr)
+		if (frsMan == NULL)
 			return;
 
 		int index = Integer::valueOf(args->get(0).toString());

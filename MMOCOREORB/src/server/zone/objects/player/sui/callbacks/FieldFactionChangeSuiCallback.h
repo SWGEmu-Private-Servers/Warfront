@@ -50,7 +50,7 @@ public:
 			ManagedReference<CreatureObject*> creo = player->asCreatureObject();
 
 			Core::getTaskManager()->scheduleTask([creo]{
-				if(creo != nullptr) {
+				if(creo != NULL) {
 					Locker locker(creo);
 
 					creo->setFactionStatus(FactionStatus::COVERT);
@@ -63,7 +63,7 @@ public:
 			ManagedReference<CreatureObject*> creo = player->asCreatureObject();
 
 			Core::getTaskManager()->scheduleTask([creo]{
-				if(creo != nullptr) {
+				if(creo != NULL) {
 					Locker locker(creo);
 
 					creo->setFactionStatus(FactionStatus::OVERT);

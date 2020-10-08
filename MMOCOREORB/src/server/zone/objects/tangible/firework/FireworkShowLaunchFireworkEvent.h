@@ -15,7 +15,7 @@
 #include "server/zone/ZoneServer.h"
 
 class FireworkShowLaunchFireworkEvent : public Task {
-	Reference<FireworkShowDataComponent*> fireworkShowData;
+	ManagedReference<FireworkShowDataComponent*> fireworkShowData;
 	ManagedReference<FireworkObject*> fireworkShow;
 	ManagedWeakReference<CreatureObject*> player;
 	ManagedReference<StaticObject*> worldFireworkShow;
@@ -31,12 +31,12 @@ public:
 	}
 
 	void run() {
-		Reference<FireworkShowDataComponent*> fireworkShowData = this->fireworkShowData.get();
+		ManagedReference<FireworkShowDataComponent*> fireworkShowData = this->fireworkShowData.get();
 		ManagedReference<CreatureObject*> player = this->player.get();
 		ManagedReference<StaticObject*> worldFireworkShow = this->worldFireworkShow.get();
 		ManagedReference<FireworkObject*> fireworkShow = this->fireworkShow.get();
 
-		if (player == nullptr || worldFireworkShow == nullptr || fireworkShowData == nullptr || fireworkShow == nullptr)
+		if (player == NULL || worldFireworkShow == NULL || fireworkShowData == NULL || fireworkShow == NULL)
 			return;
 
 		if (fireworkShowData->getTotalFireworkCount() == 0)
@@ -47,12 +47,12 @@ public:
 
 			ManagedReference<FireworkObject*> firework = fireworkShowData->getFirework(0);
 
-			if (firework == nullptr)
+			if (firework == NULL)
 				return;
 
 			ManagedReference<StaticObject*> fireworkObject = (player->getZoneServer()->createObject(firework->getFireworkObjectPath().hashCode(), 0)).castTo<StaticObject*>();
 
-			if (fireworkObject == nullptr)
+			if (fireworkObject == NULL)
 				return;
 			Locker fireworkObjectLocker(fireworkObject);
 

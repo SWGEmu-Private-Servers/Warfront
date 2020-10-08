@@ -9,27 +9,30 @@
 #include "server/zone/objects/area/areashapes/RingAreaShape.h"
 #include "engine/util/u3d/Segment.h"
 
-bool RectangularAreaShapeImplementation::containsPoint(float x, float y) const {
-	return (x >= blX) && (x <= urX) && (y >= blY) && (y <= urY);
+bool RectangularAreaShapeImplementation::containsPoint(float x, float y) {
+	if ((x >= (areaCenter.getX() - width / 2)) && (x <= (areaCenter.getX() + width / 2)) &&
+		(y >= (areaCenter.getY() - height / 2)) && (y <= (areaCenter.getY() + height / 2))) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
-bool RectangularAreaShapeImplementation::containsPoint(const Vector3& point) const {
+bool RectangularAreaShapeImplementation::containsPoint(const Vector3& point) {
 	return containsPoint(point.getX(), point.getY());
 }
 
-Vector3 RectangularAreaShapeImplementation::getRandomPosition() const {
-	float width = getWidth();
-	float height = getHeight();
-	int x = System::random(width);
-	int y = System::random(height);
+Vector3 RectangularAreaShapeImplementation::getRandomPosition() {
+	int x = System::random(width) - width / 2;
+	int y = System::random(height) - height / 2;
 	Vector3 position;
 
-	position.set(blX + x, 0, blY + y);
+	position.set(areaCenter.getX() + x, 0, areaCenter.getY() + y);
 
 	return position;
 }
 
-Vector3 RectangularAreaShapeImplementation::getRandomPosition(const Vector3& origin, float minDistance, float maxDistance) const {
+Vector3 RectangularAreaShapeImplementation::getRandomPosition(const Vector3& origin, float minDistance, float maxDistance) {
 	bool found = false;
 	Vector3 position;
 	int retries = 5;
@@ -48,9 +51,9 @@ Vector3 RectangularAreaShapeImplementation::getRandomPosition(const Vector3& ori
 	return position;
 }
 
-bool RectangularAreaShapeImplementation::intersectsWith(AreaShape* areaShape) const {
+bool RectangularAreaShapeImplementation::intersectsWith(AreaShape* areaShape) {
 	if (areaShape->isRingAreaShape()) {
-		auto ring = cast<RingAreaShape*>(areaShape);
+		ManagedReference<RingAreaShape*> ring = cast<RingAreaShape*>(areaShape);
 		Vector3 center = ring->getAreaCenter();
 
 		if (ring->getOuterRadius2() < center.squaredDistanceTo(getClosestPoint(center))) // wholly outside the ring
@@ -63,13 +66,13 @@ bool RectangularAreaShapeImplementation::intersectsWith(AreaShape* areaShape) co
 		return areaShape->containsPoint(getClosestPoint(areaShape->getAreaCenter()));
 }
 
-Vector3 RectangularAreaShapeImplementation::getClosestPoint(const Vector3& position) const {
+Vector3 RectangularAreaShapeImplementation::getClosestPoint(const Vector3& position) {
 	// Calculate corners.
 	Vector3 topLeft, topRight, bottomLeft, bottomRight;
-	topLeft.set(blX, 0, urY);
-	topRight.set(urX, 0, urY);
-	bottomLeft.set(blX, 0, blY);
-	bottomRight.set(urX, 0, blY);
+	topLeft.set(areaCenter.getX() - width / 2, 0, areaCenter.getY() - height / 2);
+	topRight.set(areaCenter.getX() + width / 2, 0, areaCenter.getY() - height / 2);
+	bottomLeft.set(areaCenter.getX() - width / 2, 0, areaCenter.getY() + height / 2);
+	bottomRight.set(areaCenter.getX() + width / 2, 0, areaCenter.getY() + height / 2);
 
 	// Find closest point on each side.
 	Segment topSegment(topLeft, topRight);
@@ -88,11 +91,9 @@ Vector3 RectangularAreaShapeImplementation::getClosestPoint(const Vector3& posit
 	if (point.distanceTo(position) > right.distanceTo(position)) {
 		point = right;
 	}
-
 	if (point.distanceTo(position) > bottom.distanceTo(position)) {
 		point = bottom;
 	}
-
 	if (point.distanceTo(position) > left.distanceTo(position)) {
 		point = left;
 	}
@@ -100,13 +101,13 @@ Vector3 RectangularAreaShapeImplementation::getClosestPoint(const Vector3& posit
 	return point;
 }
 
-Vector3 RectangularAreaShapeImplementation::getFarthestPoint(const Vector3& position) const {
+Vector3 RectangularAreaShapeImplementation::getFarthestPoint(const Vector3& position) {
 	// Calculate corners.
 	Vector3 topLeft, topRight, bottomLeft, bottomRight;
-	topLeft.set(blX, 0, urY);
-	topRight.set(urX, 0, urY);
-	bottomLeft.set(blX, 0, blY);
-	bottomRight.set(urX, 0, blY);
+	topLeft.set(areaCenter.getX() - width / 2, 0, areaCenter.getY() - height / 2);
+	topRight.set(areaCenter.getX() + width / 2, 0, areaCenter.getY() - height / 2);
+	bottomLeft.set(areaCenter.getX() - width / 2, 0, areaCenter.getY() + height / 2);
+	bottomRight.set(areaCenter.getX() + width / 2, 0, areaCenter.getY() + height / 2);
 
 	// Find the farthest of the four corners.
 	Vector3 point = topLeft;

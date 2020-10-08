@@ -19,7 +19,7 @@ LuaCityRegion::~LuaCityRegion() {
 }
 
 int LuaCityRegion::_getObject(lua_State* L) {
-	if (realObject == nullptr)
+	if (realObject == NULL)
 		lua_pushnil(L);
 	else
 		lua_pushlightuserdata(L, realObject.get());

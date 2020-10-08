@@ -11,7 +11,6 @@
 #include "server/zone/objects/player/sui/SuiCallback.h"
 #include "server/zone/Zone.h"
 #include "server/zone/managers/creature/CreatureManager.h"
-#include "server/zone/managers/city/CityManager.h"
 
 class RecruitSkillTrainerSuiCallback : public SuiCallback {
 public:
@@ -28,12 +27,12 @@ public:
 		if (args->size() < 1)
 			return;
 
-		if (player->getParent() != nullptr)
+		if (player->getParent() != NULL)
 			return;
 
 		ManagedReference<CityRegion*> city = player->getCityRegion().get();
 		CityManager* cityManager = player->getZoneServer()->getCityManager();
-		if (city == nullptr || cityManager == nullptr)
+		if (city == NULL || cityManager == NULL)
 			return;
 
 		if (!city->isMayor(player->getObjectID()))
@@ -47,7 +46,7 @@ public:
 		Zone* zone = player->getZone();
 
 		PlayerObject* ghost = player->getPlayerObject();
-		if (ghost == nullptr)
+		if (ghost == NULL)
 			return;
 
 		if (!ghost->hasAbility("recruitskilltrainer"))
@@ -177,7 +176,7 @@ public:
 
 			CreatureObject* trainer = zone->getCreatureManager()->spawnCreature(trainerTemplatePath.hashCode(),0,player->getWorldPositionX(),player->getWorldPositionZ(),player->getWorldPositionY(),0,true);
 
-			if (trainer == nullptr) {
+			if (trainer == NULL) {
 				player->sendSystemMessage("@city/city:st_fail"); // Failed to create the skill trainer for some reason. Try again.
 				return;
 			}

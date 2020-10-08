@@ -6,22 +6,20 @@
 #define BUFFLIST_H_
 
 #include "engine/engine.h"
-#include "engine/util/json_utils.h"
-
 #include "server/zone/objects/creature/buffs/Buff.h"
 
 class BuffList : public Serializable {
 protected:
 	bool spiceActive;
 	VectorMap<uint32, ManagedReference<Buff*> > buffList;
-	mutable Mutex mutex;
+	Mutex mutex;
 
 public:
 	BuffList();
 	BuffList(const BuffList& bf);
 
-	void sendTo(CreatureObject* player) const;
-	void sendDestroyTo(CreatureObject* player) const;
+	void sendTo(CreatureObject* player);
+	void sendDestroyTo(CreatureObject* player);
 
 	void updateBuffsToDatabase();
 
@@ -31,35 +29,36 @@ public:
 
 	void clearBuffs(bool updateclient, bool removeAll);
 
-	int findBuff(Buff* buff) const;
+	int findBuff(Buff* buff);
 
 	String getDurationString(bool showhours = true, bool showminutes = true) const;
-
-	friend void to_json(nlohmann::json& j, const BuffList& l);
 
 	//Getters
 	inline int getBuffListSize() const {
 		return buffList.size();
 	}
 
-	Buff* getBuffByIndex(int index) const {
+	Buff* getBuffByIndex(int index) {
 		Locker guard(&mutex);
 
 		if (index < 0 || index >= buffList.size())
-			return nullptr;
+			return NULL;
 
 		Buff* buff = buffList.elementAt(index).getValue();
 
 		return buffList.elementAt(index).getValue();
 	}
 
-	Buff* getBuffByCRC(uint32 buffcrc) const {
+	Buff* getBuffByCRC(uint32 buffcrc) {
 		Locker guard(&mutex);
 
-		return buffList.get(buffcrc);
+		if (buffList.contains(buffcrc))
+			return buffList.get(buffcrc);
+
+		return NULL;
 	}
 
-	long long getModifierByName(const String& skillMod) const {
+	long long getModifierByName(const String& skillMod) {
 		Locker guard(&mutex);
 
 		int mod = 0;
@@ -72,13 +71,13 @@ public:
 		return mod;
 	}
 
-	bool hasBuff(uint32 buffcrc) const {
+	bool hasBuff(uint32 buffcrc) {
 		Locker guard(&mutex);
 
 		return buffList.contains(buffcrc);
 	}
 
-	inline bool hasSpice() const {
+	inline bool hasSpice() {
 		return spiceActive;
 	}
 };

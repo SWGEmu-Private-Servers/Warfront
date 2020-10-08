@@ -3,7 +3,6 @@
 
 #include "server/zone/objects/player/sui/SuiCallback.h"
 #include "server/zone/objects/player/PlayerObject.h"
-#include "server/zone/objects/transaction/TransactionLog.h"
 
 class ReactionFinePaymentSuiCallback : public SuiCallback {
 
@@ -16,7 +15,7 @@ public:
 	void run(CreatureObject* creature, SuiBox* sui, uint32 eventIndex, Vector<UnicodeString>* args) {
 		bool cancelPressed = (eventIndex == 1);
 
-		if (!sui->isMessageBox() || creature == nullptr)
+		if (!sui->isMessageBox() || creature == NULL)
 			return;
 
 		if(!creature->isPlayerCreature())
@@ -25,12 +24,12 @@ public:
 		ManagedReference<SceneObject*> object = sui->getUsingObject().get();
 		ManagedReference<PlayerObject*> playerObject = creature->getPlayerObject();
 
-		if (object == nullptr || playerObject == nullptr)
+		if (object == NULL || playerObject == NULL)
 			return;
 
 		ManagedReference<CreatureObject*> emoteTarget = (object).castTo<CreatureObject*>();
 
-		if (emoteTarget == nullptr)
+		if (emoteTarget == NULL)
 			return;
 
 		int playerCredits = creature->getCashCredits();
@@ -39,7 +38,7 @@ public:
 		ChatManager* chatManager = server->getChatManager();
 		ReactionManager* reactionManager = server->getReactionManager();
 
-		if (chatManager == nullptr || reactionManager == nullptr)
+		if (chatManager == NULL || reactionManager == NULL)
 			return;
 
 		Locker clocker(emoteTarget, creature);
@@ -50,7 +49,6 @@ public:
 				chatManager->broadcastChatMessage(emoteTarget, reactionManager->getReactionQuip(41), 0, 0, emoteTarget->getMoodID());
 			}
 
-			TransactionLog trx(creature, TrxCode::FINES, playerCredits, true);
 			creature->subtractCashCredits(playerCredits);
 			playerObject->subtractFromReactionFines(playerCredits);
 
@@ -72,7 +70,6 @@ public:
 				tauntMsg = "point_accusingly";
 				randomQuip = 42 + System::random(3);
 			}
-			TransactionLog trx(creature, TrxCode::FINES, totalFine, true);
 			creature->subtractCashCredits(totalFine);
 			playerObject->setReactionFines(0);
 

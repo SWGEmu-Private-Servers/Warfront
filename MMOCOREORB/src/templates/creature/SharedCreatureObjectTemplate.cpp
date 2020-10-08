@@ -96,8 +96,6 @@ void SharedCreatureObjectTemplate::parseVariableData(const String& varName, LuaO
 	} else if (varName == "postureAlignToTerrain") {
 		LuaObject post(state);
 
-		postureAlignToTerrain.removeAll();
-
 		for (int i = 1; i <= post.getTableSize(); ++i) {
 			postureAlignToTerrain.add(post.getIntAt(i));
 		}
@@ -105,8 +103,6 @@ void SharedCreatureObjectTemplate::parseVariableData(const String& varName, LuaO
 		post.pop();
 	} else if (varName == "turnRate") {
 		LuaObject turns(state);
-
-		turnRate.removeAll();
 
 		for (int i = 1; i <= turns.getTableSize(); ++i) {
 			turnRate.add(turns.getFloatAt(i));
@@ -116,8 +112,6 @@ void SharedCreatureObjectTemplate::parseVariableData(const String& varName, LuaO
 	} else if (varName == "baseHAM") {
 		LuaObject hams(state);
 
-		baseHAM.removeAll();
-
 		for (int i = 1; i <= hams.getTableSize(); ++i) {
 			baseHAM.add(hams.getIntAt(i));
 		}
@@ -126,8 +120,6 @@ void SharedCreatureObjectTemplate::parseVariableData(const String& varName, LuaO
 	} else if (varName == "acceleration") {
 		LuaObject accel(state);
 
-		acceleration.removeAll();
-
 		for (int i = 1; i <= accel.getTableSize(); ++i) {
 			acceleration.add(accel.getFloatAt(i));
 		}
@@ -135,8 +127,6 @@ void SharedCreatureObjectTemplate::parseVariableData(const String& varName, LuaO
 		accel.pop();
 	} else if (varName == "speed") {
 		LuaObject speedTempl(state);
-
-		speed.removeAll();
 
 		for (int i = 1; i <= speedTempl.getTableSize(); ++i) {
 			speed.add(speedTempl.getFloatAt(i));
@@ -159,7 +149,7 @@ void SharedCreatureObjectTemplate::parseFileData(IffStream* iffStream) {
 	//while (iffStream->getRemainingSubChunksNumber() > 0) {
 		Chunk* chunk = iffStream->openChunk('XXXX');
 
-		if (chunk == nullptr)
+		if (chunk == NULL)
 			continue;
 
 		String varName;
@@ -225,9 +215,9 @@ void SharedCreatureObjectTemplate::readObject(LuaObject* templateData) {
 
 	int i = 0;
 
-	lua_pushnil(L);
+	lua_pushnil(L);  
 	while (lua_next(L, -2) != 0) {
-		// 'key' is at index -2 and 'value' at index -1
+		// 'key' is at index -2 and 'value' at index -1 
 		//printf("%s - %s\n",
 		//		lua_tostring(L, -2), lua_typename(L, lua_type(L, -1)));
 
@@ -240,11 +230,11 @@ void SharedCreatureObjectTemplate::readObject(LuaObject* templateData) {
 			parseVariableData(varName, templateData);
 		} else
 			lua_pop(L, 1);
-
+		
 
 		++i;
 	}
-
+	
 	return;
 
 	/*gender = templateData->getIntField("gender");

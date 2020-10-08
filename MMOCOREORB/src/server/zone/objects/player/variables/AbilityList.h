@@ -9,8 +9,6 @@
 #define ABILITYLIST_H_
 
 #include "engine/engine.h"
-#include "engine/util/json_utils.h"
-
 #include "server/zone/objects/scene/variables/DeltaVector.h"
 
 class Ability;
@@ -20,22 +18,17 @@ class Ability;
  */
 class AbilityList : public DeltaVector<Ability*> {
 private:
-#ifdef ODB_SERIALIZATION
-	Vector<String> abilities;
-#endif
-	void getStringList(Vector<String>& abilities) const;
+	void getStringList(Vector<String>& abilities);
 	void loadFromNames(Vector<String>& abilities);
 
 public:
-	bool add(Ability* const& ability, DeltaMessage* message = nullptr, int updates = 1) override;
-	bool contains(const String& element) const;
+	bool add(Ability* ability, DeltaMessage* message = NULL, int updates = 1);
+	bool contains(const String& element);
 
-	bool toBinaryStream(ObjectOutputStream* stream) override;
-	bool parseFromBinaryStream(ObjectInputStream* stream) override;
+	bool toBinaryStream(ObjectOutputStream* stream);
+	bool parseFromBinaryStream(ObjectInputStream* stream);
 
-	friend void to_json(nlohmann::json& j, const AbilityList& l);
-
-	void insertToMessage(BaseMessage* msg) const override;
+	void insertToMessage(BaseMessage* msg);
 };
 
 

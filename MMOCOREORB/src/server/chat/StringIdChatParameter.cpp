@@ -35,6 +35,7 @@ StringIdChatParameter::StringIdChatParameter(const String& fil, const String& st
 }
 
 StringIdChatParameter::StringIdChatParameter(const StringIdChatParameter& custom) : Object(), ChatParameter(), StringId(custom) {
+
 	TT = custom.TT;
 	TU = custom.TU;
 	TO = custom.TO;
@@ -45,7 +46,7 @@ StringIdChatParameter::StringIdChatParameter(const StringIdChatParameter& custom
 	unknownByte = custom.unknownByte;
 }
 
-void StringIdChatParameter::addToPacketStream(Message* packet) const {
+void StringIdChatParameter::addToPacketStream(Message* packet) {
 	packet->insertAscii(file);
 	packet->insertInt(0);
 	packet->insertAscii(stringID);
@@ -78,6 +79,7 @@ void StringIdChatParameter::parse(Message* message) {
 }
 
 bool StringIdChatParameter::toBinaryStream(ObjectOutputStream* stream) {
+
 	StringId::toBinaryStream(stream);
 
 	return TT.toBinaryStream(stream) &&
@@ -98,20 +100,5 @@ bool StringIdChatParameter::parseFromBinaryStream(ObjectInputStream* stream) {
 	TypeInfo<float >::parseFromBinaryStream(&DF, stream);
 
 	return true;
-}
-
-namespace server {
-	namespace chat {
-		void to_json(nlohmann::json& j, const StringIdChatParameter& p) {
-			j["file"] = p.getFile();
-			j["filler"] = p.getFiller();
-			j["stringID"] = p.getStringID();
-			j["TT"] = p.TT;
-			j["TU"] = p.TU;
-			j["TO"] = p.TO;
-			j["DI"] = p.DI;
-			j["DF"] = p.DF;
-		}
-	}
 }
 

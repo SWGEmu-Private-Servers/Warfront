@@ -9,7 +9,6 @@
 #include "server/zone/objects/player/PlayerObject.h"
 #include "server/zone/objects/creature/events/DroidMerchantBarkerTask.h"
 #include "server/zone/objects/player/sui/callbacks/SelectWaypointSuiCallback.h"
-#include "server/zone/objects/creature/ai/DroidObject.h"
 
 DroidMerchantModuleDataComponent::DroidMerchantModuleDataComponent() {
 	active = false;
@@ -19,7 +18,7 @@ DroidMerchantModuleDataComponent::DroidMerchantModuleDataComponent() {
 DroidMerchantModuleDataComponent::~DroidMerchantModuleDataComponent() {
 
 }
-String DroidMerchantModuleDataComponent::getModuleName() const {
+String DroidMerchantModuleDataComponent::getModuleName() {
 	return String("merchant_barker");
 }
 void DroidMerchantModuleDataComponent::initializeTransientMembers() {
@@ -32,7 +31,7 @@ void DroidMerchantModuleDataComponent::fillAttributeList(AttributeListMessage* a
 
 void DroidMerchantModuleDataComponent::fillObjectMenuResponse(SceneObject* droidObject, ObjectMenuResponse* menuResponse, CreatureObject* player) {
 
-	if( player == nullptr )
+	if( player == NULL )
 		return;
 	// Add Get waypoint Radial, not under droid options
 	//if(player != getDroidObject()->getLinkedCreature()) was this shown to the owner?
@@ -60,7 +59,7 @@ int DroidMerchantModuleDataComponent::handleObjectMenuSelect(CreatureObject* pla
 
 	if( selectedID == 70 ){
 		// handle the waypoint
-		if(waypoint == nullptr) {
+		if(waypoint == NULL) {
 			player->sendSystemMessage("@pet/droid_modules:no_waypoint");
 			return 0;
 		}
@@ -93,7 +92,7 @@ int DroidMerchantModuleDataComponent::handleObjectMenuSelect(CreatureObject* pla
 			deactivate();
 		} else {
 			ManagedReference<DroidObject*> droid = getDroidObject();
-			if( droid == nullptr ){
+			if( droid == NULL ){
 				info( "Droid is null");
 				return 0;
 			}
@@ -163,7 +162,7 @@ void DroidMerchantModuleDataComponent::deactivate() {
 	active = false;
 
 	ManagedReference<DroidObject*> droid = getDroidObject();
-	if( droid == nullptr ){
+	if( droid == NULL ){
 		info( "Droid is null" );
 		return;
 	}
@@ -172,14 +171,14 @@ void DroidMerchantModuleDataComponent::deactivate() {
 
 	// Cancel effects task
 	Task* task = droid->getPendingTask( "barking" );
-	if( task != nullptr ){
+	if( task != NULL ){
 		Core::getTaskManager()->cancelTask(task);
 		droid->removePendingTask( "barking" );
 	}
 
 }
 
-String DroidMerchantModuleDataComponent::toString() const {
+String DroidMerchantModuleDataComponent::toString(){
 	return BaseDroidModuleComponent::toString();
 }
 
@@ -188,10 +187,10 @@ void DroidMerchantModuleDataComponent::onCall(){
 	message = "";
 	active = false;
 	waitingOnMessage = false;
-	if(waypoint != nullptr) {
+	if(waypoint != NULL) {
 		waypoint->destroyObjectFromWorld(true);
 		waypoint->destroyObjectFromDatabase(true);
-		waypoint = nullptr;
+		waypoint = NULL;
 	}
 	deactivate();
 }
@@ -200,10 +199,10 @@ void DroidMerchantModuleDataComponent::onStore(){
 	message = "";
 	active = false;
 	waitingOnMessage = false;
-	if(waypoint != nullptr) {
+	if(waypoint != NULL) {
 		waypoint->destroyObjectFromWorld(true);
 		waypoint->destroyObjectFromDatabase(true);
-		waypoint = nullptr;
+		waypoint = NULL;
 	}
 	deactivate();
 }

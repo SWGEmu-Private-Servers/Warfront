@@ -30,22 +30,20 @@ public:
 
 		ManagedReference<SceneObject*> strongRef = vendor.get();
 
-		if (strongRef == nullptr || strongRef->isBazaarTerminal())
+		if (strongRef == NULL || strongRef->isBazaarTerminal())
 			return;
 
 		Locker locker(strongRef);
 
 		DataObjectComponentReference* data = strongRef->getDataObjectComponent();
-		if(data == nullptr || data->get() == nullptr || !data->get()->isVendorData()) {
+		if(data == NULL || data->get() == NULL || !data->get()->isVendorData()) {
 			return;
 		}
 
 		VendorDataComponent* vendorData = cast<VendorDataComponent*>(data->get());
-		if(vendorData == nullptr) {
+		if(vendorData == NULL) {
 			return;
 		}
-
-		setTaskName((strongRef->getLoggingName() + " ran UpdateVendorTask of owner 0x" + String::hexvalueOf(vendorData->getOwnerId())).toCharArray());
 
 		vendorData->runVendorUpdate();
 	}

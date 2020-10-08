@@ -19,7 +19,7 @@ public:
 	DeltaBitArray(int initsize, int incr) : DeltaVector<byte>(initsize, incr) {
 	}
 
-	DeltaBitArray(const DeltaBitArray& v) : DeltaVector<byte>(v) {
+	DeltaBitArray(const DeltaBitArray& v) : Object(), DeltaVector<byte>(v) {
 	}
 
 	DeltaBitArray& operator=(const DeltaBitArray& v) {
@@ -53,7 +53,7 @@ public:
 		set(vectorIndex, currentVal);
 	}
 
-	bool getBitValue(uint32 bitIndex) const {
+	bool getBitValue(uint32 bitIndex) {
 		int vectorIndex = bitIndex / 8;
 		byte vectorBitIndex = 1 << (bitIndex % 8);
 
@@ -69,7 +69,7 @@ public:
 		setBit(bitIndex, 0);
 	}
 
-	int bitCount() const {
+	int bitCount() {
 		return size() * 8;
 	}
 };

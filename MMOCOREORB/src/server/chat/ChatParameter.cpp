@@ -13,7 +13,7 @@ ChatParameter::ChatParameter() {
 ChatParameter::ChatParameter(const ChatParameter& cp) : Object() {
 }
 
-void ChatParameter::insertToMessage(Message* message) const {
+void ChatParameter::insertToMessage(Message* message) {
 	int offset = message->getOffset();
 
 	message->insertShort(0);

@@ -5,7 +5,6 @@
 #ifndef DROIDEFFECTSTASK_H_
 #define DROIDEFFECTSTASK_H_
 
-#include "server/zone/objects/building/BuildingObject.h"
 #include "server/zone/objects/creature/ai/DroidObject.h"
 #include "server/zone/objects/tangible/components/droid/DroidDetonationModuleDataComponent.h"
 #include "server/zone/objects/creature/CreatureObject.h"
@@ -15,7 +14,6 @@
 #include "server/zone/packets/object/PlayClientEffectObjectMessage.h"
 #include "server/zone/packets/scene/PlayClientEffectLocMessage.h"
 #include "server/zone/Zone.h"
-#include "server/zone/objects/intangible/PetControlDevice.h"
 
 namespace server {
 namespace zone {
@@ -26,7 +24,7 @@ namespace events {
 class DroidDetonationTask : public Task, public Logger {
 
 private:
-	Reference<DroidDetonationModuleDataComponent*> module;
+	ManagedReference<DroidDetonationModuleDataComponent*> module;
 	ManagedReference<CreatureObject*> player;
 	int detonationStep;
 public:
@@ -37,13 +35,13 @@ public:
 	}
 
 	void run() {
-		if (module == nullptr || player == nullptr) {
+		if (module == NULL || player == NULL) {
 			return;
 		}
 
 		ManagedReference<DroidObject*> droid = module->getDroidObject();
 
-		if (droid == nullptr) {
+		if (droid == NULL) {
 			return;
 		}
 
@@ -51,9 +49,9 @@ public:
 		Locker crossLocker(player, droid);
 
 		// Check if droid is spawned
-		if (droid->getLocalZone() == nullptr) {  // Not outdoors
+		if (droid->getLocalZone() == NULL) {  // Not outdoors
 			ManagedReference<SceneObject*> parent = droid->getParent().get();
-			if (parent == nullptr || !parent->isCellObject()) { // Not indoors either
+			if (parent == NULL || !parent->isCellObject()) { // Not indoors either
 				droid->removePendingTask("droid_detonation");
 				return;
 			}
@@ -93,13 +91,13 @@ public:
 			case 3: {
 				// BOOM
 				int areaDamage = module->calculateDamage(droid);
-				bool shouldGcwCrackdownTef = false, shouldGcwTef = false, shouldBhTef = false;
+				bool shouldGcwTef = false, shouldBhTef = false, shouldJediTef = false;
 
 				// find all valid targets in 17 m range and hit them with the damage
 				CloseObjectsVector* vec = (CloseObjectsVector*) droid->getCloseObjects();
 				SortedVector<ManagedReference<QuadTreeEntry*> > closeObjects;
 
-				if (vec != nullptr) {
+				if (vec != NULL) {
 					closeObjects.removeAll(vec->size(), 10);
 					vec->safeCopyTo(closeObjects);
 				} else {
@@ -123,36 +121,12 @@ public:
 
 					CreatureObject* creo = object->asCreatureObject();
 
-					if (creo == nullptr || creo->isDead() || !creo->isAttackableBy(droid) || !droid->isInRange(object, 17)) {
+					if (creo == NULL || creo->isDead() || !creo->isAttackableBy(droid) || !droid->isInRange(object, 17)) {
 						continue;
 					}
 
 					if (creo->isIncapacitated() && !creo->isFeigningDeath()) {
 						continue;
-					}
-
-					if (player->isPlayerCreature() && object->getParentID() != 0 && player->getParentID() != object->getParentID()) {
-						Reference<CellObject*> targetCell = object->getParent().get().castTo<CellObject*>();
-
-						if (targetCell != nullptr) {
-							if (!object->isPlayerCreature()) {
-								auto perms = targetCell->getContainerPermissions();
-
-								if (!perms->hasInheritPermissionsFromParent()) {
-									if (targetCell->checkContainerPermission(player, ContainerPermissions::WALKIN))
-										continue;
-								}
-							}
-
-							ManagedReference<SceneObject*> parentSceneObject = targetCell->getParent().get();
-
-							if (parentSceneObject != nullptr) {
-								BuildingObject* buildingObject = parentSceneObject->asBuildingObject();
-
-								if (buildingObject != nullptr && !buildingObject->isAllowedEntry(player))
-									continue;
-							}
-						}
 					}
 
 					try {
@@ -177,7 +151,7 @@ public:
 								tomaster.setDI((int)amount);
 								player->sendSystemMessage(tomaster);
 
-								CombatManager::instance()->checkForTefs(player, creo, &shouldGcwCrackdownTef, &shouldGcwTef, &shouldBhTef);
+								CombatManager::instance()->checkForTefs(player, creo, &shouldGcwTef, &shouldBhTef, &shouldJediTef);
 							}
 
 						}
@@ -194,7 +168,7 @@ public:
 
 				// nuke the droid from the world
 				ManagedReference<PetControlDevice*> petControlDevice = droid->getControlDevice().get().castTo<PetControlDevice*>();
-				if (petControlDevice != nullptr) {
+				if (petControlDevice != NULL) {
 					Locker deviceLocker(petControlDevice);
 
 					petControlDevice->storeObject(player, true);
@@ -204,11 +178,11 @@ public:
 				}
 
 				// Update PvP TEF Duration
-				if (shouldGcwCrackdownTef || shouldGcwTef || shouldBhTef) {
+				if (shouldGcwTef || shouldBhTef || shouldJediTef) {
 					PlayerObject* ghost = player->getPlayerObject();
 
-					if (ghost != nullptr) {
-						ghost->updateLastCombatActionTimestamp(shouldGcwCrackdownTef, shouldGcwTef, shouldBhTef);
+					if (ghost != NULL) {
+						ghost->updateLastPvpCombatActionTimestamp(shouldGcwTef, shouldBhTef, shouldJediTef);
 					}
 				}
 

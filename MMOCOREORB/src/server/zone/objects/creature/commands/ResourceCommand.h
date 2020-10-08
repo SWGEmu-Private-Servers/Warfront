@@ -63,9 +63,6 @@ public:
 		} catch (Exception& e){
 			creature->sendSystemMessage("invalid arguments for resources command:  /resource <option> [params]");
 			creature->sendSystemMessage("		list <planet> : Lists resources on specified planet");
-			creature->sendSystemMessage("		health : Lists resource pool health stats");
-			creature->sendSystemMessage("		dump : Performs manual dump of all resources to resource_manager_spawns.lua");
-			creature->sendSystemMessage("		despawn <resource name> : Despawns a specific resource");
 			creature->sendSystemMessage("		info <resource name> : Lists Info about a specific resource");
 			creature->sendSystemMessage("		find <class> <attribute> <gt|lt> <value> [<and|or> <attribute> <gt|lt> <value> [...]]");
 			creature->sendSystemMessage("		create <name> [quantity] : Spawns resource in inventory");
@@ -75,7 +72,7 @@ public:
 	}
 
 	void listResources(CreatureObject* creature, StringTokenizer* args) const {
-		if(creature->getZoneServer() == nullptr)
+		if(creature->getZoneServer() == NULL)
 			return;
 
 		String planet = "";
@@ -90,7 +87,7 @@ public:
 	}
 
 	void healthCheck(CreatureObject* creature, StringTokenizer* args) const {
-		if(creature->getZoneServer() == nullptr)
+		if(creature->getZoneServer() == NULL)
 			return;
 
 		ResourceManager* resMan = creature->getZoneServer()->getResourceManager();
@@ -99,7 +96,7 @@ public:
 	}
 
 	void dumpResources(CreatureObject* creature, StringTokenizer* args) const {
-		if(creature->getZoneServer() == nullptr)
+		if(creature->getZoneServer() == NULL)
 			return;
 
 		ResourceManager* resMan = creature->getZoneServer()->getResourceManager();
@@ -108,7 +105,7 @@ public:
 	}
 
 	void despawnResource(CreatureObject* creature, StringTokenizer* args) const {
-		if(creature->getZoneServer() == nullptr)
+		if(creature->getZoneServer() == NULL)
 			return;
 
 		String resourceName = "";
@@ -122,7 +119,7 @@ public:
 	}
 
 	void listResourceInfo(CreatureObject* creature, StringTokenizer* args) const {
-		if(creature->getZoneServer() == nullptr)
+		if(creature->getZoneServer() == NULL)
 			return;
 
 		String resourceName = "";
@@ -132,7 +129,7 @@ public:
 		ResourceManager* resMan = creature->getZoneServer()->getResourceManager();
 
 		ManagedReference<ResourceSpawn*> spawn = resMan->getResourceSpawn(resourceName);
-		if(spawn == nullptr) {
+		if(spawn == NULL) {
 			creature->sendSystemMessage("Resource not found");
 			return;
 		}
@@ -176,22 +173,22 @@ public:
 	}
 
 	void findResources(CreatureObject* creature, StringTokenizer* args) const {
-		if(creature->getZoneServer() == nullptr || !args->hasMoreTokens())
+		if(creature->getZoneServer() == NULL || !args->hasMoreTokens())
 			throw Exception();
 
 		ResourceManager* resMan = creature->getZoneServer()->getResourceManager();
-		if (resMan == nullptr)
+		if (resMan == NULL)
 			throw Exception();
 
 		String resourceType = "";
 		args->getStringToken(resourceType);
 
 		ResourceSpawner* resSpawner = resMan->getResourceSpawner();
-		if (resSpawner == nullptr)
+		if (resSpawner == NULL)
 			throw Exception();
 
 		ResourceMap* map = resSpawner->getResourceMap();
-		if (map == nullptr)
+		if (map == NULL)
 			throw Exception();
 
 		Reference<ResourceMap*> resultsMap = new ResourceMap();
@@ -310,11 +307,11 @@ public:
 	}
 
 	void giveResource(CreatureObject* creature, StringTokenizer* args) const {
-		if(creature->getZoneServer() == nullptr || !args->hasMoreTokens())
+		if(creature->getZoneServer() == NULL || !args->hasMoreTokens())
 			throw Exception();
 
 		ResourceManager* resMan = creature->getZoneServer()->getResourceManager();
-		if (resMan == nullptr)
+		if (resMan == NULL)
 			throw Exception();
 
 		if (!args->hasMoreTokens())

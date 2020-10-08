@@ -36,28 +36,28 @@ public:
 		Locker crosslocker(target, droid);
 
 		droid->removePendingTask("droid_request_stimpack");
-		if (droid == nullptr) {
+		if (droid == NULL) {
 			return;
 		}
 
 		auto module = droid->getModule("stimpack_module").castTo<DroidStimpackModuleDataComponent*>();
-		if (module == nullptr) {
+		if (module == NULL) {
 			target->sendSystemMessage("@pet/droid_modules:not_stimpack_droid");
 			return;
 		}
 
 		DroidComponent* droidComponent = cast<DroidComponent*>(module->getParent());
 
-		if (droidComponent == nullptr) {
+		if (droidComponent == NULL) {
 			target->sendSystemMessage("@pet/droid_modules:stimpack_error");
 			return;
 		}
 
 		// Check if droid is spawned
-		if (droid->getLocalZone() == nullptr) {  // Not outdoors
+		if (droid->getLocalZone() == NULL) {  // Not outdoors
 			ManagedReference<SceneObject*> parent = droid->getParent().get();
 
-			if (parent == nullptr || !parent->isCellObject()) { // Not indoors either
+			if (parent == NULL || !parent->isCellObject()) { // Not indoors either
 				return;
 			}
 		}
@@ -84,7 +84,7 @@ public:
 		ManagedReference<GroupObject*> group = target->getGroup();
 		bool groupMember = false;
 
-		if (group != nullptr) {
+		if (group != NULL) {
 			for (int i = 0; i < group->getGroupSize(); i++) {
 				ManagedReference<CreatureObject*> member = group->getGroupMember(i);
 
@@ -104,7 +104,7 @@ public:
 		StimPack* stimpack = module->findStimPack();
 
 		// droid has to have a stimpack to give
-		if (stimpack == nullptr) {
+		if (stimpack == NULL) {
 			target->sendSystemMessage("@pet/droid_modules:stimpack_supply_empty");
 			return;
 		}

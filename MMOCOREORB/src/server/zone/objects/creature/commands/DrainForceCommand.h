@@ -30,17 +30,24 @@ public:
 		if (isWearingArmor(creature)) {
 			return NOJEDIARMOR;
 		}
+	
+		uint32 avoidIncapacitationCRC = BuffCRC::JEDI_AVOID_INCAPACITATION;
+		// Stop channeling while AI 
+		if (creature->hasBuff(avoidIncapacitationCRC)){
+			creature->sendSystemMessage("Cannot Drain Force while AI");
+			return GENERALERROR;
+		}
 
 		// Fail if target is not a player...
 
 		ManagedReference<SceneObject*> object = server->getZoneServer()->getObject(target);
 
-		if (object == nullptr || !object->isPlayerCreature())
+		if (object == NULL || !object->isPlayerCreature())
 			return INVALIDTARGET;
 
 		CreatureObject* targetCreature = cast<CreatureObject*>( object.get());
 
-		if (targetCreature == nullptr || targetCreature->isDead() || (targetCreature->isIncapacitated() && !targetCreature->isFeigningDeath()) || !targetCreature->isAttackableBy(creature))
+		if (targetCreature == NULL || targetCreature->isDead() || (targetCreature->isIncapacitated() && !targetCreature->isFeigningDeath()) || !targetCreature->isAttackableBy(creature))
 			return INVALIDTARGET;
 
 		if(!checkDistance(creature, targetCreature, range))
@@ -51,27 +58,27 @@ public:
 			return GENERALERROR;
 		}
 
+		   	if (!creature->checkCooldownRecovery("drainforce")) {
+                    creature->sendSystemMessage("You cannot drain force yet.");
+                    return GENERALERROR;
+                }
+
 		Locker clocker(targetCreature, creature);
 
 		ManagedReference<PlayerObject*> targetGhost = targetCreature->getPlayerObject();
 		ManagedReference<PlayerObject*> playerGhost = creature->getPlayerObject();
 
-		if (targetGhost == nullptr || playerGhost == nullptr)
+		if (targetGhost == NULL || playerGhost == NULL)
 			return GENERALERROR;
 
 		CombatManager* manager = CombatManager::instance();
-
+		int maxDrain = 0;
 		if (manager->startCombat(creature, targetCreature, false)) { //lockDefender = false because already locked above.
 			int forceSpace = playerGhost->getForcePowerMax() - playerGhost->getForcePower();
 			if (forceSpace <= 0) //Cannot Force Drain if attacker can't hold any more Force.
 				return GENERALERROR;
 
-			if (playerGhost->getForcePower() < forceCost) {
-				creature->sendSystemMessage("@jedi_spam:no_force_power"); //You do not have sufficient Force power to perform that action.
-				return GENERALERROR;
-			}
-
-			int drain = System::random(maxDamage);
+			maxDrain = minDamage; //Value set in command lua.
 
 			int targetForce = targetGhost->getForcePower();
 			if (targetForce <= 0) {
@@ -79,21 +86,30 @@ public:
 				return GENERALERROR;
 			}
 
-			int forceDrain = targetForce >= drain ? drain : targetForce; //Drain whatever Force the target has, up to max.
+			maxDrain += 30;
+			maxDrain *= creature->getFrsMod("power"); //FRS drains more
+			maxDrain /= targetCreature->getFrsMod("control"); //FRS gets drained less
+
+			if (creature->hasSkill("force_discipline_enhancements_master"))
+				maxDrain *= 1.5; //Master enhancer drains more
+
+			if (targetCreature->hasSkill("force_discipline_enhancements_master"))
+				maxDrain /= 1.5; //Master enhancer gets drained less
+
+			int forceDrain = targetForce >= maxDrain ? maxDrain : targetForce; //Drain whatever Force the target has, up to max.
+
 			if (forceDrain > forceSpace)
 				forceDrain = forceSpace; //Drain only what attacker can hold in their own Force pool.
 
-			playerGhost->setForcePower(playerGhost->getForcePower() + (forceDrain - forceCost));
+			playerGhost->setForcePower(playerGhost->getForcePower() + forceDrain);
 			targetGhost->setForcePower(targetGhost->getForcePower() - forceDrain);
 
 			uint32 animCRC = getAnimationString().hashCode();
 			creature->doCombatAnimation(targetCreature, animCRC, 0x1, 0xFF);
-			manager->broadcastCombatSpam(creature, targetCreature, nullptr, forceDrain, "cbt_spam", combatSpam, 1);
-
-			VisibilityManager::instance()->increaseVisibility(creature, visMod);
+			manager->broadcastCombatSpam(creature, targetCreature, NULL, forceDrain, "cbt_spam", combatSpam, 1);
+			creature->updateCooldownTimer("drainforce", (5000/creature->getFrsMod("manipulation"))); // CD scales with frs
 
 			return SUCCESS;
-
 		}
 
 		return GENERALERROR;
@@ -101,14 +117,7 @@ public:
 	}
 
 	float getCommandDuration(CreatureObject* object, const UnicodeString& arguments) const {
-		float baseDuration = defaultTime * 3.0;
-		float combatHaste = object->getSkillMod("combat_haste");
-
-		if (combatHaste > 0) {
-			return baseDuration * (1.f - (combatHaste / 100.f));
-		} else {
-			return baseDuration;
-		}
+		return defaultTime * 1.2;
 	}
 
 };

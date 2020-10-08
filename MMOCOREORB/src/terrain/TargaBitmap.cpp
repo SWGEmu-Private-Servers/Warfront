@@ -68,11 +68,11 @@ public:
 
 
 TargaBitmap::TargaBitmap() {
-	pixelData = nullptr;
+	pixelData = NULL;
 }
 
 TargaBitmap::~TargaBitmap() {
-	if (pixelData != nullptr) {
+	if (pixelData != NULL) {
 		for (int i = 0; i < header.width; ++i) {
 			for (int j = 0; j < header.height; ++j) {
 				delete pixelData[i * header.width + j];
@@ -80,7 +80,7 @@ TargaBitmap::~TargaBitmap() {
 		}
 
 		delete [] pixelData;
-		pixelData = nullptr;
+		pixelData = NULL;
 	}
 }
 
@@ -98,7 +98,7 @@ void TargaBitmap::readObject(ObjectInputStream* stream) {
 	pixelData = new TargaPixel*[header.width * header.height];
 
 	for (int i = 0; i < header.width * header.height; ++i) {
-		TargaPixel* obj = nullptr;
+		TargaPixel* obj = NULL;
 		switch (header.datatypecode) {
 		case 3:
 			obj = new TargaBlackPixel();
@@ -131,13 +131,13 @@ void TargaBitmap::readObject(ObjectInputStream* stream) {
 	}
 }
 
-unsigned char TargaBitmap::getData(int offset) const {
+unsigned char TargaBitmap::getData(int offset) {
 	if (offset < 0 || offset >= header.width * header.height)
 		throw ArrayIndexOutOfBoundsException(offset);
 
-	const TargaBlackPixel* tbp = dynamic_cast<const TargaBlackPixel*>(pixelData[offset]);
+	TargaBlackPixel* tbp = dynamic_cast<TargaBlackPixel*>(pixelData[offset]);
 
-	if (tbp == nullptr)
+	if (tbp == NULL)
 		throw Exception("pixelData[" + String::valueOf(offset) + "] is not a TargaBlackPixel");
 
 	return tbp->val;

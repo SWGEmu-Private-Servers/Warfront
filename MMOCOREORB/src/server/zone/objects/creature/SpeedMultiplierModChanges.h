@@ -8,11 +8,7 @@
 #ifndef SPEEDMULTIPLIERMODCHANGES_H_
 #define SPEEDMULTIPLIERMODCHANGES_H_
 
-#include "system/util/ArrayList.h"
-
-#include "engine/util/json_utils.h"
-
-class SpeedModChange {
+class SpeedModChange : public Object {
 	float newSpeed;
 	Time timeStamp;
 
@@ -31,7 +27,7 @@ public:
 		timeStamp = tm;
 	}
 
-	SpeedModChange(const SpeedModChange& a) {
+	SpeedModChange(const SpeedModChange& a) : Object() {
 		newSpeed = a.newSpeed;
 		timeStamp = a.timeStamp;
 	}
@@ -43,32 +39,16 @@ public:
 		return *this;
 	}
 
-	inline float getNewSpeed() const {
+	inline float getNewSpeed() {
 		return newSpeed;
 	}
 
-	inline const Time& getTimeStamp() const {
+	inline Time& getTimeStamp() {
 		return timeStamp;
-	}
-
-	bool parseFromBinaryStream(ObjectInputStream* stream) {
-		//TypeInfo<float>::parseFromBinaryStream(&newSpeed, stream);
-
-
-		return false;
-	}
-
-	bool toBinaryStream(ObjectOutputStream* stream) {
-		return false;
-	}
-
-	friend void to_json(nlohmann::json& j, const SpeedModChange& v) {
-		j["newSpeed"] = v.newSpeed;
-		j["timeStamp"] = v.timeStamp;
 	}
 };
 
-class SpeedMultiplierModChanges : public ArrayList<SpeedModChange> {
+class SpeedMultiplierModChanges : public Vector<SpeedModChange> {
 
 };
 

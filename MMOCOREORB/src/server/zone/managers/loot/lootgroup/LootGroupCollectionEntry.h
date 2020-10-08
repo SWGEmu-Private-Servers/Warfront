@@ -48,11 +48,11 @@ public:
 		luagroups.pop();
 	}
 
-	inline int getLootChance() const {
+	inline int getLootChance() {
 		return lootChance;
 	}
 
-	const LootGroups* getLootGroups() const {
+	LootGroups* getLootGroups() {
 		return &lootGroups;
 	}
 };

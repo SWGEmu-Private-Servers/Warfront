@@ -79,12 +79,12 @@ String FishingPoleObjectImplementation::getText(CreatureObject* player) {
 bool FishingPoleObjectImplementation::removeObject(SceneObject* object, SceneObject* destination, bool notifyClient) {
 	ManagedReference<FishingManager*> manager = server->getFishingManager();
 	ManagedReference<SceneObject*> strongParent = getParent().get();
-	if (strongParent == nullptr)
+	if (strongParent == NULL)
 		return false;
 
-	if ((strongParent != nullptr) && (strongParent->isPlayerCreature())) {
+	if ((strongParent != NULL) && (strongParent->isPlayerCreature())) {
 		ManagedReference<CreatureObject*> player = cast<CreatureObject*>(strongParent.get());
-		if ((player != nullptr) && (object->isFishingBait())) {
+		if ((player != NULL) && (object->isFishingBait())) {
 			if (manager->getFishingState(player) != FishingManager::NOTFISHING) {
 				player->sendSystemMessage("Cannot remove bait while fishing pole is in use.");
 

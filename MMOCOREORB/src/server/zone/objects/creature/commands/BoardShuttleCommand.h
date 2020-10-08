@@ -42,7 +42,7 @@ public:
 
 		ManagedReference<Zone*> zone = creature->getZone();
 
-		if (zone == nullptr)
+		if (zone == NULL)
 			return GENERALERROR;
 
 		ManagedReference<PlanetManager*> planetManager = zone->getPlanetManager();
@@ -50,7 +50,7 @@ public:
 		Reference<PlanetTravelPoint*> closestPoint = planetManager->getNearestPlanetTravelPoint(creature, 128.f);
 
 		// Check to make sure the creature is within range of a PlanetTravelPoint
-		if (closestPoint == nullptr) {
+		if (closestPoint == NULL) {
 			// Could do @player_structure:boarding_too_far here but this allows you to know in-game that no point was found
 			creature->sendSystemMessage("There is no shuttle nearby.");
 			return GENERALERROR;
@@ -59,7 +59,7 @@ public:
 		ManagedReference<CreatureObject*> shuttle = closestPoint->getShuttle();
 
 		// Is there a shuttle object related to this point?
-		if (shuttle == nullptr) {
+		if (shuttle == NULL) {
 			creature->error("WARNING: Missing a shuttle object:" + closestPoint->toString());
 
 			// Different error so it's obvious from in-game that the shuttle did not link to this travel point.
@@ -103,7 +103,7 @@ public:
 		ManagedReference<TicketObject*> ticketObject = server->getZoneServer()->getObject(ticketoid).castTo<TicketObject*>();
 
 		//If no ticket was passed as the target, then send the selection box.
-		if (ticketObject == nullptr) {
+		if (ticketObject == NULL) {
 			sendTicketSelectionBoxTo(creature, tickets);
 			return SUCCESS;
 		}
@@ -121,24 +121,24 @@ public:
 
 		ManagedReference<Zone*> arrivalZone = server->getZoneServer()->getZone(arrivalPlanet);
 
-		if (arrivalZone == nullptr) {
+		if (arrivalZone == NULL) {
 			creature->sendSystemMessage("@travel:route_not_available"); //This ticket's route is no longer available.
 			return GENERALERROR;
 		}
 
 		Reference<PlanetTravelPoint*> arrivalPoint = arrivalZone->getPlanetManager()->getPlanetTravelPoint(arrivalPointName);
 
-		if (arrivalPoint == nullptr || !closestPoint->canTravelTo(arrivalPoint)) {
+		if (arrivalPoint == NULL || !closestPoint->canTravelTo(arrivalPoint)) {
 			creature->sendSystemMessage("@travel:wrong_shuttle"); //The ticket is not valid for the given shuttle.
 			return GENERALERROR;
 		}
 
 		ManagedReference<CreatureObject*> targetShuttleObject = arrivalPoint->getShuttle();
 
-		if (targetShuttleObject != nullptr) {
+		if (targetShuttleObject != NULL) {
 			ManagedReference<CityRegion*> region = targetShuttleObject->getCityRegion().get();
 
-			if (region != nullptr) {
+			if (region != NULL) {
 #ifdef ENABLE_CITY_TRAVEL_LIMIT
 				if (region->getCurrentPlayerCount() >= MAXIMUM_PLAYER_COUNT) {
 					creature->sendSystemMessage("Your destination is currently under maintenance, please try again later.");
@@ -154,7 +154,7 @@ public:
 
 		ManagedReference<CityRegion*> departCity = shuttle->getCityRegion().get();
 
-		if (departCity != nullptr){
+		if (departCity != NULL){
 			if (departCity->isBanned(creature->getObjectID())) {
 				creature->sendSystemMessage("@city/city:city_cant_board"); // You are banned from using the services of this city.\nYou may not board the transport.
 				return GENERALERROR;
@@ -168,11 +168,11 @@ public:
 
 		p.initializePosition(arrivalPoint->getArrivalPosition());
 
-		ManagedReference<CityRegion*> region = targetShuttleObject != nullptr ? targetShuttleObject->getCityRegion().get() : nullptr;
+		ManagedReference<CityRegion*> region = targetShuttleObject != NULL ? targetShuttleObject->getCityRegion().get() : NULL;
 
 		// Randomize the arrival a bit to try and avoid everyone zoning on top of each other
 		// For NPC cities, use the generic method
-		if (region == nullptr || region->isClientRegion()) {
+		if (region == NULL || region->isClientRegion()) {
 			p.randomizePosition(3);
 
 			x = p.getPositionX();
@@ -224,7 +224,7 @@ private:
 
 		ManagedReference<SceneObject*> inventory = creature->getSlottedObject("inventory");
 
-		if (inventory == nullptr)
+		if (inventory == NULL)
 			return tickets;
 
 		int totalObjects = inventory->getContainerObjectsSize();
@@ -256,16 +256,6 @@ private:
 			return;
 
 		CreatureObject* player = cast<CreatureObject*>(creature);
-
-		ManagedReference<PlayerObject* > ghost = player->getPlayerObject();
-
-		if (ghost == nullptr)
-			return;
-
-		if (ghost->hasSuiBoxWindowType(SuiWindowType::TRAVEL_TICKET_SELECTION))
-		{
-			ghost->closeSuiWindowType(SuiWindowType::TRAVEL_TICKET_SELECTION);
-		}
 
 		ManagedReference<SuiListBox*> suiListBox = new SuiListBox(player, SuiWindowType::TRAVEL_TICKET_SELECTION);
 		creature->sendSystemMessage("@travel:boarding_ticket_selection"); //You must select a ticket to use before boarding.

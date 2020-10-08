@@ -29,7 +29,7 @@ public:
 			targetObject = creature->getZoneServer()->getObject(creature->getTargetID()).castTo<CreatureObject*>();
 		}
 
-		if (targetObject == nullptr || !targetObject->isPlayerCreature()) {
+		if (targetObject == NULL || !targetObject->isPlayerCreature()) {
 			targetObject = creature;
 		}
 
@@ -43,50 +43,19 @@ public:
 
 		Locker smodLocker(targetObject->getSkillModMutex());
 
-		const SkillModList* skillModList = targetObject->getSkillModList();
+		SkillModList* skillModList = targetObject->getSkillModList();
 
 		StringBuffer promptText;
 		promptText << "Name: " << targetObject->getCustomObjectName().toString()  << endl;
 		promptText << "ObjectID: " << targetObject->getObjectID() << endl;
 
-		if (ghost != nullptr) {
+		if (ghost != NULL) {
 			promptText << "Online Status: ";
 
 			if(ghost->isOnline())
 				promptText << "ONLINE" << endl;
 			else {
 				promptText << "OFFLINE. Last On: " << ghost->getLastLogout()->getFormattedTime() << endl;
-			}
-
-			if (ghost->isOnline()) {
-				auto zone = targetObject->getZone();
-
-				promptText << "Current Location: " << targetObject->getWorldPosition().toString()
-					<< " zone: " << (zone != nullptr ? zone->getZoneName() : "<nullZone>")
-					<< endl;
-			} else {
-				auto loginPos = targetObject->getWorldPosition();
-
-				Reference<SceneObject*> playerParent = creature->getZoneServer()->getObject(ghost->getSavedParentID(), true);
-
-				if (playerParent == nullptr)
-					playerParent = targetObject->getParent().get();
-
-				if (playerParent != nullptr && playerParent->isCellObject()) {
-					Reference<SceneObject*> root = playerParent->getRootParent();
-
-					if (root != nullptr && root->isBuildingObject()) {
-						float length = Math::sqrt(targetObject->getPositionX() * targetObject->getPositionX() + targetObject->getPositionY() * targetObject->getPositionY());
-						float angle = root->getDirection()->getRadians() + atan2(targetObject->getPositionX(), targetObject->getPositionY());
-						float posX = root->getPositionX() + (sin(angle) * length);
-						float posY = root->getPositionY() + (cos(angle) * length);
-						float posZ = root->getPositionZ() + targetObject->getPositionZ();
-
-						loginPos = Vector3(posX, posY, posZ);
-					}
-				}
-
-				promptText << "Login Location: " << loginPos.toString() << " zone: " << ghost->getSavedTerrainName() << endl;
 			}
 		}
 
@@ -96,7 +65,7 @@ public:
 		smodLocker.release();
 
 		promptText << "Skills:" << endl;
-		const SkillList* list = targetObject->getSkillList();
+		SkillList* list = targetObject->getSkillList();
 
 		int totalSkillPointsWasted = 0;
 
@@ -109,26 +78,26 @@ public:
 
 		promptText << endl << "Level: " << targetObject->getLevel() << endl;
 
-		if (ghost != nullptr) {
+		if (ghost != NULL) {
 			promptText << "totalSkillPointsWasted = " << totalSkillPointsWasted << " skillPoints var:" << ghost->getSkillPoints() << endl;
 
 			promptText << endl << "Ability list:" << endl;
 
-			const AbilityList* abilityList = ghost->getAbilityList();
+			AbilityList* abilityList = ghost->getAbilityList();
 
 			for (int i = 0; i < abilityList->size(); ++i) {
-				const Ability* skill = abilityList->get(i);
+				Ability* skill = abilityList->get(i);
 				promptText << skill->getAbilityName() << endl;
 			}
 
 			if (creature->getPlayerObject()->getAdminLevel() >= 15) {
-				const Vector<byte>* holoProfessions = ghost->getHologrindProfessions();
+				Vector<byte>* holoProfessions = ghost->getHologrindProfessions();
 
 				promptText << endl;
 				promptText << "Hologrind professions:\n";
 
-				const BadgeList* badgeList = BadgeList::instance();
-				if (badgeList != nullptr) {
+				BadgeList* badgeList = BadgeList::instance();
+				if (badgeList != NULL) {
 					for (int i = 0; i < holoProfessions->size(); ++i) {
 						byte prof = holoProfessions->get(i);
 						const Badge* badge = badgeList->get(prof);
@@ -144,29 +113,31 @@ public:
 				promptText << endl << "Visibility = " << ghost->getVisibility() << endl;
 
 				MissionManager* missionManager = creature->getZoneServer()->getMissionManager();
-				Vector<uint64> hunterList =  missionManager->getHuntersHuntingTarget(targetObject->getObjectID());
+				Vector<uint64>* hunterList =  missionManager->getHuntersHuntingTarget(targetObject->getObjectID());
 
-				for (int i = 0; i < hunterList.size(); i++) {
-					promptText << "Hunter #" << i << ": " << hunterList.get(i) << endl;
+				if (hunterList != NULL) {
+					for (int i = 0; i < hunterList->size(); i++) {
+						promptText << "Hunter #" << i << ": " << hunterList->get(i) << endl;
+					}
 				}
 
 				promptText << endl;
 			}
 		} else {
-			promptText << "ERROR: PlayerObject nullptr" << endl;
+			promptText << "ERROR: PlayerObject NULL" << endl;
 		}
 
 		ManagedReference<SceneObject*> inventory = targetObject->getSlottedObject("inventory");
 		ManagedReference<SceneObject*> bank = targetObject->getSlottedObject("bank");
 		ManagedReference<SceneObject*> datapad = targetObject->getSlottedObject("datapad");
 
-		promptText << "Inventory: " << (inventory == nullptr ? String("nullptr") : String::valueOf(inventory->getObjectID()));
+		promptText << "Inventory: " << (inventory == NULL ? String("NULL") : String::valueOf(inventory->getObjectID()));
 		promptText << endl;
 
-		promptText << "Bank: " << (bank == nullptr ? String("nullptr") : String::valueOf(bank->getObjectID()));
+		promptText << "Bank: " << (bank == NULL ? String("NULL") : String::valueOf(bank->getObjectID()));
 		promptText << endl;
 
-		promptText << "Datapad: " << (datapad == nullptr ? String("nullptr") : String::valueOf(datapad->getObjectID()));
+		promptText << "Datapad: " << (datapad == NULL ? String("NULL") : String::valueOf(datapad->getObjectID()));
 		promptText << endl;
 
 

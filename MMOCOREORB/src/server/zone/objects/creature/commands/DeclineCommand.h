@@ -29,7 +29,7 @@ public:
 		uint64 inviterID = creature->getGroupInviterID();
 		ManagedReference<SceneObject*> object = server->getZoneServer()->getObject(inviterID);
 
-		if (object == nullptr || !object->isPlayerCreature())
+		if (object == NULL || !object->isPlayerCreature())
 			return GENERALERROR;
 
 		CreatureObject* inviter = cast<CreatureObject*>( object.get());
@@ -46,7 +46,7 @@ public:
 		return SUCCESS;
 		/*DECLINE DUEL CODE
 				CombatManager* combatManager = server->getCombatManager();
-				if (combatManager == nullptr)
+				if (combatManager == NULL)
 					return false;
 
 				 uint64 target = packet->parseLong();

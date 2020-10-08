@@ -19,7 +19,12 @@ public:
 	}
 
 	~DataTableRow() {
-		cells.forEach([](auto cell) { delete cell; });
+		while (cells.size() > 0) {
+			DataTableCell* cell = cells.remove(0);
+
+			delete cell;
+			cell = NULL;
+		}
 	}
 
 	void addCell(DataTableCell* c) {
@@ -30,16 +35,12 @@ public:
 		return cells.get(idx);
 	}
 
-	const DataTableCell* getCell(int idx) const {
-		return cells.get(idx);
-	}
-
-	int getCellsSize() const {
+	int getCellsSize() {
 		return cells.size();
 	}
 
 	template <typename V>
-	void getValue(int idx, V& out) const {
+	void getValue(int idx, V& out) {
 		cells.get(idx)->getValue(out);
 	}
 };

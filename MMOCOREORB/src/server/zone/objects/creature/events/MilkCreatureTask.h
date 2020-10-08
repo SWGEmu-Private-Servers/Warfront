@@ -6,7 +6,6 @@
 #include "server/zone/managers/combat/CombatManager.h"
 #include "server/zone/managers/creature/CreatureManager.h"
 #include "server/zone/objects/creature/CreatureObject.h"
-#include "server/zone/objects/transaction/TransactionLog.h"
 #include "engine/engine.h"
 
 class MilkCreatureTask : public Task {
@@ -51,7 +50,43 @@ public:
 		}
 
 		failureChance /= (skill / 100);
+		float bonusChance = 0;
 
+		// Check Scout / Ranger skill trees
+		if (player->hasSkill("outdoors_scout_master")){
+			bonusChance += 2;
+			if (player->hasSkill("outdoors_ranger_novice")){
+				bonusChance += 1;
+				if (player->hasSkill("outdoors_ranger_master")){
+					bonusChance += 2;
+				}
+			}
+		}
+		// Check CH skill trees
+		if (player->hasSkill("outdoors_creaturehandler_novice")){
+			bonusChance += 2;
+			if (player->hasSkill("outdoors_creaturehandler_master")){
+				bonusChance += 3;
+			}
+		}
+		// Check GCW skill trees
+		if (player->hasSkill("gcw_ranger_02")){
+			bonusChance += 1;
+			if (player->hasSkill("gcw_ranger_06")){
+				bonusChance += 2;
+			}
+		}
+		
+		// add FS Luck
+		bonusChance += player->getSkillMod("force_luck");
+
+		// min failure chance 5%
+		if ((bonusChance + 5) < failureChance){
+			failureChance -= bonusChance;
+		}else{
+			failureChance = 5;	
+		}
+		
 		if (System::random(100) < failureChance)
 			success = false;
 
@@ -111,13 +146,71 @@ public:
 
 		ManagedReference<ResourceSpawn*> resourceSpawn = resourceManager->getCurrentSpawn(restype, player->getZone()->getZoneName());
 
-		if (resourceSpawn == nullptr) {
+		if (resourceSpawn == NULL) {
 			player->sendSystemMessage("Error: Server cannot locate a current spawn of " + restype);
 			return;
 		}
 
 		float density = resourceSpawn->getDensityAt(player->getZone()->getZoneName(), player->getPositionX(), player->getPositionY());
 
+		float bonusDensity = 0;
+		int bonusQuantity = 0;
+		float bonusMod = 0;
+
+		// Check Scout / Ranger skill trees
+		if (player->hasSkill("outdoors_scout_master")){
+			bonusDensity += 2;
+			bonusMod += .05;
+			bonusQuantity += 3;
+			if (player->hasSkill("outdoors_ranger_novice")){
+				bonusMod += .05;
+				bonusQuantity += 2;
+				if (player->hasSkill("outdoors_ranger_master")){
+					bonusMod += .1;
+					bonusQuantity += 3;
+				}
+			}
+		}
+		// Check CH skill trees
+		if (player->hasSkill("outdoors_creaturehandler_novice")){
+			bonusDensity += 2;
+			bonusMod += .1;
+			bonusQuantity += 2;
+			if (player->hasSkill("outdoors_creaturehandler_master")){
+				bonusDensity += 3;
+				bonusMod += .2;
+				bonusQuantity += 5;
+			}
+		}
+		// Check GCW skill trees
+		if (player->hasSkill("gcw_ranger_01")){
+			bonusDensity += 1;
+			if (player->hasSkill("gcw_ranger_03")){
+				bonusMod += .05;
+				if (player->hasSkill("gcw_ranger_04")){
+					bonusQuantity += 2;
+					if (player->hasSkill("gcw_ranger_05")){
+						bonusQuantity += 3;
+						if (player->hasSkill("gcw_ranger_06")){
+							bonusQuantity += 5;
+							if (player->hasSkill("gcw_ranger_07")){
+								bonusMod += .05;
+								if (player->hasSkill("gcw_ranger_master")){
+									bonusDensity += 3;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		// add FS Luck to density and quantity
+		bonusDensity += player->getSkillMod("force_luck");
+		quantityExtracted += System::random(player->getSkillMod("force_luck")*2);
+
+		density += bonusDensity;
+	
 		if (density > 0.80f) {
 			quantityExtracted = int(quantityExtracted * 1.25f);
 		} else if (density > 0.60f) {
@@ -128,9 +221,12 @@ public:
 			quantityExtracted = int(quantityExtracted * 0.50f);
 		}
 
-		TransactionLog trx(TrxCode::HARVESTED, player, resourceSpawn);
-		resourceManager->harvestResourceToPlayer(trx, player, resourceSpawn, quantityExtracted);
+		// add bonus multiplier from skill trees
+		quantityExtracted += int(quantityExtracted * bonusMod);
+		// add in bonus quantity from skill trees
+		quantityExtracted += bonusQuantity;
 
+		resourceManager->harvestResourceToPlayer(player, resourceSpawn, quantityExtracted);
 		updateMilkState(CreatureManager::ALREADYMILKED);
 	}
 

@@ -14,7 +14,6 @@ include engine.util.u3d.Vector3;
 
 import server.zone.objects.creature.CreatureObject;
 
-@json
 class SurveyMissionObjective extends MissionObjective {
 	protected string spawnFamily;
 	protected unsigned int efficiency;

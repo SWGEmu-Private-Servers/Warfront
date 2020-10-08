@@ -38,13 +38,13 @@ public:
 		uint32 crc = STRING_HASHCODE("skill_buff_mask_scent");
 
 		// Rangers can remove their own conceal buff by targeting nothing.
-		if(targetPlayer == nullptr && creature->hasBuff(crc)) {
+		if(targetPlayer == NULL && creature->hasBuff(crc)) {
 			creature->sendSystemMessage("@skl_use:sys_conceal_remove"); // You remove the camouflage. You are no longer concealed.
 			creature->removeBuff(crc);
 			return SUCCESS;
 		}
 
-		if(targetPlayer == nullptr || creature->getZone() == nullptr || !targetPlayer->isPlayerCreature()) {
+		if(targetPlayer == NULL || creature->getZone() == NULL || !targetPlayer->isPlayerCreature()) {
 			creature->sendSystemMessage("@skl_use:sys_conceal_notplayer"); // You can only conceal yourself or another player.
 			return INVALIDTARGET;
 		}
@@ -72,7 +72,7 @@ public:
 		SortedVector<QuadTreeEntry*> objects(512, 512);
 		CloseObjectsVector* closeObjectsVector = (CloseObjectsVector*) creature->getCloseObjects();
 
-		if (closeObjectsVector == nullptr) {
+		if (closeObjectsVector == NULL) {
 			creature->getZone()->getInRangeObjects(creature->getPositionX(), creature->getPositionY(), 32, &objects, true);
 		} else {
 			closeObjectsVector->safeCopyReceiversTo(objects, CloseObjectsVector::CREOTYPE);
@@ -94,27 +94,27 @@ public:
 		String zoneName = creature->getZone()->getZoneName();
 
 		ManagedReference<SceneObject*> inventory = creature->getSlottedObject("inventory");
-		if(inventory == nullptr)
+		if(inventory == NULL)
 			return GENERALERROR;
 
-		ManagedReference<TangibleObject*> usableKit = nullptr;
+		ManagedReference<TangibleObject*> usableKit = NULL;
 
 		for(int i = 0; i < inventory->getContainerObjectsSize(); ++i) {
 			Reference<TangibleObject*> item = inventory->getContainerObject(i).castTo<TangibleObject*>();
 
-			if(item == nullptr || !item->isCamoKit())
+			if(item == NULL || !item->isCamoKit())
 				continue;
 
 			SharedObjectTemplate* templateData =
 					TemplateManager::instance()->getTemplate(
 							item->getServerObjectCRC());
-			if (templateData == nullptr) {
+			if (templateData == NULL) {
 				error("No template for: " + String::valueOf(item->getServerObjectCRC()));
 				return GENERALERROR;
 			}
 
 			CamoKitTemplate* camoKitData = cast<CamoKitTemplate*> (templateData);
-			if (camoKitData == nullptr) {
+			if (camoKitData == NULL) {
 				error("No camoKitData for: " + String::valueOf(camoKitData->getServerObjectCRC()));
 				return GENERALERROR;
 			}
@@ -127,7 +127,7 @@ public:
 			}
 		}
 
-		if(usableKit == nullptr) {
+		if(usableKit == NULL) {
 			creature->sendSystemMessage("@skl_use:sys_conceal_nokit"); // You need to have a Camouflage Kit in your inventory to Conceal.
 			return GENERALERROR;
 		}

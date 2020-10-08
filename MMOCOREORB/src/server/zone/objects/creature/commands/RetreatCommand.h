@@ -22,7 +22,7 @@ public:
 
 		Zone* zone = creature->getZone();
 
-		if (zone == nullptr) {
+		if (zone == NULL) {
 			return false;
 		}
 
@@ -38,6 +38,11 @@ public:
 
 		if (creature->hasBuff(burstCRC) || creature->hasBuff(forceRun1CRC) || creature->hasBuff(forceRun2CRC) || creature->hasBuff(forceRun3CRC)) {
 			creature->sendSystemMessage("@combat_effects:burst_run_no"); //You cannot burst run right now.
+			return false;
+		}
+	// Return if player is rooted
+		if (creature->isSnared()){
+			creature->sendSystemMessage("Cannot Force Run while ROOTED");
 			return false;
 		}
 
@@ -62,12 +67,12 @@ public:
 
 		ManagedReference<CreatureObject*> player = cast<CreatureObject*>(creature);
 
-		if (player == nullptr)
+		if (player == NULL)
 			return GENERALERROR;
 
 		ManagedReference<PlayerObject*> ghost = player->getPlayerObject();
 
-		if (ghost == nullptr)
+		if (ghost == NULL)
 			return GENERALERROR;
 
 		ManagedReference<GroupObject*> group = player->getGroup();
@@ -84,10 +89,13 @@ public:
 		if (!inflictHAM(player, 0, actionCost, mindCost))
 			return GENERALERROR;
 
-		for (int i = 1; i < group->getGroupSize(); ++i) {
+		for (int i = 0; i < group->getGroupSize(); ++i) {
 			ManagedReference<CreatureObject*> member = group->getGroupMember(i);
 
-			if (member == nullptr || !member->isPlayerCreature())
+			if (member == NULL || !member->isPlayerCreature() || member->getZone() != creature->getZone())
+				continue;
+
+			if(member->getDistanceTo(player) > 100)
 				continue;
 
 			if (!isValidGroupAbilityTarget(creature, member, false))
@@ -112,7 +120,7 @@ public:
 
 
 	void doRetreat(CreatureObject* player) const {
-		if (player == nullptr)
+		if (player == NULL)
 			return;
 
 		if (!checkRetreat(player))

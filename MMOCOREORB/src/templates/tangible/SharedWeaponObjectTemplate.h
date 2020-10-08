@@ -76,14 +76,14 @@ public:
 		ACID = 128,
 		ELECTRICITY = 256
 	};
-
+	
 	// multiple weapon type scenarios
 	enum WeaponClass {
 		MELEEWEAPON = 0xF0,
 		RANGEDWEAPON = 0x1F0B, // these are all weapons derived from ranged in the client
 		JEDIWEAPON = 0xE000,
 	};
-
+	
 	enum WeaponAttackType {
 		MELEEATTACK = 0,
 		RANGEDATTACK = 1,
@@ -96,7 +96,7 @@ public:
 		HEAVYROCKETLAUNCHERATTACK = 18,
 		HEAVYLAUNCHERATTACK = 19
 	};
-
+	
 	enum WeaponType {
 		ANYWEAPON = 0xFFFFFFFF,
 		THROWNWEAPON = 0x1,
@@ -116,8 +116,8 @@ public:
 		TWOHANDJEDIWEAPON = 0x4000,
 		POLEARMJEDIWEAPON = 0x8000
 	};
-
-
+	
+	
 	SharedWeaponObjectTemplate() {
 		damageType = 0;
 
@@ -293,19 +293,19 @@ public:
 		this->woundsRatio = woundsRatio;
 	}
 
-	const Vector<String>* getCertificationsRequired() const {
+	Vector<String>* getCertificationsRequired() {
 		return &certificationsRequired;
 	}
 
-	const Vector<String>* getCreatureAccuracyModifiers() const {
+	Vector<String>* getCreatureAccuracyModifiers() {
 		return &creatureAccuracyModifiers;
 	}
 
-	const Vector<String>* getCreatureAimModifiers() const {
+	Vector<String>* getCreatureAimModifiers() {
 		return &creatureAimModifiers;
 	}
 
-	const Vector<String>* getDamageModifiers() const {
+	Vector<String>* getDamageModifiers() {
 		return &damageModifiers;
 	}
 
@@ -313,19 +313,19 @@ public:
 		return damageType;
 	}
 
-	const Vector<String>* getDefenderDefenseModifiers() const {
+	Vector<String>* getDefenderDefenseModifiers() {
 		return &defenderDefenseModifiers;
 	}
 
-	const Vector<String>* getDefenderSecondaryDefenseModifiers() const {
+	Vector<String>* getDefenderSecondaryDefenseModifiers() {
 		return &defenderSecondaryDefenseModifiers;
 	}
 
-	const Vector<String>* getDefenderToughnessModifiers() const {
+	Vector<String>* getDefenderToughnessModifiers() {
 		return &defenderToughnessModifiers;
 	}
 
-	const Vector<String>* getSpeedModifiers() const {
+	Vector<String>* getSpeedModifiers() {
 		return &speedModifiers;
 	}
 
@@ -369,8 +369,8 @@ public:
 		return attackType;
 	}
 
-	const String& getWeaponEffect() const {
-		return weaponEffect.get();
+	String getWeaponEffect() const {
+		return weaponEffect;
 	}
 
 	inline int getWeaponEffectIndex() const {
@@ -389,11 +389,11 @@ public:
 		this->weaponEffectIndex = weaponEffectIndex;
 	}
 
-	const String& getCombatSpam() const {
+	String getCombatSpam() {
 		return combatSpam;
 	}
 
-	const String& getAnimationType() const {
+	String getAnimationType() {
 		return animationType;
 	}
 

@@ -44,7 +44,7 @@ public:
 
 		itemIndex = 0;
 
-		parent = nullptr;
+		parent = NULL;
 	}
 
 	~RadialMenuItem() {
@@ -60,7 +60,7 @@ public:
 	}
 
 	RadialMenuItem* getItem(int index) {
-		RadialMenuItem* returnItem = nullptr;
+		RadialMenuItem* returnItem = NULL;
 
 		for (int i = 0; i < children.size(); ++i) {
 			RadialMenuItem* item = children.get(i);
@@ -70,7 +70,7 @@ public:
 			else {
 				returnItem = item->getItem(index);
 
-				if (returnItem != nullptr)
+				if (returnItem != NULL)
 					return returnItem;
 			}
 		}
@@ -79,7 +79,7 @@ public:
 	}
 
 	RadialMenuItem* getItemByRadialID(uint8 index) {
-		RadialMenuItem* returnItem = nullptr;
+		RadialMenuItem* returnItem = NULL;
 
 		for (int i = 0; i < children.size(); ++i) {
 			RadialMenuItem* item = children.get(i);
@@ -89,7 +89,7 @@ public:
 			else {
 				returnItem = item->getItemByRadialID(index);
 
-				if (returnItem != nullptr)
+				if (returnItem != NULL)
 					return returnItem;
 			}
 		}
@@ -148,7 +148,7 @@ public:
 	}
 
 	inline int getParentIndex() {
-		if (parent != nullptr) {
+		if (parent != NULL) {
 			return parent->getItemIndex();
 		} else
 			return 0;

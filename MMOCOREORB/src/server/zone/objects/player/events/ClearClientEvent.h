@@ -21,13 +21,13 @@ public:
 	}
 
 	void run() {
-		if (player == nullptr || client == nullptr)
+		if (player == NULL || client == NULL)
 			return;
 
 		Locker _locker(player);
 
 		if (player->getClient() == client)
-			player->setClient(nullptr);
+			player->setClient(NULL);
 	}
 
 

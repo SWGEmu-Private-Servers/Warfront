@@ -30,13 +30,20 @@ public:
 		if (isWearingArmor(creature)) {
 			return NOJEDIARMOR;
 		}
-
-		// Bonus is in between 250-350.
-		int forceRandom = System::random(100);
-		int forceBonus = 250 + (forceRandom);
+		
+		uint32 avoidIncapacitationCRC = BuffCRC::JEDI_AVOID_INCAPACITATION;
+		// Stop channeling while AI 
+		if (creature->hasBuff(avoidIncapacitationCRC)){
+			creature->sendSystemMessage("Cannot Channel Force while AI");
+			return GENERALERROR;
+		}
+		// Bonus is in between 200-300.
+		int rand = System::random(10);
+		int forceBonus = 300 + (rand * 10); // Needs to be divisible by amount of ticks.
 
 		ManagedReference<PlayerObject*> playerObject = creature->getPlayerObject();
-		if (playerObject == nullptr)
+
+		if (playerObject == NULL)
 			return GENERALERROR;
 
 		// Do not execute if the player's force bar is full.
@@ -72,7 +79,7 @@ public:
 		uint32 buffCRC = STRING_HASHCODE("channelforcebuff");
 		Reference<Buff*> buff = creature->getBuff(buffCRC);
 		int duration = ChannelForceBuff::FORCE_CHANNEL_DURATION_SECONDS;
-		if (buff == nullptr) {
+		if (buff == NULL) {
 			buff = new ChannelForceBuff(creature, buffCRC, duration);
 			
 			Locker locker(buff);
@@ -98,7 +105,7 @@ public:
 			
 			creature->renewBuff(buffCRC, duration);
 			Reference<ChannelForceBuff*> channelBuff = buff.castTo<ChannelForceBuff*>();
-			if (channelBuff != nullptr)
+			if (channelBuff != NULL)
 				channelBuff->activateRegenTick();
 		}
 
@@ -106,7 +113,7 @@ public:
 	}
 
 	float getCommandDuration(CreatureObject* object, const UnicodeString& arguments) const {
-		return defaultTime * 3.0;
+		return defaultTime * 2.0;
 	}
 
 };

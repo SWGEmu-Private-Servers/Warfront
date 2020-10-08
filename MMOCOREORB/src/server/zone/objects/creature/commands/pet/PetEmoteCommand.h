@@ -37,11 +37,11 @@ public:
 			return GENERALERROR;
 
 		ManagedReference<AiAgent*> pet = cast<AiAgent*>(creature);
-		if (pet == nullptr)
+		if (pet == NULL)
 			return GENERALERROR;
 
 		ManagedReference<PetControlDevice*> controlDevice = creature->getControlDevice().get().castTo<PetControlDevice*>();
-		if (controlDevice == nullptr)
+		if (controlDevice == NULL)
 			return GENERALERROR;
 
 		// Creature specific command
@@ -70,14 +70,14 @@ public:
 	int praise(AiAgent* pet) const {
 		Zone* creoZone = pet->getZone();
 
-		if (creoZone == nullptr)
+		if (creoZone == NULL)
 			return GENERALERROR;
 
 		ManagedReference<CreatureManager*> creoManager = creoZone->getCreatureManager();
 		int speciesID = pet->getSpecies();
 		AiSpeciesData* speciesData = creoManager->getAiSpeciesData(speciesID);
 
-		if (speciesData == nullptr)
+		if (speciesData == NULL)
 			return GENERALERROR;
 
 		if (System::random(100) > 50) {

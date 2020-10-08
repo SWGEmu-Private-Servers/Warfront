@@ -11,9 +11,9 @@ using namespace server::zone;
 
 bool QuadTreeReference::toBinaryStream(ObjectOutputStream* stream) {
 	//if ()
-	/*Vector<ManagedReference<QuadTreeEntry*> >* vector = nullptr;
+	/*Vector<ManagedReference<QuadTreeEntry*> >* vector = NULL;
 
-	if (get() != nullptr)
+	if (get() != NULL)
 		vector = get()->getContainedEntries();
 	else
 		vector = new Vector<ManagedReference<QuadTreeEntry*> >();

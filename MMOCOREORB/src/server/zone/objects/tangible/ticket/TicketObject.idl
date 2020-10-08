@@ -10,23 +10,22 @@ import server.zone.objects.creature.CreatureObject;
 import server.zone.packets.scene.AttributeListMessage;
 
 @lua
-@json
 class TicketObject extends TangibleObject {
 	protected string departurePlanet;
 	protected string departurePoint;
 	protected string arrivalPlanet;
 	protected string arrivalPoint;
 	protected unsigned long ownerID;
-
+	
 	public TicketObject() {
 		Logger.setLoggingName("TicketObject");
-
+		
 		ownerID = 0;
 	}
-
+	
 	public void initializeTransientMembers() {
 		super.initializeTransientMembers();
-
+		
 		Logger.setLoggingName("TicketObject");
 	}
 	/**
@@ -39,7 +38,7 @@ class TicketObject extends TangibleObject {
 	@local
 	@dirty
 	public native void fillAttributeList(AttributeListMessage msg, CreatureObject object);
-
+	
 	/**
 	 * Handles the radial selection sent by the client
 	 * @pre { this object is locked, player is locked }
@@ -47,52 +46,52 @@ class TicketObject extends TangibleObject {
 	 * @returns 0 if successfull
 	 */
 	public native int handleObjectMenuSelect(CreatureObject player, byte selectedID);
-
+	
 	public void setDeparturePlanet(final string departureplanet) {
 		departurePlanet = departureplanet;
 	}
-
+	
 	public void setDeparturePoint(final string departurepoint) {
 		departurePoint = departurepoint;
 	}
-
+	
 	public void setArrivalPlanet(final string arrival) {
 		arrivalPlanet = arrival;
 	}
-
+	
 	public void setArrivalPoint(final string arrival) {
 		arrivalPoint = arrival;
 	}
-
+	
 	public void setOwnerID(unsigned long id) {
 		ownerID = id;
 	}
-
-	@read
+	
+	@dirty
 	public string getDeparturePlanet() {
 		return departurePlanet;
 	}
-
-	@read
+	
+	@dirty
 	public string getDeparturePoint() {
 		return departurePoint;
 	}
-
-	@read
+	
+	@dirty
 	public string getArrivalPlanet() {
 		return arrivalPlanet;
 	}
-
-	@read
+	
+	@dirty
 	public string getArrivalPoint() {
 		return arrivalPoint;
 	}
-
-	@read
+	
+	@dirty
 	public unsigned long getOwnerID() {
 		return ownerID;
 	}
-
+	
 	@dirty
 	public boolean isTicketObject() {
 		return true;

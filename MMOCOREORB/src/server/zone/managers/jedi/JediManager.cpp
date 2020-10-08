@@ -57,19 +57,15 @@ void JediManager::loadConfiguration(Lua* luaEngine) {
 		luaEngine->runFile("scripts/managers/jedi/village_jedi_manager.lua");
 		break;
 	case CUSTOMJEDIPROGRESSION:
-		luaEngine->runFile(luaEngine->getGlobalString("customJediProgressionFile"));
+		luaEngine->runFile(luaEngine->getGlobalString(String("customJediProgressionFile")));
 		break;
 	default:
 		break;
 	}
 
-	if (loaded.compareAndSet(false, true)) {
-		auto managerName = luaEngine->getGlobalString(String("jediManagerName"));
+	setJediManagerName(luaEngine->getGlobalString(String("jediManagerName")));
 
-		setJediManagerName(managerName);
-	}
-
-	info() << Thread::getCurrentThread()->getName() <<  " loaded.";
+	info("Loaded.");
 }
 
 void JediManager::onPlayerCreated(CreatureObject* creature) {

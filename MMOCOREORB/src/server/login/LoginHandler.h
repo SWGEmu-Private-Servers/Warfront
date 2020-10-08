@@ -14,23 +14,25 @@
 namespace server {
   namespace login {
 
-	class LoginSessionMap : private HashTable<uint64, Reference<LoginClient*> > {
-		int maxConnections;
+	class LoginSessionMap : private HashTable<uint64, Reference<LoginClient*> >,
+			public HashTableIterator<uint64, Reference<LoginClient*> > {
 
+		int maxConnections;
 	public:
-		LoginSessionMap(int maxconn = 10000) : HashTable<uint64, Reference<LoginClient*> >((int) (maxconn * 1.25f)) {
+		LoginSessionMap(int maxconn = 10000) : HashTable<uint64, Reference<LoginClient*> >((int) (maxconn * 1.25f)),
+				HashTableIterator<uint64, Reference<LoginClient*> >(this) {
 			maxConnections = maxconn;
 		}
 
 		bool add(LoginClient* client) {
-			if (HashTable<uint64, Reference<LoginClient*> >::put(client->getSession()->getNetworkID(), client) == nullptr) {
+			if (HashTable<uint64, Reference<LoginClient*> >::put(client->getSession()->getNetworkID(), client) == NULL) {
 				return true;
 			} else
 				return false;
 		}
 
 		bool remove(LoginClient* client) {
-			if (HashTable<uint64, Reference<LoginClient*> >::remove(client->getSession()->getNetworkID()) != nullptr) {
+			if (HashTable<uint64, Reference<LoginClient*> >::remove(client->getSession()->getNetworkID()) != NULL) {
 				return true;
 			} else
 				return false;
@@ -43,7 +45,7 @@ namespace server {
 	};
 
 	class LoginHandler: public ServiceHandler {
-		Reference<LoginServer*> server;
+		ManagedReference<LoginServer*> loginServerRef;
 
 		LoginSessionMap clients;
 
@@ -52,10 +54,14 @@ namespace server {
 		}
 
 		void initialize() {
+			LoginServer* server =  loginServerRef.getForUpdate();
+
 			server->initialize();
 		}
 
 		ServiceClient* createConnection(Socket* sock, SocketAddress& addr) {
+			LoginServer* server =  loginServerRef.getForUpdate();
+
 			LoginClient* client =  server->createConnection(sock, addr);
 
 			clients.add(client);
@@ -66,7 +72,7 @@ namespace server {
 		bool deleteConnection(ServiceClient* session) {
 			Reference<LoginClient*> client = getClient(session);
 
-			if (client != nullptr) {
+			if (client != NULL) {
 				client->disconnect();
 
 				clients.remove(client);
@@ -76,21 +82,27 @@ namespace server {
 		}
 
 		void handleMessage(ServiceClient* session, Packet* message) {
+			LoginServer* server =  loginServerRef.getForUpdate();
+
 			Reference<LoginClient*> client = getClient(session);
 
 			server->handleMessage(client, message);
 		}
 
 		void processMessage(Message* message) {
+			LoginServer* server =  loginServerRef.getForUpdate();
+
 			return server->processMessage(message);
 		}
 
 		bool handleError(ServiceClient* client, Exception& e) {
+			LoginServer* server =  loginServerRef.getForUpdate();
+
 			return server->handleError(client, e);
 		}
 
 		void setLoginSerrver(LoginServer* server) {
-			this->server = server;
+			loginServerRef = server;
 		}
 
 		LoginClient* getClient(ServiceClient* session) {

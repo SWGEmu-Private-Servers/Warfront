@@ -12,7 +12,6 @@
 #include "system/util/HashSet.h"
 
 #include "server/zone/packets/DeltaMessage.h"
-#include "engine/util/json_utils.h"
 
 template <class K>
 class AutoDeltaSet : public Variable {
@@ -45,15 +44,10 @@ public:
 		return set.parseFromBinaryStream(stream);
 	}
 
-	friend void to_json(nlohmann::json& j, const AutoDeltaSet<K>& set) {
-		j["set"] = set.set;
-		j["updateCounter"] = set.updateCounter;
-	}
-
-	virtual void add(const K& key, DeltaMessage* message = nullptr, int updates = 1) {
+	virtual void add(const K& key, DeltaMessage* message = NULL, int updates = 1) {
 		set.add(key);
 
-		if (message != nullptr) {
+		if (message != NULL) {
 			if (updates != 0)
 				message->startList(updates, updateCounter += updates);
 
@@ -64,13 +58,13 @@ public:
 		}
 	}
 
-	virtual bool drop(const K& key, DeltaMessage* message = nullptr, int updates = 1) {
+	virtual bool drop(const K& key, DeltaMessage* message = NULL, int updates = 1) {
 		if (!set.contains(key))
 			return false;
 
 		set.remove(key);
 
-		if (message != nullptr) {
+		if (message != NULL) {
 			if (updates != 0)
 				message->startList(updates, updateCounter += updates);
 
@@ -83,16 +77,16 @@ public:
 		return true;
 	}
 
-	virtual void removeAll(DeltaMessage* msg = nullptr) {
+	virtual void removeAll(DeltaMessage* msg = NULL) {
 		set.removeAll();
 
-		if (msg != nullptr) {
+		if (msg != NULL) {
 			msg->startList(1, ++updateCounter);
 			msg->insertByte(2);
 		}
 	}
 
-	virtual void insertToMessage(BaseMessage* msg) const {
+	virtual void insertToMessage(BaseMessage* msg) {
 		msg->insertInt(size());
 		msg->insertInt(getUpdateCounter());
 
@@ -105,19 +99,19 @@ public:
 		}
 	}
 
-	inline bool contains(const K& key) const {
+	inline bool contains(const K& key) {
 		return set.contains(key);
 	}
 
-	inline int size() const {
+	inline int size() {
 		return set.size();
 	}
 
-	inline uint32 getUpdateCounter() const {
+	inline uint32 getUpdateCounter() {
 		return updateCounter;
 	}
 
-	inline HashSetIterator<K> getIterator() const {
+	inline HashSetIterator<K> getIterator() {
 		return set.iterator();
 	}
 };

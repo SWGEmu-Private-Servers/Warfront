@@ -42,7 +42,7 @@ public:
 
 		ManagedReference<SceneObject*> object = suiBox->getUsingObject().get();
 
-		if (object == nullptr || !object->isFactory())
+		if (object == NULL || !object->isFactory())
 			return;
 
 		FactoryObject* factory = cast<FactoryObject*>( object.get());
@@ -68,7 +68,7 @@ public:
 
 		ManagedReference<SceneObject*> object = suiBox->getUsingObject().get();
 
-		if (object == nullptr || !object->isFactory())
+		if (object == NULL || !object->isFactory())
 			return;
 
 		FactoryObject* factory = cast<FactoryObject*>( object.get());

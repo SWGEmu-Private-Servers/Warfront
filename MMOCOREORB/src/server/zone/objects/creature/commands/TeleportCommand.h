@@ -25,7 +25,7 @@ public:
 
 		Zone* zone = creature->getZone();
 
-		if (zone == nullptr)
+		if (zone == NULL)
 			return GENERALERROR;
 
 		String zoneName = zone->getZoneName();
@@ -46,7 +46,7 @@ public:
 			} else {
 				Zone* newZone = creature->getZoneServer()->getZone(zoneName);
 
-				if (newZone != nullptr)
+				if (newZone != NULL)
 					z = CollisionManager::getWorldFloorCollision(x, y, newZone, false);
 			}
 

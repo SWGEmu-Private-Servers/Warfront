@@ -30,10 +30,6 @@ public:
 		return areas;
 	}
 
-	const Vector<AABB>& getAreas() const {
-		return areas;
-	}
-
 	Reference<NavArea*> getNavArea() {
 		return area.get();
 	}
@@ -42,15 +38,11 @@ public:
 		return settings;
 	}
 
-	const RecastSettings& getRecastConfig() const {
-		return settings;
-	}
-
 	Mutex* getMutex() {
 		return &mutex;
 	}
 
-	const String& getQueue() const {
+	const String& getQueue() {
 	    return queue;
 	}
 

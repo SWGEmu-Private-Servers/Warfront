@@ -14,6 +14,11 @@ public:
 	}
 
 	int doQueueCommand(CreatureObject* creature, const uint64& target, const UnicodeString& arguments) const {
+		// Return if Player is rooted
+		if (creature->isSnared()){
+			creature->sendSystemMessage("Cannot Burst Run while ROOTED");
+			return GENERALERROR;
+		}
 
 		if (!checkStateMask(creature)) {
 			if (creature->isRidingMount()) {

@@ -22,7 +22,7 @@ public:
 			return INVALIDLOCOMOTION;
 
 		PlayerManager* playerManager = server->getZoneServer()->getPlayerManager();
-		ManagedReference<CreatureObject*> targetObj = nullptr;
+		ManagedReference<CreatureObject*> targetObj = NULL;
 		StringTokenizer args(arguments.toString());
 
 		if (creature->getTargetID() != 0) {
@@ -35,10 +35,10 @@ public:
 			}
 		}
 
-		if (targetObj != nullptr) {
+		if (targetObj != NULL) {
 			PlayerObject* targetGhost = targetObj->getPlayerObject();
 
-			if (targetGhost != nullptr) {
+			if (targetGhost != NULL) {
 				StringIdChatParameter ratingMsg;
 				ratingMsg.setStringId("pvp_rating", "pvp_rating_target");
 				ratingMsg.setTT(targetObj->getFirstName());
@@ -51,7 +51,7 @@ public:
 
 		PlayerObject* ghost = creature->getPlayerObject();
 
-		if (ghost != nullptr) {
+		if (ghost != NULL) {
 			StringIdChatParameter ratingMsg;
 			ratingMsg.setStringId("pvp_rating", "pvp_rating");
 			ratingMsg.setDI(ghost->getPvpRating());

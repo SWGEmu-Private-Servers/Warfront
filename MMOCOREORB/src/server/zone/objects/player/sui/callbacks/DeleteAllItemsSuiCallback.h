@@ -10,7 +10,7 @@
 
 #include "server/zone/objects/player/sui/SuiCallback.h"
 #include "server/zone/objects/player/PlayerObject.h"
-#include "server/zone/objects/player/sui/callbacks/DeleteAllItemsConfirmSuiCallback.h"
+#include "server/zone/objects/player//sui/callbacks/DeleteAllItemsConfirmSuiCallback.h"
 
 class DeleteAllItemsSuiCallback : public SuiCallback {
 public:
@@ -29,7 +29,7 @@ public:
 
 		ManagedReference<PlayerObject*> ghost = creature->getPlayerObject();
 
-		if (ghost != nullptr) {
+		if (ghost != NULL) {
 			creature->sendMessage(sui->generateMessage());
 			ghost->addSuiBox(sui);
 		}

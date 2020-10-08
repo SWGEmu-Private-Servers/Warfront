@@ -18,9 +18,6 @@
 #include "server/zone/objects/player/PlayerObject.h"
 #include "server/chat/ChatManager.h"
 #include "server/zone/objects/player/events/DisconnectClientEvent.h"
-#ifdef WITH_SESSION_API
-#include "server/login/SessionAPIClient.h"
-#endif // WITH_SESSION_API
 
 class SelectCharacterCallback : public MessageCallback {
 	uint64 characterID;
@@ -38,71 +35,12 @@ public:
 	static void connectPlayer(SceneObject* obj, uint64_t characterID, CreatureObject* player, ZoneClientSession* client, ZoneServer* zoneServer) {
 		PlayerObject* ghost = player->getPlayerObject();
 
-		if (ghost == nullptr) {
+		if (ghost == NULL) {
 			return;
 		}
 
 		if (ghost->getAdminLevel() == 0 && (zoneServer->getConnectionCount() >= zoneServer->getServerCap())) {
 			client->sendMessage(new ErrorMessage("Login Error", "Server cap reached, please try again later", 0));
-			return;
-		}
-
-		if (zoneServer->isServerLocked() && (ghost->getAdminLevel() == 0)) {
-			ErrorMessage* errMsg = new ErrorMessage("Login Error", "Server is currently locked", 0);
-			client->sendMessage(errMsg);
-
-			return;
-		}
-
-#ifdef WITH_SESSION_API
-		auto clientIP = client->getIPAddress();
-		auto loggedInAccounts = zoneServer->getPlayerManager()->getOnlineZoneClientMap()->getAccountsLoggedIn(clientIP);
-
-		SessionAPIClient::instance()->approvePlayerConnect(clientIP, ghost->getAccountID(), characterID, loggedInAccounts,
-				[object = Reference<SceneObject*>(obj), characterID,
-				playerCreature = Reference<CreatureObject*>(player),
-				clientObject = Reference<ZoneClientSession*>(client),
-				zoneServer](SessionApprovalResult result) {
-
-			if (!result.isActionAllowed()) {
-				clientObject->info(true) << "Player connect not approved: " << result.getLogMessage();
-
-				clientObject->sendMessage(new ErrorMessage(result.getTitle(), result.getMessage(true), 0));
-				return;
-			}
-
-			Locker locker(object);
-
-			if (result.isActionDebug() && playerCreature != nullptr) {
-				auto ghost = playerCreature->getPlayerObject();
-
-				if (ghost != nullptr) {
-					ghost->setLogLevel(Logger::DEBUG);
-				}
-			}
-
-			connectApprovedPlayer(object, characterID, playerCreature, clientObject, zoneServer);
-		});
-	};
-
-	static void connectApprovedPlayer(SceneObject* obj, uint64_t characterID, CreatureObject* player, ZoneClientSession* client, ZoneServer* zoneServer) {
-		PlayerObject* ghost = player->getPlayerObject();
-
-		if (ghost == nullptr) {
-			return;
-		}
-#endif // WITH_SESSION_API
-
-		player->setClient(client);
-		client->setPlayer(player);
-
-		String zoneName = ghost->getSavedTerrainName();
-		Zone* zone = zoneServer->getZone(zoneName);
-
-		if (zone == nullptr) {
-			ErrorMessage* errMsg = new ErrorMessage("Login Error", "The planet where your character was stored is disabled!", 0x0);
-			client->sendMessage(errMsg);
-
 			return;
 		}
 
@@ -113,11 +51,24 @@ public:
 			return;
 		}
 
+		player->setClient(client);
+		client->setPlayer(player);
+
+		String zoneName = ghost->getSavedTerrainName();
+		Zone* zone = zoneServer->getZone(zoneName);
+
+		if (zone == NULL) {
+			ErrorMessage* errMsg = new ErrorMessage("Login Error", "The planet where your character was stored is disabled!", 0x0);
+			client->sendMessage(errMsg);
+
+			return;
+		}
+
 		ghost->setTeleporting(true);
 		player->setMovementCounter(0);
 		ghost->setClientLastMovementStamp(0);
 
-		if (player->getZone() == nullptr) {
+		if (player->getZone() == NULL) {
 			ghost->setOnLoadScreen(true);
 		}
 
@@ -125,29 +76,29 @@ public:
 		ManagedReference<SceneObject*> playerParent = zoneServer->getObject(savedParentID, true);
 		ManagedReference<SceneObject*> currentParent = player->getParent().get();
 
-		if ((playerParent != nullptr && currentParent == nullptr) || (currentParent != nullptr && currentParent->isCellObject())) {
-			playerParent = playerParent == nullptr ? currentParent : playerParent;
+		if ((playerParent != NULL && currentParent == NULL) || (currentParent != NULL && currentParent->isCellObject())) {
+			playerParent = playerParent == NULL ? currentParent : playerParent;
 
 			ManagedReference<SceneObject*> root = playerParent->getRootParent();
 
-			root = root == nullptr ? playerParent : root;
+			root = root == NULL ? playerParent : root;
 
 			//ghost->updateLastValidatedPosition();
 
-			if (root->getZone() == nullptr && root->isStructureObject()) {
+			if (root->getZone() == NULL && root->isStructureObject()) {
 				player->initializePosition(root->getPositionX(), root->getPositionZ(), root->getPositionY());
 
 				zone->transferObject(player, -1, true);
 
-				playerParent = nullptr;
+				playerParent = NULL;
 			} else {
 				if (!(playerParent->isCellObject() && playerParent == root)) {
 					playerParent->transferObject(player, -1, false);
 				}
 
-				if (player->getParent() == nullptr) {
+				if (player->getParent() == NULL) {
 					zone->transferObject(player, -1, false);
-				} else if (root->getZone() == nullptr) {
+				} else if (root->getZone() == NULL) {
 					Locker clocker(root, player);
 					zone->transferObject(root, -1, false);
 				}
@@ -155,14 +106,14 @@ public:
 				player->sendToOwner(true);
 			}
 
-		} else if (currentParent == nullptr) {
+		} else if (currentParent == NULL) {
 			player->removeAllSkillModsOfType(SkillModManager::STRUCTURE);
 			zone->transferObject(player, -1, true);
 		} else {
-			if (player->getZone() == nullptr) {
-				ManagedReference<SceneObject*> objectToInsert = currentParent != nullptr ? player->getRootParent() : player;
+			if (player->getZone() == NULL) {
+				ManagedReference<SceneObject*> objectToInsert = currentParent != NULL ? player->getRootParent() : player;
 
-				if (objectToInsert == nullptr)
+				if (objectToInsert == NULL)
 					objectToInsert = player;
 
 				Locker clocker(objectToInsert, player);
@@ -172,7 +123,7 @@ public:
 			player->sendToOwner(true);
 		}
 
-		if (playerParent == nullptr)
+		if (playerParent == NULL)
 			ghost->setSavedParentID(0);
 
 		ghost->setOnline();
@@ -217,6 +168,13 @@ public:
 	void run() {
 		ZoneServer* zoneServer = server->getZoneServer();
 
+		if (zoneServer->isServerLocked()) {
+			ErrorMessage* errMsg = new ErrorMessage("Login Error", "Server is currently locked", 0);
+			client->sendMessage(errMsg);
+
+			return;
+		}
+
 		if (zoneServer->isServerLoading()) {
 			ErrorMessage* errMsg = new ErrorMessage("Login Error", "Server is currently loading", 0);
 			client->sendMessage(errMsg);
@@ -231,7 +189,7 @@ public:
 			return;
 		}
 
-		if (!client->hasCharacter(characterID, zoneServer->getGalaxyID())) {
+		if(!client->hasCharacter(characterID, zoneServer->getGalaxyID())) {
 			ErrorMessage* errMsg = new ErrorMessage("Login Error", "You are unable to login with this character\n\nIf you feel this is an error please close your client, and try again.", 0x0);
 			client->sendMessage(errMsg);
 
@@ -243,14 +201,14 @@ public:
 
 		ManagedReference<SceneObject*> obj = zoneServer->getObject(characterID, true);
 
-		if (obj != nullptr && obj->isPlayerCreature()) {
+		if (obj != NULL && obj->isPlayerCreature()) {
 			CreatureObject* player = obj->asCreatureObject();
 
 			Locker _locker(player);
 
 			ManagedReference<ZoneClientSession*> oldClient = player->getClient();
 
-			if (oldClient != nullptr && client != oldClient) {
+			if (oldClient != NULL && client != oldClient) {
 				_locker.release();
 
 				oldClient->disconnect();
@@ -274,7 +232,7 @@ public:
 
 			connectPlayer(obj, characterID, player, client, zoneServer);
 		} else {
-			if (obj != nullptr)
+			if (obj != NULL)
 				client->error("could get from zone server character id " + String::valueOf(characterID) + " but is not a player creature");
 			else
 				client->error("could not get from zone server character id " + String::valueOf(characterID));

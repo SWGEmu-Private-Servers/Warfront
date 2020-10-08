@@ -18,24 +18,24 @@
 
 void GuildTerminalImplementation::fillObjectMenuResponse(ObjectMenuResponse* menuResponse, CreatureObject* player) {
 	ManagedReference<BuildingObject*> building = getParentRecursively(SceneObjectType::BUILDING).castTo<BuildingObject*>();
-	if (building == nullptr) {
+	if (building == NULL) {
 		return;
 	}
 
 	ManagedReference<CreatureObject*> owner = building->getOwnerCreatureObject();
-	if (owner == nullptr || !owner->isPlayerCreature()) {
+	if (owner == NULL || !owner->isPlayerCreature()) {
 		return;
 	}
 
 	ManagedReference<PlayerObject*> ownerGhost = owner->getPlayerObject().get();
 	ManagedReference<PlayerObject*> playerGhost = player->getPlayerObject().get();
 
-	if (ownerGhost == nullptr || playerGhost == nullptr)
+	if (ownerGhost == NULL || playerGhost == NULL)
 		return;
 
 	ManagedReference<GuildObject*> guildObject = owner->getGuildObject().get();
 
-	if (guildObject == nullptr) {
+	if (guildObject == NULL) {
 
 		if (player == owner) {
 			if (!player->isInGuild()) {
@@ -118,23 +118,23 @@ int GuildTerminalImplementation::handleObjectMenuSelect(CreatureObject* player, 
 
 	ManagedReference<GuildManager*> guildManager = getZoneServer()->getGuildManager();
 
-	if (guildManager == nullptr)
+	if (guildManager == NULL)
 		return TerminalImplementation::handleObjectMenuSelect(player, selectedID);
 
 	ManagedReference<BuildingObject*> building = getParentRecursively(SceneObjectType::BUILDING).castTo<BuildingObject*>();
-	if (building == nullptr) {
+	if (building == NULL) {
 		return 1;
 	}
 
 	ManagedReference<CreatureObject*> owner = building->getOwnerCreatureObject();
-	if (owner == nullptr || !owner->isPlayerCreature()) {
+	if (owner == NULL || !owner->isPlayerCreature()) {
 		return 1;
 	}
 
 	ManagedReference<PlayerObject*> ownerGhost = owner->getPlayerObject().get();
 	ManagedReference<PlayerObject*> playerGhost = player->getPlayerObject().get();
 
-	if (ownerGhost == nullptr || playerGhost == nullptr)
+	if (ownerGhost == NULL || playerGhost == NULL)
 		return 1;
 
 	ManagedReference<GuildObject*> guildObject = owner->getGuildObject().get();
@@ -142,15 +142,15 @@ int GuildTerminalImplementation::handleObjectMenuSelect(CreatureObject* player, 
 	uint64 playerID = player->getObjectID();
 	bool isMember = false, isLeader = false;
 
-	if (guildObject != nullptr && guildObject->hasMember(playerID))
+	if (guildObject != NULL && guildObject->hasMember(playerID))
 		isMember = true;
 
-	if (guildObject != nullptr && guildObject->getGuildLeaderID() == playerID)
+	if (guildObject != NULL && guildObject->getGuildLeaderID() == playerID)
 		isLeader = true;
 
 	switch (selectedID) {
 	case 68:
-		if (guildObject != nullptr && ((isLeader && player == owner) || playerGhost->isPrivileged())) {
+		if (guildObject != NULL && ((isLeader && player == owner) || playerGhost->isPrivileged())) {
 			guildManager->sendGuildTransferTo(player, _this.getReferenceUnsafeStaticCast());
 		}
 		break;
@@ -162,12 +162,12 @@ int GuildTerminalImplementation::handleObjectMenuSelect(CreatureObject* player, 
 	case 70:
 		if (isLeader && !guildObject->isElectionEnabled()) {
 			guildManager->toggleElection(guildObject, player);
-		} else if (guildObject != nullptr && guildObject->isElectionEnabled()) {
+		} else if (guildObject != NULL && guildObject->isElectionEnabled()) {
 			guildManager->viewElectionStandings(guildObject, player, _this.getReferenceUnsafeStaticCast());
 		}
 		break;
 	case 71:
-		if (guildObject != nullptr && guildObject->isElectionEnabled()) {
+		if (guildObject != NULL && guildObject->isElectionEnabled()) {
 			guildManager->viewElectionStandings(guildObject, player, _this.getReferenceUnsafeStaticCast());
 		}
 		break;
@@ -202,44 +202,44 @@ int GuildTerminalImplementation::handleObjectMenuSelect(CreatureObject* player, 
 		}
 		break;
 	case 185:
-		if (guildObject == nullptr && player == owner) {
+		if (guildObject == NULL && player == owner) {
 			guildManager->sendGuildCreateNameTo(player, _this.getReferenceUnsafeStaticCast());
 		}
 		break;
 	case 189:
-		if (guildObject != nullptr && (isMember || playerGhost->isPrivileged())) {
+		if (guildObject != NULL && (isMember || playerGhost->isPrivileged())) {
 			guildManager->sendGuildWarStatusTo(player, guildObject, _this.getReferenceUnsafeStaticCast());
 		}
 		break;
 	case 193:
 	case 186:
-		if (guildObject != nullptr && (isMember || playerGhost->isPrivileged())) {
+		if (guildObject != NULL && (isMember || playerGhost->isPrivileged())) {
 			guildManager->sendGuildInformationTo(player, guildObject, _this.getReferenceUnsafeStaticCast());
 		}
 		break;
 	case 191:
-		if (guildObject != nullptr) {
+		if (guildObject != NULL) {
 			guildManager->sendGuildDisbandConfirmTo(player, guildObject, _this.getReferenceUnsafeStaticCast());
 		}
 		break;
 	case 194:
 	case 187:
-		if (guildObject != nullptr && (isMember || playerGhost->isPrivileged())) {
+		if (guildObject != NULL && (isMember || playerGhost->isPrivileged())) {
 			guildManager->sendGuildMemberListTo(player, guildObject, _this.getReferenceUnsafeStaticCast());
 		}
 		break;
 	case 188:
-		if (guildObject != nullptr && (isMember || playerGhost->isPrivileged())) {
+		if (guildObject != NULL && (isMember || playerGhost->isPrivileged())) {
 			guildManager->sendGuildSponsoredListTo(player, guildObject, _this.getReferenceUnsafeStaticCast());
 		}
 		break;
 	case 190:
-		if (guildObject != nullptr && (isMember || playerGhost->isPrivileged())) {
+		if (guildObject != NULL && (isMember || playerGhost->isPrivileged())) {
 			guildManager->sendGuildSponsorTo(player, guildObject, _this.getReferenceUnsafeStaticCast());
 		}
 		break;
 	case 192:
-		if (guildObject != nullptr) {
+		if (guildObject != NULL) {
 			guildManager->sendGuildChangeNameTo(player, guildObject);
 		}
 		break;

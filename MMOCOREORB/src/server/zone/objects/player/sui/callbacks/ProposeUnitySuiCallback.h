@@ -22,7 +22,7 @@ public:
 		bool cancelPressed = (eventIndex == 1);
 
 		PlayerManager* playerManager = creature->getZoneServer()->getPlayerManager();
-		if( playerManager == nullptr )
+		if( playerManager == NULL )
 			return;
 
 		if( cancelPressed ){

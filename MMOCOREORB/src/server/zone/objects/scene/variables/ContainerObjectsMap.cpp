@@ -17,25 +17,25 @@ ContainerObjectsMap::ContainerObjectsMap() {
 	operationMode = NORMAL_LOAD;
 	containerObjects.setNoDuplicateInsertPlan();
 
-	oids = nullptr;
-	unloadTask = nullptr;
-	container = nullptr;
-	containerLock = nullptr;
+	oids = NULL;
+	unloadTask = NULL;
+	container = NULL;
+	containerLock = NULL;
 }
 
 ContainerObjectsMap::ContainerObjectsMap(const ContainerObjectsMap& c) {
 	operationMode = NORMAL_LOAD;
 	containerObjects.setNoDuplicateInsertPlan();
 
-	oids = nullptr;
+	oids = NULL;
 
 	copyData(c);
 }
 
 ContainerObjectsMap::~ContainerObjectsMap() {
-	if (oids != nullptr) {
+	if (oids != NULL) {
 		delete oids;
-		oids = nullptr;
+		oids = NULL;
 	}
 
 	cancelUnloadTask();
@@ -46,18 +46,18 @@ void ContainerObjectsMap::copyData(const ContainerObjectsMap& c) {
 	containerObjects = c.containerObjects;
 	lastAccess = c.lastAccess;
 
-	if (c.oids == nullptr) {
-		if (oids != nullptr)
+	if (c.oids == NULL) {
+		if (oids != NULL)
 			delete oids;
 
-		oids = nullptr;
+		oids = NULL;
 	} else {
 		oids = new VectorMap<uint64, uint64>(*c.oids);
 	}
 
-	unloadTask = nullptr;
-	container = nullptr;
-	containerLock = nullptr;
+	unloadTask = NULL;
+	container = NULL;
+	containerLock = NULL;
 }
 
 ContainerObjectsMap& ContainerObjectsMap::operator=(const ContainerObjectsMap& c) {
@@ -72,30 +72,29 @@ ContainerObjectsMap& ContainerObjectsMap::operator=(const ContainerObjectsMap& c
 void ContainerObjectsMap::loadObjects() {
 	lastAccess.updateToCurrentTime();
 
-	if (oids == nullptr)
+	if (oids == NULL)
 		return;
 
 	Locker locker(containerLock);
 
 	WMB();
 
-	if (oids == nullptr)
+	if (oids == NULL)
 		return;
 
 	VectorMap<uint64, uint64> oidsCopy = *oids;
-	const auto size = oidsCopy.size();
 
 	for (int i = 0; i < oidsCopy.size(); ++i) {
 		uint64 oid = oidsCopy.elementAt(i).getKey();
 
 		Reference<SceneObject*> object = Core::getObjectBroker()->lookUp(oid).castTo<SceneObject*>();
 
-		if (object != nullptr)
+		if (object != NULL)
 			containerObjects.put(oid, object);
 	}
 
 	delete oids;
-	oids = nullptr;
+	oids = NULL;
 
 	if (operationMode == DELAYED_LOAD) {
 		scheduleContainerUnload();
@@ -103,15 +102,13 @@ void ContainerObjectsMap::loadObjects() {
 
 	ManagedReference<SceneObject*> sceno = container.get();
 
-	if (sceno != nullptr) {
-		const auto name = sceno->getLoggingName() + " OnContainerLoadedLambda" + String::valueOf(size);
-
+	if (sceno != NULL) {
 		Core::getTaskManager()->executeTask([sceno] () {
 			if (sceno->getZoneServer()->isServerShuttingDown())
 				return;
 
 			sceno->onContainerLoaded();
-		}, name.toCharArray(), "slowQueue");
+		}, "OnContainerLoadedLambda");
 	}
 }
 
@@ -121,7 +118,7 @@ void ContainerObjectsMap::scheduleContainerUnload() {
 
 	uint64 delay = 1800000 + System::random(1800000); // 30 - 60 minutes
 
-	if (unloadTask != nullptr) {
+	if (unloadTask != NULL) {
 		if (unloadTask->isScheduled()) {
 			unloadTask->reschedule(delay);
 		} else {
@@ -146,20 +143,20 @@ void ContainerObjectsMap::unloadObjects() {
 	for (int i = 0; i < containerObjects.size(); i++) {
 		SceneObject* obj = containerObjects.get(i);
 
-		if (obj != nullptr) {
+		if (obj != NULL) {
 			uint64 oid = obj->getObjectID();
 			vector->put(oid, oid);
 			containerCopy.add(obj);
 		}
 	}
 
-	if (!oids.compareAndSet(nullptr, vector)) {
+	if (!oids.compareAndSet(NULL, vector)) {
 		delete vector;
 	}
 
 	containerObjects.removeAll();
 
-	unloadTask = nullptr;
+	unloadTask = NULL;
 
 	locker.release();
 
@@ -169,7 +166,7 @@ void ContainerObjectsMap::unloadObjects() {
 	for (int i = 0; i < containerCopy.size(); i++) {
 		SceneObject* obj = containerCopy.get(i);
 
-		if (obj != nullptr) {
+		if (obj != NULL) {
 			Locker olocker(obj);
 			parent->broadcastDestroy(obj, true);
 			obj->removeObjectFromZone(zone, parent);
@@ -182,11 +179,9 @@ void ContainerObjectsMap::notifyLoadFromDatabase() {
 }
 
 bool ContainerObjectsMap::toBinaryStream(ObjectOutputStream* stream) {
-#ifndef ODB_SERIALIZATION
 	Locker locker(containerLock);
-#endif
 
-	if (oids != nullptr)
+	if (oids != NULL)
 		return oids->toBinaryStream(stream);
 	else
 		return containerObjects.toBinaryStream(stream);
@@ -197,11 +192,11 @@ bool ContainerObjectsMap::parseFromBinaryStream(ObjectInputStream* stream) {
 	case NORMAL_LOAD:
 		return containerObjects.parseFromBinaryStream(stream);
 	case DELAYED_LOAD:
-		if (oids == nullptr) {
+		if (oids == NULL) {
 			auto vector = new VectorMap<uint64, uint64>();
 			bool res = vector->parseFromBinaryStream(stream);
 
-			if (!oids.compareAndSet(nullptr, vector)) {
+			if (!oids.compareAndSet(NULL, vector)) {
 				delete vector;
 			}
 
@@ -218,7 +213,7 @@ void ContainerObjectsMap::setContainer(SceneObject* obj) {
 	container = obj;
 	containerLock = obj->getContainerLock();
 
-	if (operationMode == DELAYED_LOAD && oids == nullptr) {
+	if (operationMode == DELAYED_LOAD && oids == NULL) {
 		scheduleContainerUnload();
 	}
 }
@@ -256,7 +251,7 @@ void ContainerObjectsMap::put(uint64 oid, SceneObject* object) {
 void ContainerObjectsMap::removeElementAt(int index) {
 	Locker locker(containerLock);
 
-	if (oids != nullptr)
+	if (oids != NULL)
 		oids->removeElementAt(index);
 	else
 		containerObjects.removeElementAt(index);
@@ -270,10 +265,10 @@ int ContainerObjectsMap::size() {
 	return containerObjects.size();
 }
 
-bool ContainerObjectsMap::contains(uint64 oid) const {
+bool ContainerObjectsMap::contains(uint64 oid) {
 	ReadLocker locker(containerLock);
 
-	if (oids != nullptr)
+	if (oids != NULL)
 		return oids->contains(oid);
 	else
 		return containerObjects.contains(oid);
@@ -282,7 +277,7 @@ bool ContainerObjectsMap::contains(uint64 oid) const {
 void ContainerObjectsMap::removeAll() {
 	Locker locker(containerLock);
 
-	if (oids != nullptr)
+	if (oids != NULL)
 		oids->removeAll();
 	else
 		containerObjects.removeAll();
@@ -291,26 +286,17 @@ void ContainerObjectsMap::removeAll() {
 void ContainerObjectsMap::drop(uint64 oid) {
 	Locker locker(containerLock);
 
-	if (oids != nullptr)
+	if (oids != NULL)
 		oids->drop(oid);
 	else
 		containerObjects.drop(oid);
 }
 
 void ContainerObjectsMap::cancelUnloadTask() {
-	if (unloadTask != nullptr) {
+	if (unloadTask != NULL) {
 		if (Core::getTaskManager())
 			unloadTask->cancel();
 
-		unloadTask = nullptr;
+		unloadTask = NULL;
 	}
-}
-
-void server::zone::objects::scene::to_json(nlohmann::json& j, const server::zone::objects::scene::ContainerObjectsMap& map) {
-	auto oids = map.getOids();
-
-	if (oids != nullptr)
-		j = *oids;
-	else
-		j = *map.getContainerObjects();
 }

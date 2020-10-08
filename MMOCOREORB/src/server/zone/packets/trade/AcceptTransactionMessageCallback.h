@@ -28,7 +28,7 @@ public:
 	void run() {
 		ManagedReference<CreatureObject*> player = client->getPlayer();
 
-		if (player == nullptr)
+		if (player == NULL)
 			return;
 
 		PlayerManager* playerManager = server->getZoneServer()->getPlayerManager();

@@ -11,8 +11,8 @@
 #include "server/zone/objects/creature/CreatureObject.h"
 
 ThreatMatrix::ThreatMatrix() : damageMap(1, 0), aggroMap(1, 0), healMap(1, 0) {
-	tauntThreat = nullptr;
-	focusedThreat = nullptr;
+	tauntThreat = NULL;
+	focusedThreat = NULL;
 }
 
 ThreatMatrix::~ThreatMatrix() {
@@ -40,8 +40,8 @@ ThreatMatrix& ThreatMatrix::operator=(const ThreatMatrix& e) {
 
 void ThreatMatrix::clear() {
 
-	tauntThreat = nullptr;
-	focusedThreat = nullptr;
+	tauntThreat = NULL;
+	focusedThreat = NULL;
 
 	if (damageMap.size() > 0)
 		damageMap.removeAll();
@@ -81,13 +81,13 @@ void ThreatMatrix::add(CreatureObject* creature, ThreatMapEntry* entry) {
 
 CreatureObject* ThreatMatrix::getLargestThreat() {
 
-	CreatureObject* returnThreat = nullptr;
+	CreatureObject* returnThreat = NULL;
 
-	if(tauntThreat != nullptr) {
+	if(tauntThreat != NULL) {
 
 		returnThreat = tauntThreat;
 
-	} else if(focusedThreat != nullptr) {
+	} else if(focusedThreat != NULL) {
 
 		returnThreat = focusedThreat;
 
@@ -118,7 +118,7 @@ CreatureObject* ThreatMatrix::getLargestThreat() {
 #ifdef DEBUG
 	print();
 
-	if(returnThreat != nullptr)
+	if(returnThreat != NULL)
 		System::out << "Targeting " << returnThreat->getFirstName() << endl;
 	else
 		System::out << "Targeting Nothing" << endl;
@@ -130,16 +130,16 @@ CreatureObject* ThreatMatrix::getLargestThreat() {
 void ThreatMatrix::print() {
 	System::out << "************* Targets *****************" << endl;
 	System::out << "Taunted by: ";
-	if(tauntThreat != nullptr)
+	if(tauntThreat != NULL)
 		System::out << tauntThreat->getFirstName() << endl;
 	else
-		System::out << "nullptr" << endl;
+		System::out << "NULL" << endl;
 
 	System::out << "Focused on: ";
-	if(focusedThreat != nullptr)
+	if(focusedThreat != NULL)
 		System::out << focusedThreat->getFirstName() << endl;
 	else
-		System::out << "nullptr" << endl;
+		System::out << "NULL" << endl;
 
 	System::out << "************* DamageMap ***************" << endl;
 	for(int i = 0; i < damageMap.size(); ++i) {

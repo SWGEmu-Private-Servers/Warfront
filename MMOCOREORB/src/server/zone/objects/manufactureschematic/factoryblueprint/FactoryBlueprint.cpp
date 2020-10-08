@@ -154,7 +154,3 @@ void FactoryBlueprint::print() {
 	System::out << "*******************" << endl;
 }
 
-void to_json(nlohmann::json& j, const FactoryBlueprint& p) {
-	j["completeEntries"] = p.completeEntries;
-	j["consolidatedEntries"] = p.consolidatedEntries;
-}

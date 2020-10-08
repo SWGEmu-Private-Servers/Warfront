@@ -45,7 +45,7 @@ public:
 	void putComponent(const String& name, SceneObjectComponent* component) {
 		Locker locker(this);
 
-		if (component != nullptr)
+		if (component != NULL)
 			components.put(name, component);
 	}
 

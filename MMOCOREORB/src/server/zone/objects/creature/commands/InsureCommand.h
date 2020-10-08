@@ -24,7 +24,7 @@ public:
 		if (!checkInvalidLocomotions(creature))
 			return INVALIDLOCOMOTION;
 
-		SceneObject* term = nullptr;
+		SceneObject* term = NULL;
 
 		CloseObjectsVector* closeSceneObjects = (CloseObjectsVector*) creature->getCloseObjects();
 
@@ -34,7 +34,7 @@ public:
 		for (int i=0; i < closeObjects.size(); i++) {
 			SceneObject* scno = cast<SceneObject*>(closeObjects.get(i));
 
-			if (scno == nullptr)
+			if (scno == NULL)
 				continue;
 
 			if (scno->getGameObjectType() == SceneObjectType::INSURANCE) {
@@ -43,7 +43,7 @@ public:
 			}
 		}
 
-		if (term == nullptr) {
+		if (term == NULL) {
 			return GENERALERROR;
 		}
 
@@ -68,7 +68,7 @@ public:
 			for (int i = 0; i < insurableItems.size(); i++) {
 				SceneObject* item = insurableItems.get(i);
 
-				if (item != nullptr)
+				if (item != NULL)
 					suiInsuranceMenuBox->addMenuItem(item->getDisplayedName(), item->getObjectID());
 			}
 

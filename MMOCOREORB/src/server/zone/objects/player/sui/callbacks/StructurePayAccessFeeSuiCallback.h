@@ -26,7 +26,7 @@ public:
 
 		ManagedReference<SceneObject*> usingObject = sui->getUsingObject().get();
 
-		if (usingObject == nullptr || !usingObject->isBuildingObject())
+		if (usingObject == NULL || !usingObject->isBuildingObject())
 			return;
 
 		BuildingObject* buildingObject = cast<BuildingObject*>(usingObject.get());

@@ -44,7 +44,7 @@ void ContainerImplementation::loadTemplateData(SharedObjectTemplate* templateDat
 
 	ContainerTemplate* containerTemplate = dynamic_cast<ContainerTemplate*>(templateData);
 
-	if (containerTemplate == nullptr)
+	if (containerTemplate == NULL)
 		return;
 
 	locked = containerTemplate->getLocked();
@@ -54,7 +54,7 @@ void ContainerImplementation::loadTemplateData(SharedObjectTemplate* templateDat
 void ContainerImplementation::fillObjectMenuResponse(ObjectMenuResponse* menuResponse, CreatureObject* player) {
 	TangibleObjectImplementation::fillObjectMenuResponse(menuResponse, player);
 
-	if (checkContainerPermission(player, ContainerPermissions::MOVECONTAINER && getParent().get() != nullptr &&
+	if (checkContainerPermission(player, ContainerPermissions::MOVECONTAINER && getParent().get() != NULL &&
 			getParent().get()->checkContainerPermission(player, ContainerPermissions::MOVEOUT) && !(_this.getReferenceUnsafeStaticCast()->isRecycleToolObject()) && !(_this.getReferenceUnsafeStaticCast()->isAntiDecayKitObject())))
 
 		menuResponse->addRadialMenuItem(50, 3, "@base_player:set_name"); //Set Name
@@ -65,7 +65,7 @@ void ContainerImplementation::fillObjectMenuResponse(ObjectMenuResponse* menuRes
 
 int ContainerImplementation::handleObjectMenuSelect(CreatureObject* player, byte selectedID) {
 	if (selectedID == 50) {
-		if (checkContainerPermission(player, ContainerPermissions::MOVECONTAINER && getParent().get() != nullptr &&
+		if (checkContainerPermission(player, ContainerPermissions::MOVECONTAINER && getParent().get() != NULL &&
 				getParent().get()->checkContainerPermission(player, ContainerPermissions::MOVEOUT))) {
 
 			ManagedReference<SuiInputBox*> inputBox = new SuiInputBox(player, SuiWindowType::OBJECT_NAME, 0x00);
@@ -87,7 +87,7 @@ int ContainerImplementation::handleObjectMenuSelect(CreatureObject* player, byte
 		ManagedReference<Facade*> facade = player->getActiveSession(SessionFacadeType::SLICING);
 		ManagedReference<SlicingSession*> session = dynamic_cast<SlicingSession*>(facade.get());
 
-		if (session != nullptr) {
+		if (session != NULL) {
 			player->sendSystemMessage("@slicing/slicing:already_slicing");
 			return 0;
 		}
@@ -146,7 +146,7 @@ int ContainerImplementation::canAddObject(SceneObject* object, int containmentTy
 		ManagedReference<SceneObject*> playerParent = getParentRecursively(SceneObjectType::PLAYERCREATURE);
 
 		// If there's a wearable container parent, return if it doesn't have enough room
-		if (wearableParent != nullptr) {
+		if (wearableParent != NULL) {
 			if (wearableParent->getContainerVolumeLimit() < wearableParent->getCountableObjectsRecursive() + objectSize) {
 				errorDescription = "@container_error_message:container03"; // This container is full.
 
@@ -155,7 +155,7 @@ int ContainerImplementation::canAddObject(SceneObject* object, int containmentTy
 
 			// It has room. Check if it's not equipped and on a player.
 			ManagedReference<WearableContainerObject*> wearable = cast<WearableContainerObject*>(wearableParent.get());
-			if (!wearable->isEquipped() && playerParent != nullptr) {
+			if (!wearable->isEquipped() && playerParent != NULL) {
 				SceneObject* inventory = playerParent->getSlottedObject("inventory");
 				SceneObject* bank = playerParent->getSlottedObject("bank");
 				SceneObject* parentOfWearableParent = wearable->getParent().get();
@@ -181,9 +181,9 @@ int ContainerImplementation::canAddObject(SceneObject* object, int containmentTy
 			if (gameObjectType == SceneObjectType::WEARABLECONTAINER) {
 				WearableContainerObject* pack = cast<WearableContainerObject*>(_this.getReferenceUnsafeStaticCast());
 
-				if (pack != nullptr && !pack->isEquipped()) {
+				if (pack != NULL && !pack->isEquipped()) {
 				// This is a wearable container, and it's not equipped.
-					if (playerParent != nullptr ) {
+					if (playerParent != NULL ) {
 						SceneObject* inventory = playerParent->getSlottedObject("inventory");
 						SceneObject* bank = playerParent->getSlottedObject("bank");
 						SceneObject* thisParent = getParent().get();
@@ -207,7 +207,7 @@ int ContainerImplementation::canAddObject(SceneObject* object, int containmentTy
 				}
 			} else {
 				// This is a non-wearable container.
-				if (playerParent != nullptr ) {
+				if (playerParent != NULL ) {
 					SceneObject* inventory = playerParent->getSlottedObject("inventory");
 					SceneObject* bank = playerParent->getSlottedObject("bank");
 					SceneObject* thisParent = getParent().get();
@@ -235,12 +235,12 @@ int ContainerImplementation::canAddObject(SceneObject* object, int containmentTy
 		// Check if the container is in a building or factory ingredient hopper
 		// If it is a droid object, don't consider these cases as it can still
 		// receive items in a full house.
-		bool isDroid = (myParent != nullptr && myParent->isDroidObject());
+		bool isDroid = (myParent != NULL && myParent->isDroidObject());
 
-		if (playerParent == nullptr && !isDroid) {
+		if (playerParent == NULL && !isDroid) {
 			ManagedReference<SceneObject*> rootParent = getRootParent();
 
-			if (rootParent != nullptr) {
+			if (rootParent != NULL) {
 				if (rootParent->isBuildingObject()) {
 					BuildingObject* building = rootParent.castTo<BuildingObject*>();
 
@@ -253,7 +253,7 @@ int ContainerImplementation::canAddObject(SceneObject* object, int containmentTy
 					FactoryObject* factory = rootParent.castTo<FactoryObject*>();
 					Reference<SceneObject*> hopper = factory->getSlottedObject("ingredient_hopper");
 
-					if (hopper == nullptr || hopper->getContainerVolumeLimit() < hopper->getCountableObjectsRecursive() + objectSize) {
+					if (hopper == NULL || hopper->getContainerVolumeLimit() < hopper->getCountableObjectsRecursive() + objectSize) {
 						errorDescription = "@container_error_message:container03"; // This container is full.
 							return TransferErrorCode::CONTAINERFULL;
 					}
@@ -263,14 +263,14 @@ int ContainerImplementation::canAddObject(SceneObject* object, int containmentTy
 
 		ManagedReference<SceneObject*> otherParent = object->getParent().get();
 
-		if (myParent != nullptr && otherParent != nullptr) {
+		if (myParent != NULL && otherParent != NULL) {
 			if (otherParent->isCreatureObject()) {
 				AiAgent* ai = dynamic_cast<AiAgent*>(otherParent.get());
 
-				if (ai != nullptr) {
+				if (ai != NULL) {
 					SceneObject* creatureInventory = ai->getSlottedObject("inventory");
 
-					if (creatureInventory != nullptr) {
+					if (creatureInventory != NULL) {
 						uint64 lootOwnerID = creatureInventory->getContainerPermissions()->getOwnerID();
 
 						if (lootOwnerID != myParent->getObjectID()) {

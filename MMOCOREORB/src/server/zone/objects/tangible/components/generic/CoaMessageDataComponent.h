@@ -18,13 +18,6 @@ public:
 
 	}
 
-	void writeJSON(nlohmann::json& j) const {
-		DataObjectComponent::writeJSON(j);
-
-		SERIALIZE_JSON_MEMBER(faction);
-		SERIALIZE_JSON_MEMBER(number);
-	}
-
 	void setFaction(String side) {
 		faction = side;
 	}

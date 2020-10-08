@@ -16,7 +16,7 @@
 int PlaceStructureComponent::placeStructure(StructureDeed* deed, CreatureObject* creature, float x, float y, int angle) const {
 	Zone* zone = creature->getZone();
 
-	if (zone != nullptr)
+	if (zone != NULL)
 		StructureManager::instance()->placeStructureFromDeed(creature, deed, x, y, angle);
 
 	return 0;

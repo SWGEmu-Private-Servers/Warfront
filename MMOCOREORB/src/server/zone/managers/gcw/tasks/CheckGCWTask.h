@@ -23,13 +23,13 @@ public:
 	void run() {
 		ManagedReference<GCWManager*> strongRef = gcwManager.get();
 
-		if (strongRef == nullptr){
+		if (strongRef == NULL){
 			return;
 		}
 
 		ZoneServer* server = strongRef->getZone()->getZoneServer();
 
-		if (server == nullptr || server->isServerShuttingDown())
+		if (server == NULL || server->isServerShuttingDown())
 			return;
 
 		strongRef->performGCWTasks(false);

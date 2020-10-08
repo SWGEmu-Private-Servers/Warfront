@@ -6,7 +6,7 @@
 #include "server/zone/objects/manufactureschematic/ManufactureSchematic.h"
 
 CraftingValues::CraftingValues() {
-	experimentalValuesMap.setNullValue(nullptr);
+	experimentalValuesMap.setNullValue(NULL);
 	doHide = true;
 	setLoggingName("CraftingValues");
 	setLogging(false);
@@ -34,7 +34,7 @@ CraftingValues::CraftingValues(const CraftingValues& values) : Object(), Seriali
 }
 
 CraftingValues::CraftingValues(const ValuesMap& values) : Object(), Serializable(), Logger() {
-	experimentalValuesMap.setNullValue(nullptr);
+	experimentalValuesMap.setNullValue(NULL);
 	doHide = true;
 
 	for (int i = 0; i < values.size(); ++i) {
@@ -53,8 +53,8 @@ CraftingValues::CraftingValues(const ValuesMap& values) : Object(), Serializable
 
 CraftingValues::~CraftingValues() {
 	experimentalValuesMap.removeAll();
-	schematic = nullptr;
-	player = nullptr;
+	schematic = NULL;
+	player = NULL;
 }
 
 void CraftingValues::setManufactureSchematic(ManufactureSchematic* manu) {
@@ -116,13 +116,13 @@ void CraftingValues::clearAll() {
 	doHide = true;
 	experimentalValuesMap.removeAll();
 	valuesToSend.removeAll();
-	schematic = nullptr;
-	player = nullptr;
+	schematic = NULL;
+	player = NULL;
 	clearSlots();
 }
 
-String CraftingValues::toString() const {
-	const Subclasses* tempSubclasses;
+String CraftingValues::toString() {
+	Subclasses* tempSubclasses;
 
 	StringBuffer str;
 

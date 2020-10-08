@@ -11,10 +11,10 @@
 
 class SceneObjectCloseMessage : public BaseMessage {
 public:
-	SceneObjectCloseMessage(const SceneObject* scno) : BaseMessage(18) {
+	SceneObjectCloseMessage(SceneObject* scno) : BaseMessage(18) {
 		insertShort(0x02);
 		insertInt(0x2C436037);  // CRC
-		insertLong(const_cast<SceneObject*>(scno)->getObjectID());  // ObjectID
+		insertLong(scno->getObjectID());  // ObjectID
 
 		/*StringBuffer msg;
 		msg << hex << "SceneObjectCloseMessage [Object = " << scno->getObjectID() << "]" << " of (" << scno->getObjectCRC() << ")\n";

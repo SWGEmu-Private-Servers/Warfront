@@ -17,7 +17,7 @@ void VitalityPackImplementation::fillAttributeList(AttributeListMessage* msg, Cr
 
 int VitalityPackImplementation::handleObjectMenuSelect(CreatureObject* player, byte selectedID) {
 
-	if (player == nullptr)
+	if (player == NULL)
 		return 0;
 
 	if (!isASubChildOf(player))
@@ -28,22 +28,22 @@ int VitalityPackImplementation::handleObjectMenuSelect(CreatureObject* player, b
 
 	uint64 targetID = player->getTargetID();
 	ZoneServer* server = player->getZoneServer();
-	if (server == nullptr)
+	if (server == NULL)
 		return 0;
 
 	// Target must be a pet
 	ManagedReference<TangibleObject*> target = server->getObject(targetID, true).castTo<TangibleObject*>();
-	if (target == nullptr || !target->isPet()) {
+	if (target == NULL || !target->isPet()) {
 		player->sendSystemMessage("You can only use this to restore vitality to pets");
 		return 0;
 	}
 
 	ManagedReference<AiAgent*> pet = cast<AiAgent*>(target.get());
-	if (pet == nullptr)
+	if (pet == NULL)
 		return 0;
 
 	ManagedReference<PetControlDevice*> controlDevice = pet->getControlDevice().get().castTo<PetControlDevice*>();
-	if (controlDevice == nullptr)
+	if (controlDevice == NULL)
 		return 0;
 
 	// Check pet type

@@ -21,7 +21,7 @@
 int CitySpecializationSessionImplementation::initializeSession() {
 	PlayerObject* ghost = creatureObject->getPlayerObject();
 
-	if (ghost == nullptr)
+	if (ghost == NULL)
 		return cancelSession();
 
 	if (!cityRegion->isMayor(creatureObject->getObjectID()) && !ghost->isAdmin())
@@ -34,26 +34,26 @@ int CitySpecializationSessionImplementation::initializeSession() {
 	sui->setUsingObject(terminalObject);
 	sui->setForceCloseDistance(16.f);
 
-	const AbilityList* abilityList = nullptr;
+	AbilityList* abilityList = NULL;
 
 	if (cityRegion->isMayor(creatureObject->getObjectID())) {
 		abilityList = ghost->getAbilityList();
 	} else {
 		ManagedReference<CreatureObject*> mayor = creatureObject->getZoneServer()->getObject(cityRegion->getMayorID()).castTo<CreatureObject*>();
 
-		if (mayor != nullptr) {
+		if (mayor != NULL) {
 			PlayerObject* mayorGhost = mayor->getPlayerObject();
 
-			if (mayorGhost != nullptr) {
+			if (mayorGhost != NULL) {
 				abilityList = mayorGhost->getAbilityList();
 			}
 		}
 	}
 
-	if (abilityList != nullptr) {
+	if (abilityList != NULL) {
 		for (int i = 0; i < abilityList->size(); ++i) {
-			Reference<const Ability*> ability = abilityList->getSafe(i);
-			const String& abilityName = ability->getAbilityName();
+			Reference<Ability*> ability = abilityList->getSafe(i);
+			String abilityName = ability->getAbilityName();
 
 			if (abilityName.beginsWith("city_spec"))
 				sui->addMenuItem("@city/city:" + abilityName);
@@ -78,7 +78,7 @@ int CitySpecializationSessionImplementation::initializeSession() {
 int CitySpecializationSessionImplementation::sendConfirmationBox(const String& choice) {
 	PlayerObject* ghost = creatureObject->getPlayerObject();
 
-	if (ghost == nullptr)
+	if (ghost == NULL)
 		return cancelSession();
 
 	if (choice != "@city/city:null") {
@@ -89,7 +89,7 @@ int CitySpecializationSessionImplementation::sendConfirmationBox(const String& c
 
 		if (!creatureObject->checkCooldownRecovery("city_specialization")) {
 			StringIdChatParameter params("city/city", "spec_time"); //You can't set another city spec right now. Time Remaining: %TO
-			const Time* timeRemaining = creatureObject->getCooldownTime("city_specialization");
+			Time* timeRemaining = creatureObject->getCooldownTime("city_specialization");
 			params.setTO(String::valueOf(round(fabs(timeRemaining->miliDifference() / 1000.f))) + " seconds");
 			creatureObject->sendSystemMessage(params);
 

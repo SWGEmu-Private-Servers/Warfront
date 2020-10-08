@@ -25,7 +25,7 @@ public:
 	void run() {
 		ManagedReference<PlayerObject*> play = player.get();
 
-		if (play == nullptr)
+		if (play == NULL)
 			return;
 
 		ManagedReference<SceneObject*> par = play->getParent().get();

@@ -36,7 +36,7 @@ public:
 				return;
 
 			Zone* zone = player->getZone();
-			if (zone == nullptr)
+			if (zone == NULL)
 				return;
 
 			if (player->getDistanceTo(&initialPosition) > 1) {
@@ -69,8 +69,8 @@ public:
 			bool canGetDirection = player->hasSkill("outdoors_ranger_harvest_01");
 		    bool canGetDistance = player->hasSkill("outdoors_ranger_harvest_03");
 
-			SortedVector<ManagedReference<QuadTreeEntry*> > objects(512, 512);
-			zone->getInRangeObjects(player->getPositionX(), player->getPositionY(), 512, &objects, true);
+			SortedVector<ManagedReference<QuadTreeEntry*> > objects(2048, 2048);
+			zone->getInRangeObjects(player->getPositionX(), player->getPositionY(), 2048, &objects, true);
 
 			for (int i = 0; i < objects.size(); ++i) {
 				SceneObject* object = static_cast<SceneObject*>(objects.get(i).get());
@@ -81,7 +81,7 @@ public:
 				}
 
 				CreatureObject* creature = cast<CreatureObject*>(object);
-				if(creature == nullptr || creature->isInvisible())
+				if(creature == NULL || creature->isInvisible())
 					continue;
 
 				if(type == 0) {

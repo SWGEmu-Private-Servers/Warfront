@@ -32,7 +32,7 @@ public:
 		taskKey = key;
 		screenPlay = playName;
 		args = arguments;
-		persistentEvent = nullptr;
+		persistentEvent = NULL;
 	}
 
 	void run();

@@ -1,11 +1,11 @@
 #include "SceneObject.h"
 
 SceneObject::SceneObject(LuaObject* templateData) : Logger("SceneObject") {
-	parent = nullptr;
+	parent = NULL;
 
 	objectID = 0;
 
-	slottedObjects.setNullValue(nullptr);
+	slottedObjects.setNullValue(NULL);
 	objectName.setStringId(String(templateData->getStringField("objectName")));
 
 	detailedDescription.setStringId(String(templateData->getStringField("detailedDescription")));
@@ -45,14 +45,14 @@ SceneObject::SceneObject(LuaObject* templateData) : Logger("SceneObject") {
 	String fullPath;
 	objectName.getFullPath(fullPath);
 
-	client = nullptr;
-	zone = nullptr;
+	client = NULL;
+	zone = NULL;
 
 	info("created " + fullPath);
 }
 
 SceneObject::~SceneObject() {
-	/*if (parent != nullptr) {
+	/*if (parent != NULL) {
 		error("DELETING OBJECT WITH PARENT NOT NULL");
 	}*/
 	info("destroying object");
@@ -68,7 +68,7 @@ SceneObject::~SceneObject() {
 
 		removeObject(object);
 
-		object->setParent(nullptr);
+		object->setParent(NULL);
 
 		zone->getObjectManager()->destroyObject(object->getObjectID());
 	}
@@ -76,7 +76,7 @@ SceneObject::~SceneObject() {
 
 	while (containerObjects.size() > 0) {
 		SceneObject* object = containerObjects.get(0);
-		object->setParent(nullptr);
+		object->setParent(NULL);
 
 		containerObjects.drop(object->getObjectID());
 
@@ -142,7 +142,7 @@ bool SceneObject::removeObject(SceneObject* object) {
 		return false;
 	}
 
-	object->setParent(nullptr);
+	object->setParent(NULL);
 
 	/*if (notifyClient)
 		broadcastMessage(object->link(0, 0xFFFFFFFF));*/

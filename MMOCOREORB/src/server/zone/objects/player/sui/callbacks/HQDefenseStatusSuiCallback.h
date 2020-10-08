@@ -20,19 +20,19 @@ public:
 	void run(CreatureObject* player, SuiBox* suiBox, uint32 eventIndex, Vector<UnicodeString>* args) {
 		bool cancelPressed = (eventIndex == 1);
 
-		if (cancelPressed || !suiBox->isListBox() || player == nullptr)
+		if (cancelPressed || !suiBox->isListBox() || player == NULL)
 			return;
 
 		ManagedReference<SceneObject*> obj = suiBox->getUsingObject().get();
 
-		if (obj == nullptr || !obj->isBuildingObject())
+		if (obj == NULL || !obj->isBuildingObject())
 			return;
 
 		ManagedReference<BuildingObject*> building = cast<BuildingObject*>(obj.get());
 
 		GCWManager* gcwMan = player->getZone()->getGCWManager();
 
-		if (gcwMan == nullptr)
+		if (gcwMan == NULL)
 			return;
 
 		bool otherPressed = Bool::valueOf(args->get(0).toString());

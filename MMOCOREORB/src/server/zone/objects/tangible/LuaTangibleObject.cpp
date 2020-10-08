@@ -38,6 +38,7 @@ Luna<LuaTangibleObject>::RegType LuaTangibleObject::Register[] = {
 		{ "isNeutral", &LuaTangibleObject::isNeutral },
 		{ "hasActiveArea", &LuaTangibleObject::hasActiveArea},
 		{ "isInvisible", &LuaTangibleObject::isInvisible },
+		{ "setInvisible", &LuaTangibleObject::setInvisible },
 		{ "getLuaStringData", &LuaTangibleObject::getLuaStringData },
 		{ "setLuaStringData", &LuaTangibleObject::setLuaStringData },
 		{ "deleteLuaStringData", &LuaTangibleObject::deleteLuaStringData },
@@ -57,7 +58,7 @@ LuaTangibleObject::LuaTangibleObject(lua_State *L) : LuaSceneObject(L) {
 #ifdef DYNAMIC_CAST_LUAOBJECTS
 	realObject = dynamic_cast<TangibleObject*>(_getRealSceneObject());
 
-	E3_ASSERT(!_getRealSceneObject() || realObject != nullptr);
+	assert(!_getRealSceneObject() || realObject != NULL);
 #else
 	realObject = static_cast<TangibleObject*>(lua_touserdata(L, 1));
 #endif
@@ -75,7 +76,7 @@ int LuaTangibleObject::_setObject(lua_State* L) {
 	if (realObject != obj)
 		realObject = obj;
 
-	E3_ASSERT(!_getRealSceneObject() || realObject != nullptr);
+	assert(!_getRealSceneObject() || realObject != NULL);
 #else
 	auto obj = static_cast<TangibleObject*>(lua_touserdata(L, -1));
 
@@ -106,26 +107,25 @@ int LuaTangibleObject::getPaletteColorCount(lua_State* L) {
 
 	int colors = 0;
 
-	for (int i = 0; i < variables.size(); ++i) {
-		const String& varkey = variables.elementAt(i).getKey();
+	for (int i = 0; i< variables.size(); ++i) {
+		String varkey = variables.elementAt(i).getKey();
 
 		if (varkey.contains(variableName)) {
 			CustomizationVariable* customizationVariable = variables.get(varkey).get();
 
-			if (customizationVariable == nullptr)
+			if (customizationVariable == NULL)
 				continue;
 
 			PaletteColorCustomizationVariable* palette = dynamic_cast<PaletteColorCustomizationVariable*>(customizationVariable);
 
-			if (palette != nullptr) {
-				const auto& paletteFileName = palette->getPaletteFileName();
-				UniqueReference<PaletteTemplate*> paletteTemplate(TemplateManager::instance()->getPaletteTemplate(paletteFileName));
+			if (palette != NULL) {
+				String paletteFileName = palette->getPaletteFileName();
+				PaletteTemplate* paletteTemplate = TemplateManager::instance()->getPaletteTemplate(paletteFileName);
 
-				if (paletteTemplate == nullptr)
+				if (paletteTemplate == NULL)
 					continue;
 
 				colors = paletteTemplate->getColorCount();
-
 				break;
 			}
 		}
@@ -267,6 +267,13 @@ int LuaTangibleObject::isInvisible(lua_State* L) {
 	lua_pushboolean(L, retVal);
 
 	return 1;
+}
+
+int LuaTangibleObject::setInvisible(lua_State* L) {
+	Locker locker(realObject);
+	bool setVal = lua_toboolean(L, -1);
+	realObject->setInvisible(setVal);
+	return 0;
 }
 
 int LuaTangibleObject::setLuaStringData(lua_State *L) {

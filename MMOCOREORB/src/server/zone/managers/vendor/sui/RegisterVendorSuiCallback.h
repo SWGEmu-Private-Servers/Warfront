@@ -28,12 +28,12 @@ public:
 
 		ManagedReference<SceneObject*> object = suiBox->getUsingObject().get();
 
-		if (object == nullptr || !object->isVendor())
+		if (object == NULL || !object->isVendor())
 			return;
 
 		TangibleObject* vendor = cast<TangibleObject*>(object.get());
 
-		if (vendor == nullptr)
+		if (vendor == NULL)
 			return;
 
 		SuiListBox* suiListBox = cast<SuiListBox*>( suiBox);

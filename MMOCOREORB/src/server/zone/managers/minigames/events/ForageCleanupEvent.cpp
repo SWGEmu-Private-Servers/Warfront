@@ -13,12 +13,12 @@ ForageCleanupEvent::ForageCleanupEvent(const String& name, ZoneProcessServer* zo
 }
 
 void ForageCleanupEvent::run() {
-	if (zoneServer == nullptr)
+	if (zoneServer == NULL)
 		return;
 
 	ManagedReference<ForageManager*> forageManager = zoneServer->getForageManager();
 
-	if (forageManager != nullptr)
+	if (forageManager != NULL)
 		forageManager->deleteForageAreaCollection(playerName);
 
 }

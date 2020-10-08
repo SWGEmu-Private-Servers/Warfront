@@ -11,7 +11,6 @@ include templates.tangible.InstrumentObjectTemplate;
 import server.zone.packets.object.ObjectMenuResponse;
 import server.zone.objects.creature.CreatureObject;
 
-@json
 class Instrument extends TangibleObject {
 	protected int instrumentType;
 	protected boolean beingUsed;
@@ -99,7 +98,7 @@ class Instrument extends TangibleObject {
 	@dirty
 	public native boolean canDropInstrument();
 
-	@read
+	@dirty
 	public int getInstrumentType() {
 		return instrumentType;
 	}

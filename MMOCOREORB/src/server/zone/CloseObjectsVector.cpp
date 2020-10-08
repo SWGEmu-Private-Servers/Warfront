@@ -2,6 +2,8 @@
 // Created by Victor Popovici on 7/2/17.
 //
 
+#include "engine/core/ManagedReference.h"
+
 #include "CloseObjectsVector.h"
 
 #include "server/zone/QuadTreeEntry.h"
@@ -63,15 +65,13 @@ void CloseObjectsVector::removeAll(int newSize, int newIncrement) {
 	objects.removeAll(newSize, newIncrement);
 
 	messageReceivers.removeAll(newSize, newIncrement);
-
-	count = 0;
 }
 
 void CloseObjectsVector::dropReceiver(QuadTreeEntry* entry) {
 	uint32 receiverTypes = entry->registerToCloseObjectsReceivers();
 
 	if (receiverTypes && messageReceivers.size()) {
-		for (int i = 0; i < CloseObjectsVector::MAXTYPES / 2; ++i) {
+		for (int i = 0; i < CloseObjectsVector::MAXTYPES; ++i) {
 			uint32 type = 1 << i;
 
 			if (receiverTypes & type) {
@@ -94,11 +94,7 @@ Reference<QuadTreeEntry*> CloseObjectsVector::remove(int index) {
 
 	dropReceiver(ref);
 
-	auto obj = objects.remove(index);
-
-	count = objects.size();
-
-	return obj;
+	return objects.remove(index);
 }
 
 bool CloseObjectsVector::drop(const Reference<QuadTreeEntry*>& o) {
@@ -106,11 +102,7 @@ bool CloseObjectsVector::drop(const Reference<QuadTreeEntry*>& o) {
 
 	dropReceiver(o);
 
-	auto res = objects.drop(o);
-
-	count = objects.size();
-
-	return res;
+	return objects.drop(o);
 }
 
 void CloseObjectsVector::safeCopyReceiversTo(Vector<QuadTreeEntry*>& vec, uint32 receiverType) const {
@@ -165,13 +157,13 @@ void CloseObjectsVector::safeAppendReceiversTo(Vector<ManagedReference<QuadTreeE
 	}
 }
 
-const Reference<QuadTreeEntry*>& CloseObjectsVector::get(int idx) const {
+Reference<QuadTreeEntry*> CloseObjectsVector::get(int idx) const {
 	return objects.get(idx);
 }
 
 void CloseObjectsVector::putReceiver(QuadTreeEntry* entry, uint32 receiverTypes) {
 	if (receiverTypes) {
-		for (int i = 0; i < CloseObjectsVector::MAXTYPES / 2; ++i) {
+		for (int i = 0; i < CloseObjectsVector::MAXTYPES; ++i) {
 			uint32 type = 1 << i;
 
 			if (receiverTypes & type) {
@@ -195,28 +187,19 @@ void CloseObjectsVector::putReceiver(QuadTreeEntry* entry, uint32 receiverTypes)
 }
 
 int CloseObjectsVector::put(const Reference<QuadTreeEntry*>& o) {
-	uint32 receiverTypes = o->registerToCloseObjectsReceivers();
 
+	uint32 receiverTypes = o->registerToCloseObjectsReceivers();
 	Locker locker(&mutex);
 
 	putReceiver(o.get(), receiverTypes);
 
-	auto res = objects.put(o);
-
-	count = objects.size();
-
-	return res;
+	return objects.put(o);
 }
 
 int CloseObjectsVector::put(Reference<QuadTreeEntry*>&& o) {
 	uint32 receiverTypes = o->registerToCloseObjectsReceivers();
-
 	Locker locker(&mutex);
 	putReceiver(o.get(), receiverTypes);
 
-	auto res = objects.put(std::move(o));
-
-	count = objects.size();
-
-	return res;
+	return objects.put(std::move(o));
 }

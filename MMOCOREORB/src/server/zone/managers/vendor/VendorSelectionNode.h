@@ -120,7 +120,7 @@ public:
 
 	VendorSelectionNode* getNode(int idx) {
 		if (idx < 0 || idx >= childNodes.size())
-			return nullptr;
+			return NULL;
 
 		return childNodes.get(idx);
 	}
@@ -134,15 +134,15 @@ public:
 		if(childNodes.size() == 0)
 			return "";
 
-		VendorSelectionNode* node = nullptr;
+		VendorSelectionNode* node = NULL;
 		int loop = 0;
 
 		do {
 			node = childNodes.get(System::random(childNodes.size() - 1));
 			loop++;
-		} while((node == nullptr || node->getHiringRequired() > skillLevel) && loop < 10 );
+		} while((node == NULL || node->getHiringRequired() > skillLevel) && loop < 10 );
 
-		if(node == nullptr)
+		if(node == NULL)
 			return "";
 
 		return node->getTemplatePath();

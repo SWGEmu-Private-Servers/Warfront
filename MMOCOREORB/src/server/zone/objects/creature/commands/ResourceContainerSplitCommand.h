@@ -32,7 +32,7 @@ public:
 
 		ManagedReference<ResourceContainer* > resourceContainer = server->getZoneServer()->getObject(target).castTo<ResourceContainer*>();
 
-		if ((resourceContainer == nullptr || !resourceContainer->isResourceContainer() ||!creature->isPlayerCreature()))
+		if ((resourceContainer == NULL || !resourceContainer->isResourceContainer() ||!creature->isPlayerCreature()))
 			return INVALIDTARGET;
 
 		if(!resourceContainer->isASubChildOf(creature)) {
@@ -42,7 +42,7 @@ public:
 
 		ManagedReference<SceneObject*> objectsParent = resourceContainer->getParent().get();
 
-		if (objectsParent == nullptr ||
+		if (objectsParent == NULL ||
 				objectsParent->isCellObject()) {
 
 			creature->sendSystemMessage("@container_error_message:container03");
